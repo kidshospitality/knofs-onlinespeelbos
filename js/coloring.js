@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const coloringCanvas = document.getElementById('coloring-canvas');
   const ctx = coloringCanvas.getContext('2d');
   
+  // Toon welkomstbericht van Knof
+  setTimeout(() => {
+    if (typeof typeSpeechMessage === 'function') {
+      typeSpeechMessage("Welkom bij mijn kleurboek! Wat zullen we gaan kleuren?");
+    }
+  }, 500);
+  
   // Creëer het sjablooncanvas
   const templateCanvas = document.createElement('canvas');
   templateCanvas.id = 'template-canvas';
@@ -104,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Maak coloring-container flexibel
     document.querySelector('.coloring-container').style.display = 'flex';
     document.querySelector('.coloring-container').style.flexDirection = 'column';
-    document.querySelector('.coloring-container').style.height = 'calc(100vh - 160px)'; // Ruimte voor top en bottom nav
+    document.querySelector('.coloring-container').style.height = 'calc(100vh - 120px)'; // Ruimte voor top en bottom nav zonder titel
 
     // Kleurenkiezer knop en container
     const colorPickerContainer = document.createElement('div');
@@ -414,10 +421,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const bottomNav = document.getElementById('bottom-nav-container');
     const topNavHeight = topNav ? topNav.offsetHeight : 0;
     const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
-    const pageTitleHeight = document.querySelector('.page-title').offsetHeight;
     const controlsHeight = controls ? controls.offsetHeight : 50;
     
-    const availableHeight = window.innerHeight - topNavHeight - bottomNavHeight - pageTitleHeight - controlsHeight - 40; // Extra marge
+    // Zonder de titel hebben we meer ruimte
+    const availableHeight = window.innerHeight - topNavHeight - bottomNavHeight - controlsHeight - 40; // Extra marge
     
     // Stel canvas container hoogte in
     canvasContainer.style.height = `${availableHeight}px`;
