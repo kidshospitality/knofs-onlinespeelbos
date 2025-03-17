@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM geladen - Initialisatie kleurboek app");
+  
   // Hoofdelementen
   const canvasContainer = document.getElementById('canvas-container');
   const coloringCanvas = document.getElementById('coloring-canvas');
@@ -28,15 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const drawingTools = document.querySelector('.drawing-tools');
   const coloringActions = document.querySelector('.coloring-actions');
   
-  // Zorg ervoor dat de toolbox container bestaat - zo niet, maak hem aan
-  let toolboxContainer = document.querySelector('.toolbox-container');
-  if (!toolboxContainer) {
-    toolboxContainer = document.createElement('div');
-    toolboxContainer.className = 'toolbox-container';
-    const coloringContainer = document.querySelector('.coloring-container');
-    // Plaats voor het canvas-container element
-    coloringContainer.insertBefore(toolboxContainer, canvasContainer);
-  }
+  // Zoek de toolbox direct onder app-container (nieuwe structuur)
+  let toolboxContainer = document.querySelector('.app-container > .toolbox-container');
+  console.log("Toolbox container gevonden:", !!toolboxContainer);
   
   // Verwijder marges en padding van body en html om scrolling te voorkomen
   document.body.style.margin = '0';
@@ -59,10 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.alignItems = 'center';
   controls.style.padding = '8px'; // Iets meer padding voor betere zichtbaarheid
   controls.style.backgroundColor = '#f8f8f8'; // Solide achtergrond in plaats van transparant
-  controls.style.borderTop = '1px solid #ddd';
-  controls.style.borderBottom = '1px solid #ddd'; 
   controls.style.width = '100%';
-  controls.style.minHeight = '40px'; // Minimale hoogte om zichtbaarheid te garanderen
+  controls.style.minHeight = '50px'; // Minimale hoogte om zichtbaarheid te garanderen
   
   // Creëer bevestigingsdialoog
   const confirmDialog = document.createElement('div');
@@ -120,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // UI bouwen
   function buildUI() {
+    console.log("buildUI wordt uitgevoerd");
+    
     // Maak coloring-container flexibel en vul volledige ruimte tussen menubalken
     const coloringContainer = document.querySelector('.coloring-container');
     coloringContainer.style.display = 'flex';
@@ -133,10 +129,11 @@ document.addEventListener('DOMContentLoaded', function() {
     toolboxContainer.style.width = '100%';
     toolboxContainer.style.backgroundColor = '#f8f8f8';
     toolboxContainer.style.borderBottom = '1px solid #ddd';
-    toolboxContainer.style.padding = '0';
-    toolboxContainer.style.zIndex = '10';
     toolboxContainer.style.display = 'block'; // Zorg dat het zichtbaar is
     toolboxContainer.style.minHeight = '50px'; // Garandeer minimum hoogte
+    toolboxContainer.style.margin = '0';
+    toolboxContainer.style.padding = '0';
+    toolboxContainer.style.zIndex = '100';
     
     // App container moet ook maximale ruimte benutten
     const appContainer = document.querySelector('.app-container');
@@ -390,8 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
     templateContainer.appendChild(templateMenu);
     controls.appendChild(templateContainer);
     
-    // Voeg controls toe aan de toolboxContainer
-    toolboxContainer.innerHTML = ''; // Maak zeker dat de container leeg is
+    // Leeg en voeg controls toe aan de toolboxContainer
+    toolboxContainer.innerHTML = '';
     toolboxContainer.appendChild(controls);
     
     // Bevestigingsdialoog knoppen
@@ -410,14 +407,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Canvas grootte bijwerken
   function updateCanvasSize() {
-    // Print debug info naar console
     console.log("updateCanvasSize uitgevoerd");
     
     // Kleine vertraging om te zorgen dat alle elementen goed geladen zijn
     setTimeout(() => {
-      // Log toolbox zichtbaarheid
-      console.log("Toolbox bestaat:", !!toolboxContainer);
-      console.log("Toolbox hoogte:", toolboxContainer.offsetHeight);
+      // Log toolbox status
+      console.log("Toolbox status:", {
+        exists: !!toolboxContainer,
+        height: toolboxContainer ? toolboxContainer.offsetHeight : 0,
+        visible: toolboxContainer.style.display !== 'none'
+      });
       
       // Force direct update voor alle container hoogtes
       const appContainer = document.querySelector('.app-container');
@@ -437,16 +436,20 @@ document.addEventListener('DOMContentLoaded', function() {
       const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
       const toolboxHeight = toolboxContainer ? toolboxContainer.offsetHeight : 0;
       
-      console.log("topNavHeight:", topNavHeight);
-      console.log("bottomNavHeight:", bottomNavHeight);
-      console.log("toolboxHeight:", toolboxHeight);
+      console.log("Element hoogtes:", {
+        topNav: topNavHeight,
+        bottomNav: bottomNavHeight,
+        toolbox: toolboxHeight
+      });
       
       // Bereken exacte beschikbare ruimte
       const windowHeight = window.innerHeight;
       const availableHeight = windowHeight - topNavHeight - bottomNavHeight - toolboxHeight;
       
-      console.log("windowHeight:", windowHeight);
-      console.log("availableHeight:", availableHeight);
+      console.log("Ruimte berekening:", {
+        window: windowHeight,
+        available: availableHeight
+      });
       
       // Stel canvas container hoogte in op beschikbare ruimte
       canvasContainer.style.height = `${availableHeight}px`;
@@ -464,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Teken opnieuw na resize
       redrawCanvas();
-    }, 10);
+    }, 50);
   }
   
   // Teken starten
@@ -716,6 +719,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Bouw UI
     buildUI();
     
+    // Force toolbox zichtbaarheid
+    toolboxContainer.style.display = 'block';
+    
     // Canvas voorbereiden en onmiddellijk grootte aanpassen
     setTimeout(updateCanvasSize, 0);
     
@@ -731,6 +737,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Derde keer voor de zekerheid
     setTimeout(updateCanvasSize, 800);
+    
+    // Force zichtbaarheid aan het eind
+    setTimeout(() => {
+      console.log("Force visibility van toolbox na initialisatie");
+      toolboxContainer.style.display = 'block';
+      toolboxContainer.style.visibility = 'visible';
+      toolboxContainer.style.opacity = '1';
+      updateCanvasSize();
+    }, 1000);
     
     console.log("App initialisatie voltooid");
   }
