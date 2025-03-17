@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kleurboek - Knof's Speelbos</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+</head>
+<body>
+  <!-- SVG filters for hand-drawn effect -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Hoofdcontent - Kleurboek -->
+  <div class="app-container">
+    <h1 class="page-title">Knof's Kleurboek</h1>
+    
+    <div class="coloring-container">
+      <div class="color-tools">
+        <div class="color-btn" style="background-color: #FF0000;" data-color="#FF0000" data-name="rood"></div>
+        <div class="color-btn" style="background-color: #FFA500;" data-color="#FFA500" data-name="oranje"></div>
+        <div class="color-btn" style="background-color: #FFFF00;" data-color="#FFFF00" data-name="geel"></div>
+        <div class="color-btn" style="background-color: #008000;" data-color="#008000" data-name="groen"></div>
+        <div class="color-btn" style="background-color: #0000FF;" data-color="#0000FF" data-name="blauw"></div>
+        <div class="color-btn" style="background-color: #4B0082;" data-color="#4B0082" data-name="paars"></div>
+        <div class="color-btn" style="background-color: #FF69B4;" data-color="#FF69B4" data-name="roze"></div>
+        <div class="color-btn" style="background-color: #8B4513;" data-color="#8B4513" data-name="bruin"></div>
+        <div class="color-btn" style="background-color: #000000;" data-color="#000000" data-name="zwart"></div>
+        <div class="color-btn" style="background-color: #FFFFFF;" data-color="#FFFFFF" data-name="wit"></div>
+      </div>
+      
+      <div class="drawing-tools">
+        <label for="color-picker">Kleur:</label>
+        <input type="color" id="color-picker" value="#FF0000">
+        
+        <label for="brush-size">Dikte:</label>
+        <input type="range" id="brush-size" min="1" max="20" value="5">
+        
+        <button id="clear-canvas">Wissen</button>
+      </div>
+      
+      <div id="canvas-container">
+        <canvas id="coloring-canvas"></canvas>
+      </div>
+      
+      <div class="coloring-actions">
+        <button id="save-drawing" class="coloring-button">Opslaan</button>
+        <button id="load-template" class="coloring-button">Kleurplaat Laden</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/common.js"></script>
+  <script src="js/coloring.js"></script>
+</body>
+</html>
