@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
   <style>
-    /* Extra stijlen voor betere schaling */
+    /* Reset */
     body, html {
       margin: 0;
       padding: 0;
@@ -17,27 +17,40 @@
       overflow: hidden;
     }
     
+    /* Layout */
     .app-container {
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 100px); /* Ruimte voor top en bottom navigatie */
-      padding: 0;
     }
     
+    /* Top bar is standaard aanwezig */
+    #top-nav-container {
+      flex-shrink: 0;
+    }
+    
+    /* NIEUWE TOOLBOX - Eenvoudig en direct gepositioneerd */
+    #drawing-toolbar {
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-shrink: 0; /* Voorkomt krimpen */
+    }
+    
+    /* Oude container wordt flex om ruimte op te vullen */
     .coloring-container {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      flex: 1;
-      width: 100%;
-      position: relative;
+      overflow: hidden;
     }
     
     #canvas-container {
       flex: 1;
       position: relative;
-      width: 100%;
-      margin: 0;
-      padding: 0;
     }
     
     #coloring-canvas {
@@ -48,56 +61,47 @@
       height: 100%;
     }
     
-    /* Expliciete styling voor toolbox container */
-    .toolbox-container {
-      width: 100%;
-      background-color: #f8f8f8;
-      border-bottom: 1px solid #ddd;
-      margin: 0;
-      padding: 0;
-      z-index: 100;
-      display: block;
+    /* Bottom nav standaard aanwezig */
+    #bottom-nav-container {
+      flex-shrink: 0;
     }
   </style>
 </head>
 <body>
-  <!-- SVG filters for hand-drawn effect -->
-  <svg class="svg-filters">
+  <!-- SVG filters -->
+  <svg class="svg-filters" style="display:none;">
     <defs>
       <filter id="rough-filter">
         <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
-      <filter id="squiggly-filter">
-        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
-      </filter>
     </defs>
   </svg>
 
-  <!-- Container voor top navigatie -->
-  <div id="top-nav-container"></div>
-
-  <!-- Settings modal container -->
-  <div id="settings-modal-container"></div>
-
-  <!-- Hoofdcontent - Kleurboek -->
+  <!-- App container -->
   <div class="app-container">    
-    <!-- Toolbox is nu direct onder app-container -->
-    <div class="toolbox-container"></div>
+    <!-- Top navigatie -->
+    <div id="top-nav-container"></div>
     
+    <!-- NIEUWE TOOLBAR - Direct onder top nav -->
+    <div id="drawing-toolbar">
+      <!-- Wordt gevuld door JavaScript -->
+    </div>
+    
+    <!-- Coloring container -->
     <div class="coloring-container">
-      <div class="color-tools"></div>
-      <div class="drawing-tools"></div>
       <div id="canvas-container">
         <canvas id="coloring-canvas"></canvas>
       </div>
-      <div class="coloring-actions"></div>
+      <!-- Oude UI elementen - nu leeg -->
+      <div class="color-tools" style="display:none;"></div>
+      <div class="drawing-tools" style="display:none;"></div>
+      <div class="coloring-actions" style="display:none;"></div>
     </div>
+    
+    <!-- Bottom navigatie -->
+    <div id="bottom-nav-container"></div>
   </div>
-
-  <!-- Container voor bottom navigatie -->
-  <div id="bottom-nav-container"></div>
 
   <!-- Scripts -->
   <script src="js/common.js"></script>
