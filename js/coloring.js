@@ -15,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
   templateCanvas.style.height = '100%';
   canvasContainer.appendChild(templateCanvas);
   canvasContainer.style.position = 'relative';
+  canvasContainer.style.flex = '1'; // Laat het canvas container element groeien
+  canvasContainer.style.display = 'flex'; // Zorg ervoor dat het canvas kan uitrekken
+  canvasContainer.style.width = '100%';
+  canvasContainer.style.height = '100%';
   const templateCtx = templateCanvas.getContext('2d');
   
   // UI-elementen
@@ -34,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.justifyContent = 'space-around';
   controls.style.alignItems = 'center';
   controls.style.padding = '10px';
-  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Transparante achtergrond
   controls.style.width = '100%';
   controls.style.marginTop = '10px';
   
@@ -97,6 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // UI bouwen
   function buildUI() {
+    // Maak coloring-container flexibel
+    document.querySelector('.coloring-container').style.display = 'flex';
+    document.querySelector('.coloring-container').style.flexDirection = 'column';
+    document.querySelector('.coloring-container').style.height = 'calc(100vh - 160px)'; // Ruimte voor top en bottom nav
+
     // Kleurenkiezer knop en container
     const colorPickerContainer = document.createElement('div');
     colorPickerContainer.style.position = 'relative';
@@ -396,11 +405,28 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Canvas grootte bijwerken
   function updateCanvasSize() {
-    const rect = canvasContainer.getBoundingClientRect();
-    coloringCanvas.width = rect.width;
-    coloringCanvas.height = rect.height;
-    templateCanvas.width = rect.width;
-    templateCanvas.height = rect.height;
+    // Bereken beschikbare hoogte tussen top en bottom navigatie
+    const appContainer = document.querySelector('.app-container');
+    const appContainerRect = appContainer.getBoundingClientRect();
+    
+    // Bepaal beschikbare hoogte voor canvas (pagina hoogte - top nav - bottom nav - padding)
+    const topNav = document.getElementById('top-nav-container');
+    const bottomNav = document.getElementById('bottom-nav-container');
+    const topNavHeight = topNav ? topNav.offsetHeight : 0;
+    const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
+    const pageTitleHeight = document.querySelector('.page-title').offsetHeight;
+    const controlsHeight = controls ? controls.offsetHeight : 50;
+    
+    const availableHeight = window.innerHeight - topNavHeight - bottomNavHeight - pageTitleHeight - controlsHeight - 40; // Extra marge
+    
+    // Stel canvas container hoogte in
+    canvasContainer.style.height = `${availableHeight}px`;
+    
+    // Pas canvas grootte aan
+    coloringCanvas.width = canvasContainer.clientWidth;
+    coloringCanvas.height = canvasContainer.clientHeight;
+    templateCanvas.width = coloringCanvas.width;
+    templateCanvas.height = coloringCanvas.height;
     
     // Teken opnieuw na resize
     redrawCanvas();
