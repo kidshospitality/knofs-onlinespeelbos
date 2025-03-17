@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.justifyContent = 'space-around';
   controls.style.alignItems = 'center';
   controls.style.padding = '10px';
-  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Transparante achtergrond
+  controls.style.backgroundColor = 'rgba(255, 255, 255, 0)'; // Transparante achtergrond
   controls.style.width = '100%';
   controls.style.marginTop = '0'; // Verwijder margin om ruimte te besparen
   
