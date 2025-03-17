@@ -1,210 +1,548 @@
-// Kleurboek-specifieke functies
 document.addEventListener('DOMContentLoaded', function() {
-  // Canvas tekening initialiseren als we op de kleurboek pagina zijn
-  if (window.location.pathname.includes('coloring.html')) {
-    initColoringCanvas();
-    
-    // Welkomstbericht voor kleurboek
-    setTimeout(() => {
-      typeSpeechMessage("Welkom in mijn kleurboek! Kies een kleur en begin met tekenen. Wat ga je maken?");
-    }, 500);
-  }
-});
-
-// Kleurboek canvas initialiseren
-function initColoringCanvas() {
-  const canvas = document.getElementById('coloring-canvas');
-  if (!canvas) return;
-  
-  const ctx = canvas.getContext('2d');
-  const colorPicker = document.getElementById('color-picker');
-  const brushSize = document.getElementById('brush-size');
-  const clearButton = document.getElementById('clear-canvas');
-  const saveButton = document.getElementById('save-drawing');
-  const loadTemplateButton = document.getElementById('load-template');
-  
-  // Voeg een template canvas toe voor kleurplaten
+  // Hoofdelementen
   const canvasContainer = document.getElementById('canvas-container');
+  const coloringCanvas = document.getElementById('coloring-canvas');
+  const ctx = coloringCanvas.getContext('2d');
+  
+  // Creëer het sjablooncanvas
   const templateCanvas = document.createElement('canvas');
   templateCanvas.id = 'template-canvas';
   templateCanvas.style.position = 'absolute';
   templateCanvas.style.top = '0';
   templateCanvas.style.left = '0';
   templateCanvas.style.pointerEvents = 'none';
+  templateCanvas.style.width = '100%';
+  templateCanvas.style.height = '100%';
   canvasContainer.appendChild(templateCanvas);
+  canvasContainer.style.position = 'relative';
   const templateCtx = templateCanvas.getContext('2d');
   
-  // Pad geschiedenis voor ongedaan maken
+  // UI-elementen
+  const colorTools = document.querySelector('.color-tools');
+  const drawingTools = document.querySelector('.drawing-tools');
+  const coloringActions = document.querySelector('.coloring-actions');
+  
+  // Vervanging van bestaande tools door nieuwe interface
+  colorTools.innerHTML = '';
+  drawingTools.innerHTML = '';
+  coloringActions.innerHTML = '';
+  
+  // Creëer nieuwe controlebalk
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+  controls.style.display = 'flex';
+  controls.style.justifyContent = 'space-around';
+  controls.style.alignItems = 'center';
+  controls.style.padding = '10px';
+  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+  controls.style.width = '100%';
+  controls.style.marginTop = '10px';
+  
+  // Creëer bevestigingsdialoog
+  const confirmDialog = document.createElement('div');
+  confirmDialog.className = 'confirm-dialog';
+  confirmDialog.style.display = 'none';
+  confirmDialog.style.position = 'fixed';
+  confirmDialog.style.top = '50%';
+  confirmDialog.style.left = '50%';
+  confirmDialog.style.transform = 'translate(-50%, -50%)';
+  confirmDialog.style.backgroundColor = 'white';
+  confirmDialog.style.padding = '20px';
+  confirmDialog.style.borderRadius = '10px';
+  confirmDialog.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+  confirmDialog.style.zIndex = '1000';
+  confirmDialog.style.flexDirection = 'column';
+  confirmDialog.style.alignItems = 'center';
+  document.body.appendChild(confirmDialog);
+  
+  confirmDialog.innerHTML = `
+    <p>Weet je zeker dat je de tekening wilt wissen?</p>
+    <div style="display: flex;">
+      <button id="confirm-yes" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #4CAF50;">Ja</button>
+      <button id="confirm-no" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #f44336;">Nee</button>
+    </div>
+  `;
+  
+  // Staat
+  let currentColor = '#000000';
+  let brushSize = 8;
+  let isDrawing = false;
   let paths = [];
   let currentPath = null;
   let drawHistory = [];
   let currentHistoryIndex = -1;
+  let selectedTemplate = null;
   
-  // Canvas grootte instellen
-  function resizeCanvas() {
-    if (!canvasContainer) return;
+  // Beschikbare kleuren
+  const colors = [
+    '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
+    '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080'
+  ];
+  
+  // Penseel groottes
+  const brushSizes = [3, 8, 15];
+  
+  // Template afbeeldingen - pas de paden aan naar waar je ze opslaat
+  const templates = [
+    null, // Leeg vel
+    'images/kleurplaten/kleurplaat-knof1.png',
+    'images/kleurplaten/kleurplaat-kok1.png'
+  ];
+  
+  // Bepaal of dit het eerste bezoek is
+  let isFirstVisit = !localStorage.getItem('hasVisitedKleurboek');
+  if (isFirstVisit) {
+    localStorage.setItem('hasVisitedKleurboek', 'true');
+  }
+  
+  // UI bouwen
+  function buildUI() {
+    // Kleurenkiezer knop en container
+    const colorPickerContainer = document.createElement('div');
+    colorPickerContainer.style.position = 'relative';
     
-    const width = canvasContainer.offsetWidth;
-    const height = Math.min(500, window.innerHeight - 300);
+    const colorPickerButton = document.createElement('button');
+    colorPickerButton.textContent = '🎨';
+    colorPickerButton.className = 'control-button';
+    colorPickerButton.style.fontSize = '24px';
+    colorPickerButton.style.background = 'none';
+    colorPickerButton.style.border = 'none';
+    colorPickerButton.style.cursor = 'pointer';
+    colorPickerButton.style.padding = '5px';
     
-    canvas.width = width;
-    canvas.height = height;
-    templateCanvas.width = width;
-    templateCanvas.height = height;
+    const colorPickerMenu = document.createElement('div');
+    colorPickerMenu.className = 'color-picker-menu';
+    colorPickerMenu.style.display = 'none';
+    colorPickerMenu.style.flexWrap = 'wrap';
+    colorPickerMenu.style.justifyContent = 'center';
+    colorPickerMenu.style.position = 'absolute';
+    colorPickerMenu.style.bottom = '100%';
+    colorPickerMenu.style.left = '50%';
+    colorPickerMenu.style.transform = 'translateX(-50%)';
+    colorPickerMenu.style.backgroundColor = 'white';
+    colorPickerMenu.style.borderRadius = '10px';
+    colorPickerMenu.style.padding = '5px';
+    colorPickerMenu.style.marginBottom = '10px';
+    colorPickerMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+    colorPickerMenu.style.zIndex = '100';
     
-    // Witte achtergrond
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    colors.forEach(color => {
+      const colorOption = document.createElement('div');
+      colorOption.className = 'color-option';
+      colorOption.style.width = '30px';
+      colorOption.style.height = '30px';
+      colorOption.style.borderRadius = '50%';
+      colorOption.style.border = '2px solid white';
+      colorOption.style.margin = '2px';
+      colorOption.style.cursor = 'pointer';
+      colorOption.style.backgroundColor = color;
+      
+      colorOption.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentColor = color;
+        colorPickerMenu.style.display = 'none';
+      });
+      
+      colorPickerMenu.appendChild(colorOption);
+    });
     
-    // Herteken alle paden
+    colorPickerButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      colorPickerMenu.style.display = colorPickerMenu.style.display === 'flex' ? 'none' : 'flex';
+      brushSizeMenu.style.display = 'none';
+      templateMenu.style.display = 'none';
+    });
+    
+    colorPickerContainer.appendChild(colorPickerButton);
+    colorPickerContainer.appendChild(colorPickerMenu);
+    controls.appendChild(colorPickerContainer);
+    
+    // Penseelgrootte knop en container
+    const brushSizeContainer = document.createElement('div');
+    brushSizeContainer.style.position = 'relative';
+    
+    const brushSizeButton = document.createElement('button');
+    brushSizeButton.textContent = '🖌️';
+    brushSizeButton.className = 'control-button';
+    brushSizeButton.style.fontSize = '24px';
+    brushSizeButton.style.background = 'none';
+    brushSizeButton.style.border = 'none';
+    brushSizeButton.style.cursor = 'pointer';
+    brushSizeButton.style.padding = '5px';
+    
+    const brushSizeMenu = document.createElement('div');
+    brushSizeMenu.className = 'brush-size-menu';
+    brushSizeMenu.style.display = 'none';
+    brushSizeMenu.style.flexDirection = 'column-reverse';
+    brushSizeMenu.style.position = 'absolute';
+    brushSizeMenu.style.bottom = '100%';
+    brushSizeMenu.style.left = '50%';
+    brushSizeMenu.style.transform = 'translateX(-50%)';
+    brushSizeMenu.style.backgroundColor = 'white';
+    brushSizeMenu.style.borderRadius = '10px';
+    brushSizeMenu.style.padding = '5px';
+    brushSizeMenu.style.marginBottom = '10px';
+    brushSizeMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+    brushSizeMenu.style.zIndex = '100';
+    
+    brushSizes.forEach(size => {
+      const sizeOption = document.createElement('button');
+      sizeOption.className = 'brush-size-option';
+      sizeOption.style.fontSize = `${size * 2}px`;
+      sizeOption.style.background = 'none';
+      sizeOption.style.border = 'none';
+      sizeOption.style.cursor = 'pointer';
+      sizeOption.style.padding = '5px';
+      sizeOption.textContent = '🖌️';
+      
+      sizeOption.addEventListener('click', (e) => {
+        e.stopPropagation();
+        brushSize = size;
+        brushSizeMenu.style.display = 'none';
+      });
+      
+      brushSizeMenu.appendChild(sizeOption);
+    });
+    
+    brushSizeButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      brushSizeMenu.style.display = brushSizeMenu.style.display === 'flex' ? 'none' : 'flex';
+      colorPickerMenu.style.display = 'none';
+      templateMenu.style.display = 'none';
+    });
+    
+    brushSizeContainer.appendChild(brushSizeButton);
+    brushSizeContainer.appendChild(brushSizeMenu);
+    controls.appendChild(brushSizeContainer);
+    
+    // Undo knop
+    const undoButton = document.createElement('button');
+    undoButton.textContent = '↩️';
+    undoButton.className = 'control-button';
+    undoButton.style.fontSize = '24px';
+    undoButton.style.background = 'none';
+    undoButton.style.border = 'none';
+    undoButton.style.cursor = 'pointer';
+    undoButton.style.padding = '5px';
+    
+    undoButton.addEventListener('click', undo);
+    controls.appendChild(undoButton);
+    
+    // Wis knop
+    const clearButton = document.createElement('button');
+    clearButton.textContent = '🗑️';
+    clearButton.className = 'control-button';
+    clearButton.style.fontSize = '24px';
+    clearButton.style.background = 'none';
+    clearButton.style.border = 'none';
+    clearButton.style.cursor = 'pointer';
+    clearButton.style.padding = '5px';
+    
+    clearButton.addEventListener('click', handleClearCanvas);
+    controls.appendChild(clearButton);
+    
+    // Download knop
+    const downloadButton = document.createElement('button');
+    downloadButton.textContent = '💾';
+    downloadButton.className = 'control-button';
+    downloadButton.style.fontSize = '24px';
+    downloadButton.style.background = 'none';
+    downloadButton.style.border = 'none';
+    downloadButton.style.cursor = 'pointer';
+    downloadButton.style.padding = '5px';
+    
+    downloadButton.addEventListener('click', downloadImage);
+    controls.appendChild(downloadButton);
+    
+    // Template knop en container
+    const templateContainer = document.createElement('div');
+    templateContainer.style.position = 'relative';
+    
+    const templateButton = document.createElement('button');
+    templateButton.textContent = '🖼️';
+    templateButton.className = 'control-button';
+    templateButton.style.fontSize = '24px';
+    templateButton.style.background = 'none';
+    templateButton.style.border = 'none';
+    templateButton.style.cursor = 'pointer';
+    templateButton.style.padding = '5px';
+    
+    const templateMenu = document.createElement('div');
+    templateMenu.className = 'template-menu';
+    templateMenu.style.display = 'none';
+    templateMenu.style.flexDirection = 'column';
+    templateMenu.style.position = 'absolute';
+    templateMenu.style.bottom = '100%';
+    templateMenu.style.left = '50%';
+    templateMenu.style.transform = 'translateX(-50%)';
+    templateMenu.style.backgroundColor = 'white';
+    templateMenu.style.padding = '5px';
+    templateMenu.style.borderRadius = '5px';
+    templateMenu.style.zIndex = '100';
+    
+    // Voeg popup hint toe voor eerste bezoek
+    if (isFirstVisit) {
+      const popupHint = document.createElement('div');
+      popupHint.className = 'popup-hint';
+      popupHint.textContent = 'Kies hier je kleurplaat!';
+      popupHint.style.position = 'absolute';
+      popupHint.style.bottom = '120%';
+      popupHint.style.right = '-20px';
+      popupHint.style.backgroundColor = '#fff';
+      popupHint.style.border = '2px solid #4CAF50';
+      popupHint.style.borderRadius = '8px';
+      popupHint.style.padding = '10px';
+      popupHint.style.fontSize = '14px';
+      popupHint.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+      popupHint.style.zIndex = '1001';
+      
+      // Voeg pijltje aan de hint toe
+      popupHint.style.setProperty('--after-content', "''");
+      popupHint.style.setProperty('--after-position', 'absolute');
+      popupHint.style.setProperty('--after-bottom', '-10px');
+      popupHint.style.setProperty('--after-right', '20px');
+      popupHint.style.setProperty('--after-border-width', '10px 10px 0');
+      popupHint.style.setProperty('--after-border-style', 'solid');
+      popupHint.style.setProperty('--after-border-color', '#4CAF50 transparent transparent');
+      
+      // Animatie voor de hint
+      const keyframes = `
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+          40% {transform: translateY(-10px);}
+          60% {transform: translateY(-5px);}
+        }
+      `;
+      const style = document.createElement('style');
+      style.textContent = keyframes;
+      document.head.appendChild(style);
+      
+      popupHint.style.animation = 'bounce 2s infinite';
+      
+      templateContainer.appendChild(popupHint);
+    }
+    
+    templates.forEach((template, index) => {
+      const templateOption = document.createElement('div');
+      templateOption.className = 'template-option';
+      templateOption.style.width = '60px';
+      templateOption.style.height = '60px';
+      templateOption.style.border = '2px solid #ccc';
+      templateOption.style.borderRadius = '5px';
+      templateOption.style.margin = '5px 0';
+      templateOption.style.cursor = 'pointer';
+      templateOption.style.display = 'flex';
+      templateOption.style.justifyContent = 'center';
+      templateOption.style.alignItems = 'center';
+      templateOption.style.overflow = 'hidden';
+      
+      if (template === null) {
+        templateOption.style.backgroundColor = '#f0f0f0';
+        const plusSign = document.createElement('span');
+        plusSign.style.fontSize = '24px';
+        plusSign.textContent = '➕';
+        templateOption.appendChild(plusSign);
+      } else {
+        const img = document.createElement('img');
+        img.src = template;
+        img.alt = `Template ${index}`;
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+        templateOption.appendChild(img);
+      }
+      
+      templateOption.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectTemplate(template);
+      });
+      
+      templateMenu.appendChild(templateOption);
+    });
+    
+    templateButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      templateMenu.style.display = templateMenu.style.display === 'flex' ? 'none' : 'flex';
+      colorPickerMenu.style.display = 'none';
+      brushSizeMenu.style.display = 'none';
+      
+      if (isFirstVisit) {
+        isFirstVisit = false;
+        const popupHint = templateContainer.querySelector('.popup-hint');
+        if (popupHint) popupHint.style.display = 'none';
+      }
+    });
+    
+    templateContainer.appendChild(templateButton);
+    templateContainer.appendChild(templateMenu);
+    controls.appendChild(templateContainer);
+    
+    // Voeg controls toe aan de pagina
+    coloringActions.appendChild(controls);
+    
+    // Bevestigingsdialoog knoppen
+    document.getElementById('confirm-yes').addEventListener('click', confirmClearCanvas);
+    document.getElementById('confirm-no').addEventListener('click', () => {
+      confirmDialog.style.display = 'none';
+    });
+    
+    // Klikken buiten de menu's sluit ze
+    document.addEventListener('click', () => {
+      colorPickerMenu.style.display = 'none';
+      brushSizeMenu.style.display = 'none';
+      templateMenu.style.display = 'none';
+    });
+  }
+  
+  // Canvas grootte bijwerken
+  function updateCanvasSize() {
+    const rect = canvasContainer.getBoundingClientRect();
+    coloringCanvas.width = rect.width;
+    coloringCanvas.height = rect.height;
+    templateCanvas.width = rect.width;
+    templateCanvas.height = rect.height;
+    
+    // Teken opnieuw na resize
     redrawCanvas();
   }
   
-  // Canvas grootte aanpassen bij laden en resizen
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  
-  // Variabelen voor tekenen
-  let isDrawing = false;
-  let lastX = 0;
-  let lastY = 0;
-  
-  // Variabele voor huidige template
-  let currentTemplate = null;
-  
-  // Teken functies
+  // Teken starten
   function startDrawing(e) {
+    e.preventDefault();
     isDrawing = true;
-    const [x, y] = getMousePos(canvas, e);
-    lastX = x;
-    lastY = y;
     
-    // Start een nieuw pad
+    const rect = coloringCanvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
+    
     currentPath = { 
-      color: colorPicker.value, 
-      size: brushSize.value, 
-      points: [{x: lastX, y: lastY}] 
+      color: currentColor, 
+      size: brushSize, 
+      points: [{ x, y }] 
     };
+    
+    // Begin tekenpad
+    ctx.beginPath();
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = currentColor;
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
   }
   
+  // Teken verdergaan
   function draw(e) {
     if (!isDrawing) return;
+    e.preventDefault();
     
-    const [x, y] = getMousePos(canvas, e);
+    const rect = coloringCanvas.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const y = (e.clientY || e.touches[0].clientY) - rect.top;
     
-    // Voeg punt toe aan het huidige pad
-    if (currentPath) {
-      currentPath.points.push({x, y});
-    }
+    // Voeg punt toe aan pad
+    currentPath.points.push({ x, y });
     
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-    ctx.lineWidth = brushSize.value;
-    ctx.strokeStyle = colorPicker.value;
+    // Tekenen met vloeiende lijnen
+    const pointCount = currentPath.points.length;
+    if (pointCount < 2) return;
     
     ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
+    ctx.lineWidth = currentPath.size;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = currentPath.color;
     
-    // Creëer een vloeiende lijn met een kwadratische curve
-    const controlX = (lastX + x) / 2;
-    const controlY = (lastY + y) / 2;
-    ctx.quadraticCurveTo(controlX, controlY, x, y);
+    const lastPoint = currentPath.points[pointCount - 2];
+    const currentPoint = currentPath.points[pointCount - 1];
+    
+    if (pointCount < 3) {
+      // Voor de eerste twee punten, teken een rechte lijn
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(currentPoint.x, currentPoint.y);
+    } else {
+      // Gebruik een quadratische curve voor vloeiende lijnen
+      const controlX = (lastPoint.x + currentPoint.x) / 2;
+      const controlY = (lastPoint.y + currentPoint.y) / 2;
+      
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.quadraticCurveTo(controlX, controlY, currentPoint.x, currentPoint.y);
+    }
+    
     ctx.stroke();
-    
-    lastX = x;
-    lastY = y;
   }
   
+  // Teken stoppen
   function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
     
-    // Voeg pad toe aan geschiedenis als er punten zijn
     if (currentPath && currentPath.points.length > 0) {
       paths.push(currentPath);
       
       // Update tekening geschiedenis
-      drawHistory = drawHistory.slice(0, currentHistoryIndex + 1);
-      drawHistory.push([...paths]);
-      currentHistoryIndex = drawHistory.length - 1;
+      const newHistory = drawHistory.slice(0, currentHistoryIndex + 1);
+      newHistory.push([...paths]);
+      drawHistory = newHistory;
+      currentHistoryIndex = newHistory.length - 1;
     }
     
     currentPath = null;
   }
   
-  // Helper functie voor muis/touch positie
-  function getMousePos(canvas, e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    
-    if (e.type.includes('touch')) {
-      return [
-        (e.touches[0].clientX - rect.left) * scaleX,
-        (e.touches[0].clientY - rect.top) * scaleY
-      ];
-    } else {
-      return [
-        (e.clientX - rect.left) * scaleX,
-        (e.clientY - rect.top) * scaleY
-      ];
-    }
-  }
-  
-  // Functie om alles opnieuw te tekenen
+  // Canvas opnieuw tekenen
   function redrawCanvas() {
+    // Schoon canvas
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
     
     // Teken alle paden
     drawPaths();
     
-    // Teken template indien aanwezig
-    drawTemplate();
+    // Schoon template canvas
+    templateCtx.clearRect(0, 0, templateCanvas.width, templateCanvas.height);
+    
+    // Teken sjabloon als er één is geselecteerd
+    if (selectedTemplate) {
+      const img = new Image();
+      img.onload = function() {
+        templateCtx.drawImage(img, 0, 0, templateCanvas.width, templateCanvas.height);
+      };
+      img.src = selectedTemplate;
+    }
   }
   
-  // Functie om alle paden te tekenen
+  // Teken alle opgeslagen paden
   function drawPaths() {
     const currentPaths = currentHistoryIndex >= 0 ? drawHistory[currentHistoryIndex] : [];
-    
     currentPaths.forEach(path => {
+      if (path.points.length < 2) return;
+      
       ctx.beginPath();
       ctx.lineWidth = path.size;
       ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
       ctx.strokeStyle = path.color;
       
-      path.points.forEach((point, index) => {
-        if (index === 0) {
-          ctx.moveTo(point.x, point.y);
-        } else if (index === 1) {
-          ctx.lineTo(point.x, point.y);
+      // Begin met het eerste punt
+      ctx.moveTo(path.points[0].x, path.points[0].y);
+      
+      // Voor elk volgend punt, teken vloeiende lijnen
+      for (let i = 1; i < path.points.length; i++) {
+        if (i === 1) {
+          // Eerste segment is een rechte lijn
+          ctx.lineTo(path.points[i].x, path.points[i].y);
         } else {
-          const prevPoint = path.points[index - 1];
-          const controlX = (prevPoint.x + point.x) / 2;
-          const controlY = (prevPoint.y + point.y) / 2;
-          ctx.quadraticCurveTo(controlX, controlY, point.x, point.y);
+          // Volgende segmenten gebruiken quadratische curves
+          const controlX = (path.points[i-1].x + path.points[i].x) / 2;
+          const controlY = (path.points[i-1].y + path.points[i].y) / 2;
+          ctx.quadraticCurveTo(controlX, controlY, path.points[i].x, path.points[i].y);
         }
-      });
+      }
       
       ctx.stroke();
     });
   }
   
-  // Functie om template te tekenen
-  function drawTemplate() {
-    templateCtx.clearRect(0, 0, templateCanvas.width, templateCanvas.height);
-    
-    if (currentTemplate) {
-      const img = new Image();
-      img.onload = () => {
-        templateCtx.drawImage(img, 0, 0, templateCanvas.width, templateCanvas.height);
-      };
-      img.src = currentTemplate;
-    }
-  }
-  
-  // Ongedaan maken functie
+  // Undo functie
   function undo() {
     if (currentHistoryIndex > 0) {
       currentHistoryIndex--;
@@ -217,116 +555,93 @@ function initColoringCanvas() {
     }
   }
   
-  // Functie om tekening op te slaan
-  function saveDrawing() {
-    // Creëer een tijdelijke canvas om tekening en template te combineren
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-    
-    // Teken de tekening
-    tempCtx.drawImage(canvas, 0, 0);
-    
-    // Teken de template
-    tempCtx.drawImage(templateCanvas, 0, 0);
-    
-    // Creëer download link
-    const link = document.createElement('a');
-    link.download = 'mijn_kleurplaat.png';
-    link.href = tempCanvas.toDataURL('image/png');
-    link.click();
+  // Wis canvas bevestiging tonen
+  function handleClearCanvas() {
+    confirmDialog.style.display = 'flex';
   }
   
-  // Functie om bevestiging voor wissen te vragen
-  function confirmClear() {
-    if (confirm('Weet je zeker dat je de tekening wilt wissen?')) {
-      clearCanvas();
-      typeSpeechMessage("Je hebt een schoon canvas! Wat ga je nu tekenen?");
-    }
-  }
-  
-  // Functie om canvas te wissen
-  function clearCanvas() {
+  // Canvas wissen bevestigd
+  function confirmClearCanvas() {
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
+    
+    templateCtx.clearRect(0, 0, templateCanvas.width, templateCanvas.height);
+    
     paths = [];
     drawHistory = [];
     currentHistoryIndex = -1;
-    currentTemplate = null;
-    templateCtx.clearRect(0, 0, templateCanvas.width, templateCanvas.height);
-  }
-  
-  // Functie om template te laden
-  function loadTemplate() {
-    // Maak een lijst van beschikbare templates
-    const templates = [
-      { name: "Leeg vel", url: null },
-      { name: "Knof", url: "images/kleurplaten/kleurplaat-knof1.png" },
-      { name: "Kok", url: "images/kleurplaten/kleurplaat-kok1.png" }
-    ];
+    selectedTemplate = null;
     
-    // Toon een simpele keuze dialoog
-    let choice = "Kies een kleurplaat:\n";
-    templates.forEach((template, index) => {
-      choice += `${index}. ${template.name}\n`;
-    });
+    confirmDialog.style.display = 'none';
+  }
+  
+  // Afbeelding downloaden
+  function downloadImage() {
+    const downloadCanvas = document.createElement('canvas');
+    downloadCanvas.width = coloringCanvas.width;
+    downloadCanvas.height = coloringCanvas.height;
+    const downloadCtx = downloadCanvas.getContext('2d');
     
-    const selection = prompt(choice, "0");
-    if (selection !== null && selection !== "") {
-      const index = parseInt(selection);
-      if (!isNaN(index) && index >= 0 && index < templates.length) {
-        currentTemplate = templates[index].url;
-        clearCanvas();
-        drawTemplate();
-        typeSpeechMessage(`Je hebt ${templates[index].name} gekozen! Begin maar met kleuren!`);
-      }
-    }
+    // Teken de kleuren
+    downloadCtx.drawImage(coloringCanvas, 0, 0);
+    
+    // Teken de sjabloon er bovenop
+    downloadCtx.drawImage(templateCanvas, 0, 0);
+    
+    // Download
+    const link = document.createElement('a');
+    link.download = 'mijn_kleurplaat.png';
+    link.href = downloadCanvas.toDataURL();
+    link.click();
   }
   
-  // Maak een "undo" knop
-  const undoButton = document.createElement('button');
-  undoButton.id = 'undo-button';
-  undoButton.textContent = '↩️ Ongedaan maken';
-  undoButton.className = 'coloring-button';
-  document.querySelector('.drawing-tools').appendChild(undoButton);
-  
-  // Event listeners voor tekenen
-  canvas.addEventListener('mousedown', startDrawing);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', stopDrawing);
-  canvas.addEventListener('mouseout', stopDrawing);
-  
-  canvas.addEventListener('touchstart', startDrawing);
-  canvas.addEventListener('touchmove', draw);
-  canvas.addEventListener('touchend', stopDrawing);
-  
-  // Event listeners voor knoppen
-  if (clearButton) {
-    clearButton.addEventListener('click', confirmClear);
+  // Sjabloon selecteren
+  function selectTemplate(template) {
+    selectedTemplate = template;
+    const templateMenu = document.querySelector('.template-menu');
+    if (templateMenu) templateMenu.style.display = 'none';
+    
+    // Reset tekening
+    paths = [];
+    drawHistory = [];
+    currentHistoryIndex = -1;
+    
+    redrawCanvas();
   }
   
-  if (undoButton) {
-    undoButton.addEventListener('click', undo);
+  // Event listeners toevoegen
+  function addEventListeners() {
+    // Canvas events
+    coloringCanvas.addEventListener('mousedown', startDrawing);
+    coloringCanvas.addEventListener('mousemove', draw);
+    coloringCanvas.addEventListener('mouseup', stopDrawing);
+    coloringCanvas.addEventListener('mouseout', stopDrawing);
+    
+    // Touch events
+    coloringCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+    coloringCanvas.addEventListener('touchmove', draw, { passive: false });
+    coloringCanvas.addEventListener('touchend', stopDrawing);
+    
+    // Resize event
+    window.addEventListener('resize', updateCanvasSize);
   }
   
-  if (saveButton) {
-    saveButton.addEventListener('click', saveDrawing);
+  // Initialisatie
+  function init() {
+    // Bouw UI
+    buildUI();
+    
+    // Canvas voorbereiden
+    updateCanvasSize();
+    
+    // Teken witte achtergrond
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
+    
+    // Event listeners toevoegen
+    addEventListeners();
   }
   
-  if (loadTemplateButton) {
-    loadTemplateButton.addEventListener('click', loadTemplate);
-  }
-  
-  // Kleurenknoppen
-  document.querySelectorAll('.color-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      colorPicker.value = this.dataset.color;
-      typeSpeechMessage(`Je hebt ${this.dataset.name} gekozen! Een mooie kleur!`);
-    });
-  });
-  
-  // Initialiseer met een wit canvas
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+  // Start de applicatie
+  init();
+});
