@@ -4,13 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const coloringCanvas = document.getElementById('coloring-canvas');
   const ctx = coloringCanvas.getContext('2d');
   
-  // Toon welkomstbericht van Knof
-  setTimeout(() => {
-    if (typeof typeSpeechMessage === 'function') {
-      typeSpeechMessage("Welkom bij mijn kleurboek! Wat zullen we gaan kleuren?");
-    }
-  }, 500);
-  
   // Creëer het sjablooncanvas
   const templateCanvas = document.createElement('canvas');
   templateCanvas.id = 'template-canvas';
@@ -33,6 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const drawingTools = document.querySelector('.drawing-tools');
   const coloringActions = document.querySelector('.coloring-actions');
   
+  // Verwijder marges en padding van body en html om scrolling te voorkomen
+  document.body.style.margin = '0';
+  document.body.style.padding = '0';
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.margin = '0';
+  document.documentElement.style.padding = '0';
+  document.documentElement.style.overflow = 'hidden';
+  
   // Vervanging van bestaande tools door nieuwe interface
   colorTools.innerHTML = '';
   drawingTools.innerHTML = '';
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.padding = '10px';
   controls.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Transparante achtergrond
   controls.style.width = '100%';
-  controls.style.marginTop = '10px';
+  controls.style.marginTop = '0'; // Verwijder margin om ruimte te besparen
   
   // Creëer bevestigingsdialoog
   const confirmDialog = document.createElement('div');
@@ -108,10 +109,20 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // UI bouwen
   function buildUI() {
-    // Maak coloring-container flexibel
-    document.querySelector('.coloring-container').style.display = 'flex';
-    document.querySelector('.coloring-container').style.flexDirection = 'column';
-    document.querySelector('.coloring-container').style.height = 'calc(100vh - 120px)'; // Ruimte voor top en bottom nav zonder titel
+    // Maak coloring-container flexibel en vul volledige ruimte tussen menubalken
+    const coloringContainer = document.querySelector('.coloring-container');
+    coloringContainer.style.display = 'flex';
+    coloringContainer.style.flexDirection = 'column';
+    coloringContainer.style.height = '100%';
+    coloringContainer.style.margin = '0';
+    coloringContainer.style.padding = '0';
+    
+    // Verwijder margin van page-title om ruimte te besparen
+    const pageTitle = document.querySelector('.page-title');
+    if (pageTitle) {
+      pageTitle.style.margin = '0';
+      pageTitle.style.padding = '5px 0';
+    }
 
     // Kleurenkiezer knop en container
     const colorPickerContainer = document.createElement('div');
@@ -135,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPickerMenu.style.bottom = '100%';
     colorPickerMenu.style.left = '50%';
     colorPickerMenu.style.transform = 'translateX(-50%)';
-    colorPickerMenu.style.backgroundColor = 'white';
+    colorPickerMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     colorPickerMenu.style.borderRadius = '10px';
     colorPickerMenu.style.padding = '5px';
     colorPickerMenu.style.marginBottom = '10px';
@@ -194,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeMenu.style.bottom = '100%';
     brushSizeMenu.style.left = '50%';
     brushSizeMenu.style.transform = 'translateX(-50%)';
-    brushSizeMenu.style.backgroundColor = 'white';
+    brushSizeMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     brushSizeMenu.style.borderRadius = '10px';
     brushSizeMenu.style.padding = '5px';
     brushSizeMenu.style.marginBottom = '10px';
@@ -230,6 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeContainer.appendChild(brushSizeButton);
     brushSizeContainer.appendChild(brushSizeMenu);
     controls.appendChild(brushSizeContainer);
+    
+    // Rest van je UI code...
     
     // Undo knop
     const undoButton = document.createElement('button');
@@ -291,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     templateMenu.style.bottom = '100%';
     templateMenu.style.left = '50%';
     templateMenu.style.transform = 'translateX(-50%)';
-    templateMenu.style.backgroundColor = 'white';
+    templateMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     templateMenu.style.padding = '5px';
     templateMenu.style.borderRadius = '5px';
     templateMenu.style.zIndex = '100';
@@ -410,23 +423,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Canvas grootte bijwerken
+  // Canvas grootte bijwerken - verbeterd om te zorgen voor perfecte scaling
   function updateCanvasSize() {
-    // Bereken beschikbare hoogte tussen top en bottom navigatie
+    // Force direct update voor alle container hoogtes
     const appContainer = document.querySelector('.app-container');
-    const appContainerRect = appContainer.getBoundingClientRect();
+    if (appContainer) {
+      appContainer.style.height = '100%';
+      appContainer.style.overflow = 'hidden';
+    }
     
-    // Bepaal beschikbare hoogte voor canvas (pagina hoogte - top nav - bottom nav - padding)
+    // Verzamel alle elementen die hoogte in beslag nemen
     const topNav = document.getElementById('top-nav-container');
     const bottomNav = document.getElementById('bottom-nav-container');
+    const pageTitle = document.querySelector('.page-title');
+    const coloringActions = document.querySelector('.coloring-actions');
+    
+    // Bereken hoogtes
     const topNavHeight = topNav ? topNav.offsetHeight : 0;
     const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
-    const controlsHeight = controls ? controls.offsetHeight : 50;
+    const pageTitleHeight = pageTitle ? pageTitle.offsetHeight : 0;
+    const actionsHeight = coloringActions ? coloringActions.offsetHeight : 0;
     
-    // Zonder de titel hebben we meer ruimte
-    const availableHeight = window.innerHeight - topNavHeight - bottomNavHeight - controlsHeight - 40; // Extra marge
+    // Bereken exacte beschikbare ruimte
+    const windowHeight = window.innerHeight;
+    const availableHeight = windowHeight - topNavHeight - bottomNavHeight - pageTitleHeight - actionsHeight;
     
-    // Stel canvas container hoogte in
+    // Stel canvas container hoogte in op beschikbare ruimte
     canvasContainer.style.height = `${availableHeight}px`;
     
     // Pas canvas grootte aan
@@ -438,6 +460,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Teken opnieuw na resize
     redrawCanvas();
   }
+  
+  // Rest van je code blijft hetzelfde...
   
   // Teken starten
   function startDrawing(e) {
@@ -657,6 +681,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Resize event
     window.addEventListener('resize', updateCanvasSize);
+    
+    // Force een onmiddellijke resize bij orientatie verandering
+    window.addEventListener('orientationchange', function() {
+      setTimeout(updateCanvasSize, 100); // Korte timeout om de browser tijd te geven
+    });
   }
   
   // Initialisatie
@@ -664,8 +693,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Bouw UI
     buildUI();
     
-    // Canvas voorbereiden
-    updateCanvasSize();
+    // Canvas voorbereiden en onmiddellijk grootte aanpassen
+    setTimeout(updateCanvasSize, 0); // Gebruik setTimeout om zeker te zijn dat de DOM geladen is
     
     // Teken witte achtergrond
     ctx.fillStyle = 'white';
