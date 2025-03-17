@@ -8,6 +8,54 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    /* Extra stijlen voor betere schaling */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 100px); /* Ruimte voor top en bottom navigatie */
+      padding: 0;
+    }
+    
+    .coloring-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+      position: relative;
+    }
+    
+    #canvas-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #coloring-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .controls {
+      position: fixed;
+      bottom: 60px; /* Ruimte voor bottom navigatie */
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -34,13 +82,10 @@
   <div class="app-container">    
     <div class="coloring-container">
       <div class="color-tools"></div>
-      
       <div class="drawing-tools"></div>
-      
       <div id="canvas-container">
         <canvas id="coloring-canvas"></canvas>
       </div>
-      
       <div class="coloring-actions"></div>
     </div>
   </div>
