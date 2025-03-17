@@ -48,20 +48,16 @@
       height: 100%;
     }
     
+    /* Expliciete styling voor toolbox container */
     .toolbox-container {
-    width: 100%;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-    padding: 5px 0;
-    z-index: 10;
-  }
-  
-  /* De controls hoeven niet meer fixed te zijn */
-  .controls {
-    position: relative;
-    bottom: auto;
-    z-index: 10;
-  }
+      width: 100%;
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+      margin: 0;
+      padding: 0;
+      z-index: 100;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -87,19 +83,18 @@
 
   <!-- Hoofdcontent - Kleurboek -->
   <div class="app-container">    
-  <div class="coloring-container">
-    <!-- Nieuwe toolbox container boven het canvas -->
+    <!-- Toolbox is nu direct onder app-container -->
     <div class="toolbox-container"></div>
     
-    <div class="color-tools"></div>
-    <div class="drawing-tools"></div>
-    <div id="canvas-container">
-      <canvas id="coloring-canvas"></canvas>
+    <div class="coloring-container">
+      <div class="color-tools"></div>
+      <div class="drawing-tools"></div>
+      <div id="canvas-container">
+        <canvas id="coloring-canvas"></canvas>
+      </div>
+      <div class="coloring-actions"></div>
     </div>
-    <!-- Deze div bewaarde de oude toolbox onderaan, die we nu leeg laten -->
-    <div class="coloring-actions"></div>
   </div>
-</div>
 
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
