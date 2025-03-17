@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Knof's Online Speelbos</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+</head>
+<body>
+  <!-- SVG filters for hand-drawn effect -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Hoofdcontent -->
+  <div class="app-container">
+    <div class="buttons-container">
+      <div class="button" id="blij-btn">
+        <div class="button-bg"></div>
+        <span>
+          <div class="button-emoji">😃</div>
+          <div class="button-text">Ik voel me blij</div>
+        </span>
+      </div>
+      <div class="button" id="creatief-btn">
+        <div class="button-bg"></div>
+        <span>
+          <div class="button-emoji">✨</div>
+          <div class="button-text">Ik voel me creatief</div>
+        </span>
+      </div>
+      <div class="button" id="nieuwsgierig-btn">
+        <div class="button-bg"></div>
+        <span>
+          <div class="button-emoji">🤔</div>
+          <div class="button-text">Ik ben nieuwsgierig</div>
+        </span>
+      </div>
+      <div class="button" id="verrassing-btn">
+        <div class="button-bg"></div>
+        <span>
+          <div class="button-emoji">🎲</div>
+          <div class="button-text">Verras me!</div>
+        </span>
+      </div>
+    </div>
+    
+    <div class="sections-container">
+      <!-- Games Section -->
+      <div class="section" id="games-section">
+        <div class="section-bg-games"></div>
+        <div class="section-title">Spelletjes!</div>
+        <div class="section-subtitle">Kies een leuk spel om te spelen</div>
+        <span class="section-arrow"></span>
+      </div>
+      
+      <!-- Coloring Boek Section -->
+      <div class="section" id="coloring-section">
+        <div class="section-bg-coloring"></div>
+        <div class="section-title">Kleurboek</div>
+        <div class="section-subtitle">Maak je eigen kunstwerk!</div>
+        <span class="section-arrow"></span>
+      </div>
+
+      <!-- Placemat Section -->
+      <div class="section" id="placemat-section">
+        <div class="section-bg-placemat"></div>
+        <div class="section-title">Interactieve Placemat</div>
+        <div class="section-subtitle">Speel met AR!</div>
+        <span class="section-arrow"></span>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="section" id="chat-section">
+        <div class="section-bg-chat"></div>
+        <div class="section-title">Praten met Knof</div>
+        <div class="section-subtitle">Stel vragen aan je vriend!</div>
+        <span class="section-arrow"></span>
+      </div>
+    </div>
+  </div> 
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/common.js"></script>
+  <script>
+    // Home-specifieke code
+    document.addEventListener('DOMContentLoaded', function() {
+      // Welkomstbericht tonen wanneer de pagina geladen is
+      setTimeout(() => {
+        typeSpeechMessage("Hoi! Ik ben Knof. Hoe voel je je vandaag?");
+      }, 500);
+      
+      // Event listeners voor de stemmings-buttons
+      document.getElementById('blij-btn').addEventListener('click', () => {
+        window.location.href = 'games.html';
+      });
+      
+      document.getElementById('creatief-btn').addEventListener('click', () => {
+        window.location.href = 'coloring.html';
+      });
+      
+      document.getElementById('nieuwsgierig-btn').addEventListener('click', () => {
+        window.location.href = 'chat.html';
+      });
+      
+      document.getElementById('verrassing-btn').addEventListener('click', () => {
+        const sections = ['games.html', 'coloring.html', 'placemat.html', 'chat.html'];
+        const randomSection = sections[Math.floor(Math.random() * sections.length)];
+        window.location.href = randomSection;
+      });
+      
+      // Sectie klikbare gebieden
+      document.getElementById('games-section').addEventListener('click', () => {
+        window.location.href = 'games.html';
+      });
+      
+      document.getElementById('coloring-section').addEventListener('click', () => {
+        window.location.href = 'coloring.html';
+      });
+      
+      document.getElementById('placemat-section').addEventListener('click', () => {
+        window.location.href = 'placemat.html';
+      });
+      
+      document.getElementById('chat-section').addEventListener('click', () => {
+        window.location.href = 'chat.html';
+      });
+    });
+  </script>
+</body>
+</html>
