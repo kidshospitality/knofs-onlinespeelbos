@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Raad mijn Tekening - Knof's Speelbos</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="../images/icon-192.png">
+  <style>
+    .drawing-game-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .drawing-area {
+      width: 100%;
+      height: 300px;
+      background-color: white;
+      border: 2px solid #FF7BF3;
+      border-radius: 10px;
+      margin: 20px 0;
+      position: relative;
+      filter: url(#rough-filter);
+      overflow: hidden;
+    }
+    
+    .drawing-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    
+    .drawing-option {
+      padding: 8px 15px;
+      background-color: #ADDFFF;
+      border: 2px solid #00A4CC;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      filter: url(#rough-filter);
+    }
+    
+    .drawing-option:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG filters -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Hoofdcontent - Raad mijn Tekening Spel -->
+  <div class="app-container">
+    <h1 class="page-title">Raad mijn Tekening</h1>
+    
+    <div class="drawing-game-container">
+      <div class="game-controls">
+        <button id="start-game" class="game-button">Start Spel</button>
+        <button id="back-to-games" class="game-button">Terug naar Spelletjes</button>
+      </div>
+      
+      <div class="drawing-score">Score: <span id="score">0</span></div>
+      <div class="drawing-timer">Tijd: <span id="timer">60</span>s</div>
+      
+      <div id="drawing-area" class="drawing-area">
+        <!-- Tekening verschijnt hier -->
+      </div>
+      
+      <div class="drawing-options" id="drawing-options">
+        <!-- Opties worden hier dynamisch ingevoegd -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Scripts -->
+  <script src="../js/common.js"></script>
+  <script src="../js/games.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Welkomstbericht voor het spel
+      setTimeout(() => {
+        typeSpeechMessage("In dit spel ga ik iets tekenen en jij moet raden wat het is! Klik op 'Start Spel' om te beginnen.");
+      }, 500);
+      
+      // Bekijk het script voor volledige implementatie
+      // Hier zou de game-logica komen
+    });
+  </script>
+</body>
+</html>
