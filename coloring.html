@@ -48,13 +48,20 @@
       height: 100%;
     }
     
-    .controls {
-      position: fixed;
-      bottom: 60px; /* Ruimte voor bottom navigatie */
-      left: 0;
-      width: 100%;
-      z-index: 10;
-    }
+    .toolbox-container {
+    width: 100%;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+    z-index: 10;
+  }
+  
+  /* De controls hoeven niet meer fixed te zijn */
+  .controls {
+    position: relative;
+    bottom: auto;
+    z-index: 10;
+  }
   </style>
 </head>
 <body>
