@@ -80,15 +80,19 @@
 
   <!-- Hoofdcontent - Kleurboek -->
   <div class="app-container">    
-    <div class="coloring-container">
-      <div class="color-tools"></div>
-      <div class="drawing-tools"></div>
-      <div id="canvas-container">
-        <canvas id="coloring-canvas"></canvas>
-      </div>
-      <div class="coloring-actions"></div>
+  <div class="coloring-container">
+    <!-- Nieuwe toolbox container boven het canvas -->
+    <div class="toolbox-container"></div>
+    
+    <div class="color-tools"></div>
+    <div class="drawing-tools"></div>
+    <div id="canvas-container">
+      <canvas id="coloring-canvas"></canvas>
     </div>
+    <!-- Deze div bewaarde de oude toolbox onderaan, die we nu leeg laten -->
+    <div class="coloring-actions"></div>
   </div>
+</div>
 
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
