@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-  console.log("DOM geladen - Initialisatie kleurboek app");
-  
   // Hoofdelementen
   const canvasContainer = document.getElementById('canvas-container');
   const coloringCanvas = document.getElementById('coloring-canvas');
   const ctx = coloringCanvas.getContext('2d');
+  const drawingToolbar = document.getElementById('drawing-toolbar');
   
   // Creëer het sjablooncanvas
   const templateCanvas = document.createElement('canvas');
@@ -16,51 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
   templateCanvas.style.width = '100%';
   templateCanvas.style.height = '100%';
   canvasContainer.appendChild(templateCanvas);
-  canvasContainer.style.position = 'relative';
-  canvasContainer.style.flex = '1'; // Laat het canvas container element groeien
-  canvasContainer.style.display = 'flex'; // Zorg ervoor dat het canvas kan uitrekken
-  canvasContainer.style.width = '100%';
-  canvasContainer.style.height = '100%';
-  canvasContainer.style.margin = '0'; // Verwijder alle marges
-  canvasContainer.style.padding = '0'; // Verwijder alle padding
   const templateCtx = templateCanvas.getContext('2d');
-  
-  // UI-elementen
-  const colorTools = document.querySelector('.color-tools');
-  const drawingTools = document.querySelector('.drawing-tools');
-  const coloringActions = document.querySelector('.coloring-actions');
-  
-  // Zoek de toolbox direct onder app-container (nieuwe structuur)
-  let toolboxContainer = document.querySelector('.app-container > .toolbox-container');
-  console.log("Toolbox container gevonden:", !!toolboxContainer);
-  
-  // Verwijder marges en padding van body en html om scrolling te voorkomen
-  document.body.style.margin = '0';
-  document.body.style.padding = '0';
-  document.body.style.overflow = 'hidden';
-  document.documentElement.style.margin = '0';
-  document.documentElement.style.padding = '0';
-  document.documentElement.style.overflow = 'hidden';
-  
-  // Vervanging van bestaande tools door nieuwe interface
-  colorTools.innerHTML = '';
-  drawingTools.innerHTML = '';
-  coloringActions.innerHTML = '';
-  
-  // Creëer nieuwe controlebalk
-  const controls = document.createElement('div');
-  controls.className = 'controls';
-  controls.style.display = 'flex';
-  controls.style.justifyContent = 'space-around';
-  controls.style.alignItems = 'center';
-  controls.style.padding = '8px'; // Iets meer padding voor betere zichtbaarheid
-  controls.style.backgroundColor = '#f8f8f8'; // Solide achtergrond in plaats van transparant
-  controls.style.width = '100%';
-  controls.style.minHeight = '50px'; // Minimale hoogte om zichtbaarheid te garanderen
   
   // Creëer bevestigingsdialoog
   const confirmDialog = document.createElement('div');
-  confirmDialog.className = 'confirm-dialog';
   confirmDialog.style.display = 'none';
   confirmDialog.style.position = 'fixed';
   confirmDialog.style.top = '50%';
@@ -102,100 +60,56 @@ document.addEventListener('DOMContentLoaded', function() {
   // Penseel groottes
   const brushSizes = [3, 8, 15];
   
-  // Template afbeeldingen - pas de paden aan naar waar je ze opslaat
+  // Template afbeeldingen
   const templates = [
     null, // Leeg vel
     'images/kleurplaten/kleurplaat-knof1.png',
     'images/kleurplaten/kleurplaat-kok1.png'
   ];
   
-  // Geen eerste bezoek hint meer
-  let isFirstVisit = false;
-  
-  // UI bouwen
-  function buildUI() {
-    console.log("buildUI wordt uitgevoerd");
+  // NIEUWE FUNCTIE: Bouw de toolbar
+  function buildToolbar() {
+    // Maak toolbar leeg
+    drawingToolbar.innerHTML = '';
     
-    // Maak coloring-container flexibel en vul volledige ruimte tussen menubalken
-    const coloringContainer = document.querySelector('.coloring-container');
-    coloringContainer.style.display = 'flex';
-    coloringContainer.style.flexDirection = 'column';
-    coloringContainer.style.height = '100%';
-    coloringContainer.style.margin = '0';
-    coloringContainer.style.padding = '0';
-    coloringContainer.style.width = '100%';
-    
-    // Stijl voor de toolbox container - zorg voor duidelijke zichtbaarheid
-    toolboxContainer.style.width = '100%';
-    toolboxContainer.style.backgroundColor = '#f8f8f8';
-    toolboxContainer.style.borderBottom = '1px solid #ddd';
-    toolboxContainer.style.display = 'block'; // Zorg dat het zichtbaar is
-    toolboxContainer.style.minHeight = '50px'; // Garandeer minimum hoogte
-    toolboxContainer.style.margin = '0';
-    toolboxContainer.style.padding = '0';
-    toolboxContainer.style.zIndex = '100';
-    
-    // App container moet ook maximale ruimte benutten
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-      appContainer.style.height = '100%';
-      appContainer.style.margin = '0';
-      appContainer.style.padding = '0';
-      appContainer.style.display = 'flex';
-      appContainer.style.flexDirection = 'column';
-      appContainer.style.overflow = 'hidden';
-    }
-    
-    // Verwijder margin en verminder padding van page-title om ruimte te besparen
-    const pageTitle = document.querySelector('.page-title');
-    if (pageTitle) {
-      pageTitle.style.margin = '0';
-      pageTitle.style.padding = '2px 0';
-      pageTitle.style.fontSize = '24px';
-    }
-
-    // Kleurenkiezer knop en container
+    // Kleurenkiezer
     const colorPickerContainer = document.createElement('div');
     colorPickerContainer.style.position = 'relative';
     
     const colorPickerButton = document.createElement('button');
     colorPickerButton.textContent = '🎨';
-    colorPickerButton.className = 'control-button';
     colorPickerButton.style.fontSize = '24px';
     colorPickerButton.style.background = 'none';
     colorPickerButton.style.border = 'none';
     colorPickerButton.style.cursor = 'pointer';
-    colorPickerButton.style.padding = '5px';
     
     const colorPickerMenu = document.createElement('div');
-    colorPickerMenu.className = 'color-picker-menu';
     colorPickerMenu.style.display = 'none';
-    colorPickerMenu.style.flexWrap = 'wrap';
-    colorPickerMenu.style.justifyContent = 'center';
     colorPickerMenu.style.position = 'absolute';
     colorPickerMenu.style.top = '100%';
     colorPickerMenu.style.left = '50%';
     colorPickerMenu.style.transform = 'translateX(-50%)';
-    colorPickerMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-    colorPickerMenu.style.borderRadius = '10px';
+    colorPickerMenu.style.backgroundColor = 'white';
+    colorPickerMenu.style.borderRadius = '5px';
     colorPickerMenu.style.padding = '5px';
-    colorPickerMenu.style.marginTop = '5px';
-    colorPickerMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+    colorPickerMenu.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
     colorPickerMenu.style.zIndex = '100';
+    colorPickerMenu.style.display = 'none';
+    colorPickerMenu.style.flexWrap = 'wrap';
+    colorPickerMenu.style.width = '120px';
+    colorPickerMenu.style.justifyContent = 'center';
     
     colors.forEach(color => {
       const colorOption = document.createElement('div');
-      colorOption.className = 'color-option';
       colorOption.style.width = '30px';
       colorOption.style.height = '30px';
-      colorOption.style.borderRadius = '50%';
-      colorOption.style.border = '2px solid white';
       colorOption.style.margin = '2px';
-      colorOption.style.cursor = 'pointer';
+      colorOption.style.borderRadius = '50%';
       colorOption.style.backgroundColor = color;
+      colorOption.style.border = '2px solid #ddd';
+      colorOption.style.cursor = 'pointer';
       
-      colorOption.addEventListener('click', (e) => {
-        e.stopPropagation();
+      colorOption.addEventListener('click', () => {
         currentColor = color;
         colorPickerMenu.style.display = 'none';
       });
@@ -212,48 +126,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     colorPickerContainer.appendChild(colorPickerButton);
     colorPickerContainer.appendChild(colorPickerMenu);
-    controls.appendChild(colorPickerContainer);
+    drawingToolbar.appendChild(colorPickerContainer);
     
-    // Penseelgrootte knop en container
+    // Penseelgrootte
     const brushSizeContainer = document.createElement('div');
     brushSizeContainer.style.position = 'relative';
     
     const brushSizeButton = document.createElement('button');
     brushSizeButton.textContent = '🖌️';
-    brushSizeButton.className = 'control-button';
     brushSizeButton.style.fontSize = '24px';
     brushSizeButton.style.background = 'none';
     brushSizeButton.style.border = 'none';
     brushSizeButton.style.cursor = 'pointer';
-    brushSizeButton.style.padding = '5px';
     
     const brushSizeMenu = document.createElement('div');
-    brushSizeMenu.className = 'brush-size-menu';
     brushSizeMenu.style.display = 'none';
-    brushSizeMenu.style.flexDirection = 'column-reverse';
     brushSizeMenu.style.position = 'absolute';
     brushSizeMenu.style.top = '100%';
     brushSizeMenu.style.left = '50%';
     brushSizeMenu.style.transform = 'translateX(-50%)';
-    brushSizeMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-    brushSizeMenu.style.borderRadius = '10px';
+    brushSizeMenu.style.backgroundColor = 'white';
+    brushSizeMenu.style.borderRadius = '5px';
     brushSizeMenu.style.padding = '5px';
-    brushSizeMenu.style.marginTop = '5px';
-    brushSizeMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+    brushSizeMenu.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
     brushSizeMenu.style.zIndex = '100';
+    brushSizeMenu.style.flexDirection = 'column';
     
     brushSizes.forEach(size => {
       const sizeOption = document.createElement('button');
-      sizeOption.className = 'brush-size-option';
-      sizeOption.style.fontSize = `${size * 2}px`;
+      sizeOption.textContent = '🖌️';
+      sizeOption.style.fontSize = `${size * 1.5}px`;
       sizeOption.style.background = 'none';
       sizeOption.style.border = 'none';
       sizeOption.style.cursor = 'pointer';
-      sizeOption.style.padding = '5px';
-      sizeOption.textContent = '🖌️';
+      sizeOption.style.padding = '5px 10px';
       
-      sizeOption.addEventListener('click', (e) => {
-        e.stopPropagation();
+      sizeOption.addEventListener('click', () => {
         brushSize = size;
         brushSizeMenu.style.display = 'none';
       });
@@ -270,93 +178,80 @@ document.addEventListener('DOMContentLoaded', function() {
     
     brushSizeContainer.appendChild(brushSizeButton);
     brushSizeContainer.appendChild(brushSizeMenu);
-    controls.appendChild(brushSizeContainer);
+    drawingToolbar.appendChild(brushSizeContainer);
     
     // Undo knop
     const undoButton = document.createElement('button');
     undoButton.textContent = '↩️';
-    undoButton.className = 'control-button';
     undoButton.style.fontSize = '24px';
     undoButton.style.background = 'none';
     undoButton.style.border = 'none';
     undoButton.style.cursor = 'pointer';
-    undoButton.style.padding = '5px';
-    
     undoButton.addEventListener('click', undo);
-    controls.appendChild(undoButton);
+    drawingToolbar.appendChild(undoButton);
     
     // Wis knop
     const clearButton = document.createElement('button');
     clearButton.textContent = '🗑️';
-    clearButton.className = 'control-button';
     clearButton.style.fontSize = '24px';
     clearButton.style.background = 'none';
     clearButton.style.border = 'none';
     clearButton.style.cursor = 'pointer';
-    clearButton.style.padding = '5px';
-    
     clearButton.addEventListener('click', handleClearCanvas);
-    controls.appendChild(clearButton);
+    drawingToolbar.appendChild(clearButton);
     
     // Download knop
     const downloadButton = document.createElement('button');
     downloadButton.textContent = '💾';
-    downloadButton.className = 'control-button';
     downloadButton.style.fontSize = '24px';
     downloadButton.style.background = 'none';
     downloadButton.style.border = 'none';
     downloadButton.style.cursor = 'pointer';
-    downloadButton.style.padding = '5px';
-    
     downloadButton.addEventListener('click', downloadImage);
-    controls.appendChild(downloadButton);
+    drawingToolbar.appendChild(downloadButton);
     
-    // Template knop en container
+    // Template knop
     const templateContainer = document.createElement('div');
     templateContainer.style.position = 'relative';
     
     const templateButton = document.createElement('button');
     templateButton.textContent = '🖼️';
-    templateButton.className = 'control-button';
     templateButton.style.fontSize = '24px';
     templateButton.style.background = 'none';
     templateButton.style.border = 'none';
     templateButton.style.cursor = 'pointer';
-    templateButton.style.padding = '5px';
     
     const templateMenu = document.createElement('div');
-    templateMenu.className = 'template-menu';
     templateMenu.style.display = 'none';
-    templateMenu.style.flexDirection = 'column';
     templateMenu.style.position = 'absolute';
     templateMenu.style.top = '100%';
     templateMenu.style.left = '50%';
     templateMenu.style.transform = 'translateX(-50%)';
-    templateMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-    templateMenu.style.padding = '5px';
+    templateMenu.style.backgroundColor = 'white';
     templateMenu.style.borderRadius = '5px';
-    templateMenu.style.marginTop = '5px';
+    templateMenu.style.padding = '5px';
+    templateMenu.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
     templateMenu.style.zIndex = '100';
+    templateMenu.style.flexDirection = 'column';
     
     templates.forEach((template, index) => {
       const templateOption = document.createElement('div');
-      templateOption.className = 'template-option';
       templateOption.style.width = '60px';
       templateOption.style.height = '60px';
-      templateOption.style.border = '2px solid #ccc';
-      templateOption.style.borderRadius = '5px';
       templateOption.style.margin = '5px 0';
+      templateOption.style.borderRadius = '5px';
+      templateOption.style.border = '2px solid #ddd';
       templateOption.style.cursor = 'pointer';
+      templateOption.style.overflow = 'hidden';
       templateOption.style.display = 'flex';
       templateOption.style.justifyContent = 'center';
       templateOption.style.alignItems = 'center';
-      templateOption.style.overflow = 'hidden';
       
       if (template === null) {
         templateOption.style.backgroundColor = '#f0f0f0';
-        const plusSign = document.createElement('span');
-        plusSign.style.fontSize = '24px';
+        const plusSign = document.createElement('div');
         plusSign.textContent = '➕';
+        plusSign.style.fontSize = '24px';
         templateOption.appendChild(plusSign);
       } else {
         const img = document.createElement('img');
@@ -368,9 +263,9 @@ document.addEventListener('DOMContentLoaded', function() {
         templateOption.appendChild(img);
       }
       
-      templateOption.addEventListener('click', (e) => {
-        e.stopPropagation();
+      templateOption.addEventListener('click', () => {
         selectTemplate(template);
+        templateMenu.style.display = 'none';
       });
       
       templateMenu.appendChild(templateOption);
@@ -385,87 +280,45 @@ document.addEventListener('DOMContentLoaded', function() {
     
     templateContainer.appendChild(templateButton);
     templateContainer.appendChild(templateMenu);
-    controls.appendChild(templateContainer);
+    drawingToolbar.appendChild(templateContainer);
     
-    // Leeg en voeg controls toe aan de toolboxContainer
-    toolboxContainer.innerHTML = '';
-    toolboxContainer.appendChild(controls);
+    // Klikken buiten menu's sluit ze
+    document.addEventListener('click', () => {
+      colorPickerMenu.style.display = 'none';
+      brushSizeMenu.style.display = 'none';
+      templateMenu.style.display = 'none';
+    });
     
     // Bevestigingsdialoog knoppen
     document.getElementById('confirm-yes').addEventListener('click', confirmClearCanvas);
     document.getElementById('confirm-no').addEventListener('click', () => {
       confirmDialog.style.display = 'none';
     });
-    
-    // Klikken buiten de menu's sluit ze
-    document.addEventListener('click', () => {
-      colorPickerMenu.style.display = 'none';
-      brushSizeMenu.style.display = 'none';
-      templateMenu.style.display = 'none';
-    });
   }
   
-  // Canvas grootte bijwerken
+  // Update canvas grootte
   function updateCanvasSize() {
-    console.log("updateCanvasSize uitgevoerd");
-    
     // Kleine vertraging om te zorgen dat alle elementen goed geladen zijn
     setTimeout(() => {
-      // Log toolbox status
-      console.log("Toolbox status:", {
-        exists: !!toolboxContainer,
-        height: toolboxContainer ? toolboxContainer.offsetHeight : 0,
-        visible: toolboxContainer.style.display !== 'none'
-      });
+      // Verzamel hoogtes
+      const topNavHeight = document.getElementById('top-nav-container').offsetHeight || 0;
+      const bottomNavHeight = document.getElementById('bottom-nav-container').offsetHeight || 0;
+      const toolbarHeight = drawingToolbar.offsetHeight || 0;
       
-      // Force direct update voor alle container hoogtes
-      const appContainer = document.querySelector('.app-container');
-      if (appContainer) {
-        appContainer.style.height = '100%';
-        appContainer.style.overflow = 'hidden';
-        appContainer.style.margin = '0';
-        appContainer.style.padding = '0';
-      }
-      
-      // Verzamel alle elementen die hoogte in beslag nemen
-      const topNav = document.getElementById('top-nav-container');
-      const bottomNav = document.getElementById('bottom-nav-container');
-      
-      // Bereken hoogtes
-      const topNavHeight = topNav ? topNav.offsetHeight : 0;
-      const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
-      const toolboxHeight = toolboxContainer ? toolboxContainer.offsetHeight : 0;
-      
-      console.log("Element hoogtes:", {
-        topNav: topNavHeight,
-        bottomNav: bottomNavHeight,
-        toolbox: toolboxHeight
-      });
-      
-      // Bereken exacte beschikbare ruimte
+      // Bereken beschikbare ruimte
       const windowHeight = window.innerHeight;
-      const availableHeight = windowHeight - topNavHeight - bottomNavHeight - toolboxHeight;
+      const availableHeight = windowHeight - topNavHeight - bottomNavHeight - toolbarHeight;
       
-      console.log("Ruimte berekening:", {
-        window: windowHeight,
-        available: availableHeight
-      });
-      
-      // Stel canvas container hoogte in op beschikbare ruimte
+      // Update canvas container
       canvasContainer.style.height = `${availableHeight}px`;
       
-      // Directe update voor de app-container
-      if (appContainer) {
-        appContainer.style.height = 'calc(100% - ' + (topNavHeight + bottomNavHeight) + 'px)';
-      }
-      
-      // Pas canvas grootte aan
+      // Update canvas
       coloringCanvas.width = canvasContainer.clientWidth;
       coloringCanvas.height = canvasContainer.clientHeight;
       templateCanvas.width = coloringCanvas.width;
       templateCanvas.height = coloringCanvas.height;
       
-      // Teken opnieuw na resize
+      // Teken canvas opnieuw
       redrawCanvas();
     }, 50);
   }
@@ -520,11 +373,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentPoint = currentPath.points[pointCount - 1];
     
     if (pointCount < 3) {
-      // Voor de eerste twee punten, teken een rechte lijn
       ctx.moveTo(lastPoint.x, lastPoint.y);
       ctx.lineTo(currentPoint.x, currentPoint.y);
     } else {
-      // Gebruik een quadratische curve voor vloeiende lijnen
       const controlX = (lastPoint.x + currentPoint.x) / 2;
       const controlY = (lastPoint.y + currentPoint.y) / 2;
       
@@ -628,7 +479,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function confirmClearCanvas() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
-    
     templateCtx.clearRect(0, 0, templateCanvas.width, templateCanvas.height);
     
     paths = [];
@@ -662,8 +512,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Sjabloon selecteren
   function selectTemplate(template) {
     selectedTemplate = template;
-    const templateMenu = document.querySelector('.template-menu');
-    if (templateMenu) templateMenu.style.display = 'none';
     
     // Reset tekening
     paths = [];
@@ -688,66 +536,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Resize event
     window.addEventListener('resize', updateCanvasSize);
-    
-    // Force een onmiddellijke resize bij orientatie verandering
-    window.addEventListener('orientationchange', function() {
-      setTimeout(updateCanvasSize, 300); // Langere timeout bij oriëntatieverandering
-    });
-    
-    // Observeer veranderingen in de menubalk hoogtes
-    if (window.ResizeObserver) {
-      const resizeObserver = new ResizeObserver(() => {
-        updateCanvasSize();
-      });
-      
-      if (document.getElementById('top-nav-container')) {
-        resizeObserver.observe(document.getElementById('top-nav-container'));
-      }
-      if (document.getElementById('bottom-nav-container')) {
-        resizeObserver.observe(document.getElementById('bottom-nav-container'));
-      }
-      if (toolboxContainer) {
-        resizeObserver.observe(toolboxContainer);
-      }
-    }
+    window.addEventListener('orientationchange', () => setTimeout(updateCanvasSize, 300));
   }
   
   // Initialisatie
   function init() {
-    console.log("App initialisatie gestart");
+    // Bouw toolbar
+    buildToolbar();
     
-    // Bouw UI
-    buildUI();
-    
-    // Force toolbox zichtbaarheid
-    toolboxContainer.style.display = 'block';
-    
-    // Canvas voorbereiden en onmiddellijk grootte aanpassen
-    setTimeout(updateCanvasSize, 0);
-    
-    // Teken witte achtergrond
+    // Canvas voorbereiden
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
     
     // Event listeners toevoegen
     addEventListeners();
     
-    // Tweede keer updateCanvasSize aanroepen na een korte vertraging
+    // Canvas grootte aanpassen
+    updateCanvasSize();
+    
+    // Extra updateCanvasSize aanroepen na korte vertraging
     setTimeout(updateCanvasSize, 300);
-    
-    // Derde keer voor de zekerheid
-    setTimeout(updateCanvasSize, 800);
-    
-    // Force zichtbaarheid aan het eind
-    setTimeout(() => {
-      console.log("Force visibility van toolbox na initialisatie");
-      toolboxContainer.style.display = 'block';
-      toolboxContainer.style.visibility = 'visible';
-      toolboxContainer.style.opacity = '1';
-      updateCanvasSize();
-    }, 1000);
-    
-    console.log("App initialisatie voltooid");
   }
   
   // Start de applicatie
