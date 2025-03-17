@@ -27,7 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const colorTools = document.querySelector('.color-tools');
   const drawingTools = document.querySelector('.drawing-tools');
   const coloringActions = document.querySelector('.coloring-actions');
-  const toolboxContainer = document.querySelector('.toolbox-container');
+  
+  // Zorg ervoor dat de toolbox container bestaat - zo niet, maak hem aan
+  let toolboxContainer = document.querySelector('.toolbox-container');
+  if (!toolboxContainer) {
+    toolboxContainer = document.createElement('div');
+    toolboxContainer.className = 'toolbox-container';
+    const coloringContainer = document.querySelector('.coloring-container');
+    // Plaats voor het canvas-container element
+    coloringContainer.insertBefore(toolboxContainer, canvasContainer);
+  }
   
   // Verwijder marges en padding van body en html om scrolling te voorkomen
   document.body.style.margin = '0';
@@ -48,11 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.display = 'flex';
   controls.style.justifyContent = 'space-around';
   controls.style.alignItems = 'center';
-  controls.style.padding = '5px'; // Verminder padding om ruimte te besparen
-  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
+  controls.style.padding = '8px'; // Iets meer padding voor betere zichtbaarheid
+  controls.style.backgroundColor = '#f8f8f8'; // Solide achtergrond in plaats van transparant
+  controls.style.borderTop = '1px solid #ddd';
+  controls.style.borderBottom = '1px solid #ddd'; 
   controls.style.width = '100%';
-  controls.style.marginTop = '0'; // Verwijder margin om ruimte te besparen
-  controls.style.marginBottom = '0'; // Verwijder margin om ruimte te besparen
+  controls.style.minHeight = '40px'; // Minimale hoogte om zichtbaarheid te garanderen
   
   // Creëer bevestigingsdialoog
   const confirmDialog = document.createElement('div');
@@ -105,11 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
     'images/kleurplaten/kleurplaat-kok1.png'
   ];
   
-  // Bepaal of dit het eerste bezoek is
-  let isFirstVisit = !localStorage.getItem('hasVisitedKleurboek');
-  if (isFirstVisit) {
-    localStorage.setItem('hasVisitedKleurboek', 'true');
-  }
+  // Geen eerste bezoek hint meer
+  let isFirstVisit = false;
   
   // UI bouwen
   function buildUI() {
@@ -122,19 +129,21 @@ document.addEventListener('DOMContentLoaded', function() {
     coloringContainer.style.padding = '0';
     coloringContainer.style.width = '100%';
     
-    // Stijl voor de toolbox container
+    // Stijl voor de toolbox container - zorg voor duidelijke zichtbaarheid
     toolboxContainer.style.width = '100%';
     toolboxContainer.style.backgroundColor = '#f8f8f8';
     toolboxContainer.style.borderBottom = '1px solid #ddd';
-    toolboxContainer.style.padding = '5px 0';
+    toolboxContainer.style.padding = '0';
     toolboxContainer.style.zIndex = '10';
+    toolboxContainer.style.display = 'block'; // Zorg dat het zichtbaar is
+    toolboxContainer.style.minHeight = '50px'; // Garandeer minimum hoogte
     
     // App container moet ook maximale ruimte benutten
     const appContainer = document.querySelector('.app-container');
     if (appContainer) {
       appContainer.style.height = '100%';
       appContainer.style.margin = '0';
-      appContainer.style.padding = '0'; // Verwijder padding om ruimte te besparen
+      appContainer.style.padding = '0';
       appContainer.style.display = 'flex';
       appContainer.style.flexDirection = 'column';
       appContainer.style.overflow = 'hidden';
@@ -145,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pageTitle) {
       pageTitle.style.margin = '0';
       pageTitle.style.padding = '2px 0';
-      pageTitle.style.fontSize = '24px'; // Kleinere titel
+      pageTitle.style.fontSize = '24px';
     }
 
     // Kleurenkiezer knop en container
@@ -167,13 +176,13 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPickerMenu.style.flexWrap = 'wrap';
     colorPickerMenu.style.justifyContent = 'center';
     colorPickerMenu.style.position = 'absolute';
-    colorPickerMenu.style.top = '100%'; // Toon onder de knop
+    colorPickerMenu.style.top = '100%';
     colorPickerMenu.style.left = '50%';
     colorPickerMenu.style.transform = 'translateX(-50%)';
-    colorPickerMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
+    colorPickerMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
     colorPickerMenu.style.borderRadius = '10px';
     colorPickerMenu.style.padding = '5px';
-    colorPickerMenu.style.marginTop = '10px'; // Marge aan de bovenkant
+    colorPickerMenu.style.marginTop = '5px';
     colorPickerMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
     colorPickerMenu.style.zIndex = '100';
     
@@ -226,13 +235,13 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeMenu.style.display = 'none';
     brushSizeMenu.style.flexDirection = 'column-reverse';
     brushSizeMenu.style.position = 'absolute';
-    brushSizeMenu.style.top = '100%'; // Toon onder de knop
+    brushSizeMenu.style.top = '100%';
     brushSizeMenu.style.left = '50%';
     brushSizeMenu.style.transform = 'translateX(-50%)';
-    brushSizeMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
+    brushSizeMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
     brushSizeMenu.style.borderRadius = '10px';
     brushSizeMenu.style.padding = '5px';
-    brushSizeMenu.style.marginTop = '10px'; // Marge aan de bovenkant
+    brushSizeMenu.style.marginTop = '5px';
     brushSizeMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
     brushSizeMenu.style.zIndex = '100';
     
@@ -323,56 +332,14 @@ document.addEventListener('DOMContentLoaded', function() {
     templateMenu.style.display = 'none';
     templateMenu.style.flexDirection = 'column';
     templateMenu.style.position = 'absolute';
-    templateMenu.style.top = '100%'; // Toon onder de knop
+    templateMenu.style.top = '100%';
     templateMenu.style.left = '50%';
     templateMenu.style.transform = 'translateX(-50%)';
-    templateMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
+    templateMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
     templateMenu.style.padding = '5px';
     templateMenu.style.borderRadius = '5px';
-    templateMenu.style.marginTop = '10px'; // Marge aan de bovenkant
+    templateMenu.style.marginTop = '5px';
     templateMenu.style.zIndex = '100';
-    
-    // Voeg popup hint toe voor eerste bezoek
-    if (isFirstVisit) {
-      const popupHint = document.createElement('div');
-      popupHint.className = 'popup-hint';
-      popupHint.textContent = 'Kies hier je kleurplaat!';
-      popupHint.style.position = 'absolute';
-      popupHint.style.top = '120%'; // Toon onder de knop
-      popupHint.style.right = '-20px';
-      popupHint.style.backgroundColor = '#fff';
-      popupHint.style.border = '2px solid #4CAF50';
-      popupHint.style.borderRadius = '8px';
-      popupHint.style.padding = '10px';
-      popupHint.style.fontSize = '14px';
-      popupHint.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-      popupHint.style.zIndex = '1001';
-      
-      // Voeg pijltje aan de hint toe (nu naar boven)
-      popupHint.style.setProperty('--after-content', "''");
-      popupHint.style.setProperty('--after-position', 'absolute');
-      popupHint.style.setProperty('--after-top', '-10px'); // Nu aan de bovenkant
-      popupHint.style.setProperty('--after-right', '20px');
-      popupHint.style.setProperty('--after-border-width', '0 10px 10px'); // Omgedraaid pijltje
-      popupHint.style.setProperty('--after-border-style', 'solid');
-      popupHint.style.setProperty('--after-border-color', 'transparent transparent #4CAF50'); // Omgedraaid pijltje
-      
-      // Animatie voor de hint
-      const keyframes = `
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-          40% {transform: translateY(-10px);}
-          60% {transform: translateY(-5px);}
-        }
-      `;
-      const style = document.createElement('style');
-      style.textContent = keyframes;
-      document.head.appendChild(style);
-      
-      popupHint.style.animation = 'bounce 2s infinite';
-      
-      templateContainer.appendChild(popupHint);
-    }
     
     templates.forEach((template, index) => {
       const templateOption = document.createElement('div');
@@ -417,19 +384,14 @@ document.addEventListener('DOMContentLoaded', function() {
       templateMenu.style.display = templateMenu.style.display === 'flex' ? 'none' : 'flex';
       colorPickerMenu.style.display = 'none';
       brushSizeMenu.style.display = 'none';
-      
-      if (isFirstVisit) {
-        isFirstVisit = false;
-        const popupHint = templateContainer.querySelector('.popup-hint');
-        if (popupHint) popupHint.style.display = 'none';
-      }
     });
     
     templateContainer.appendChild(templateButton);
     templateContainer.appendChild(templateMenu);
     controls.appendChild(templateContainer);
     
-    // Voeg controls toe aan de toolboxContainer in plaats van coloringActions
+    // Voeg controls toe aan de toolboxContainer
+    toolboxContainer.innerHTML = ''; // Maak zeker dat de container leeg is
     toolboxContainer.appendChild(controls);
     
     // Bevestigingsdialoog knoppen
@@ -446,10 +408,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Canvas grootte bijwerken - verbeterd om te zorgen voor perfecte scaling
+  // Canvas grootte bijwerken
   function updateCanvasSize() {
+    // Print debug info naar console
+    console.log("updateCanvasSize uitgevoerd");
+    
     // Kleine vertraging om te zorgen dat alle elementen goed geladen zijn
     setTimeout(() => {
+      // Log toolbox zichtbaarheid
+      console.log("Toolbox bestaat:", !!toolboxContainer);
+      console.log("Toolbox hoogte:", toolboxContainer.offsetHeight);
+      
       // Force direct update voor alle container hoogtes
       const appContainer = document.querySelector('.app-container');
       if (appContainer) {
@@ -462,16 +431,22 @@ document.addEventListener('DOMContentLoaded', function() {
       // Verzamel alle elementen die hoogte in beslag nemen
       const topNav = document.getElementById('top-nav-container');
       const bottomNav = document.getElementById('bottom-nav-container');
-      const toolboxContainer = document.querySelector('.toolbox-container');
       
       // Bereken hoogtes
       const topNavHeight = topNav ? topNav.offsetHeight : 0;
       const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
       const toolboxHeight = toolboxContainer ? toolboxContainer.offsetHeight : 0;
       
+      console.log("topNavHeight:", topNavHeight);
+      console.log("bottomNavHeight:", bottomNavHeight);
+      console.log("toolboxHeight:", toolboxHeight);
+      
       // Bereken exacte beschikbare ruimte
       const windowHeight = window.innerHeight;
       const availableHeight = windowHeight - topNavHeight - bottomNavHeight - toolboxHeight;
+      
+      console.log("windowHeight:", windowHeight);
+      console.log("availableHeight:", availableHeight);
       
       // Stel canvas container hoogte in op beschikbare ruimte
       canvasContainer.style.height = `${availableHeight}px`;
@@ -736,11 +711,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialisatie
   function init() {
+    console.log("App initialisatie gestart");
+    
     // Bouw UI
     buildUI();
     
     // Canvas voorbereiden en onmiddellijk grootte aanpassen
-    setTimeout(updateCanvasSize, 0); // Gebruik setTimeout om zeker te zijn dat de DOM geladen is
+    setTimeout(updateCanvasSize, 0);
     
     // Teken witte achtergrond
     ctx.fillStyle = 'white';
@@ -750,8 +727,12 @@ document.addEventListener('DOMContentLoaded', function() {
     addEventListeners();
     
     // Tweede keer updateCanvasSize aanroepen na een korte vertraging
-    // om zeker te zijn dat alles goed geschaald is
     setTimeout(updateCanvasSize, 300);
+    
+    // Derde keer voor de zekerheid
+    setTimeout(updateCanvasSize, 800);
+    
+    console.log("App initialisatie voltooid");
   }
   
   // Start de applicatie
