@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const colorTools = document.querySelector('.color-tools');
   const drawingTools = document.querySelector('.drawing-tools');
   const coloringActions = document.querySelector('.coloring-actions');
+  const toolboxContainer = document.querySelector('.toolbox-container');
   
   // Verwijder marges en padding van body en html om scrolling te voorkomen
   document.body.style.margin = '0';
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
   controls.style.justifyContent = 'space-around';
   controls.style.alignItems = 'center';
   controls.style.padding = '5px'; // Verminder padding om ruimte te besparen
-  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Transparante achtergrond
+  controls.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
   controls.style.width = '100%';
   controls.style.marginTop = '0'; // Verwijder margin om ruimte te besparen
   controls.style.marginBottom = '0'; // Verwijder margin om ruimte te besparen
@@ -121,6 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
     coloringContainer.style.padding = '0';
     coloringContainer.style.width = '100%';
     
+    // Stijl voor de toolbox container
+    toolboxContainer.style.width = '100%';
+    toolboxContainer.style.backgroundColor = '#f8f8f8';
+    toolboxContainer.style.borderBottom = '1px solid #ddd';
+    toolboxContainer.style.padding = '5px 0';
+    toolboxContainer.style.zIndex = '10';
+    
     // App container moet ook maximale ruimte benutten
     const appContainer = document.querySelector('.app-container');
     if (appContainer) {
@@ -159,13 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPickerMenu.style.flexWrap = 'wrap';
     colorPickerMenu.style.justifyContent = 'center';
     colorPickerMenu.style.position = 'absolute';
-    colorPickerMenu.style.bottom = '100%';
+    colorPickerMenu.style.top = '100%'; // Toon onder de knop
     colorPickerMenu.style.left = '50%';
     colorPickerMenu.style.transform = 'translateX(-50%)';
     colorPickerMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     colorPickerMenu.style.borderRadius = '10px';
     colorPickerMenu.style.padding = '5px';
-    colorPickerMenu.style.marginBottom = '10px';
+    colorPickerMenu.style.marginTop = '10px'; // Marge aan de bovenkant
     colorPickerMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
     colorPickerMenu.style.zIndex = '100';
     
@@ -218,13 +226,13 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeMenu.style.display = 'none';
     brushSizeMenu.style.flexDirection = 'column-reverse';
     brushSizeMenu.style.position = 'absolute';
-    brushSizeMenu.style.bottom = '100%';
+    brushSizeMenu.style.top = '100%'; // Toon onder de knop
     brushSizeMenu.style.left = '50%';
     brushSizeMenu.style.transform = 'translateX(-50%)';
     brushSizeMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     brushSizeMenu.style.borderRadius = '10px';
     brushSizeMenu.style.padding = '5px';
-    brushSizeMenu.style.marginBottom = '10px';
+    brushSizeMenu.style.marginTop = '10px'; // Marge aan de bovenkant
     brushSizeMenu.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
     brushSizeMenu.style.zIndex = '100';
     
@@ -315,12 +323,13 @@ document.addEventListener('DOMContentLoaded', function() {
     templateMenu.style.display = 'none';
     templateMenu.style.flexDirection = 'column';
     templateMenu.style.position = 'absolute';
-    templateMenu.style.bottom = '100%';
+    templateMenu.style.top = '100%'; // Toon onder de knop
     templateMenu.style.left = '50%';
     templateMenu.style.transform = 'translateX(-50%)';
     templateMenu.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Semi-transparant menu
     templateMenu.style.padding = '5px';
     templateMenu.style.borderRadius = '5px';
+    templateMenu.style.marginTop = '10px'; // Marge aan de bovenkant
     templateMenu.style.zIndex = '100';
     
     // Voeg popup hint toe voor eerste bezoek
@@ -329,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
       popupHint.className = 'popup-hint';
       popupHint.textContent = 'Kies hier je kleurplaat!';
       popupHint.style.position = 'absolute';
-      popupHint.style.bottom = '120%';
+      popupHint.style.top = '120%'; // Toon onder de knop
       popupHint.style.right = '-20px';
       popupHint.style.backgroundColor = '#fff';
       popupHint.style.border = '2px solid #4CAF50';
@@ -339,14 +348,14 @@ document.addEventListener('DOMContentLoaded', function() {
       popupHint.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
       popupHint.style.zIndex = '1001';
       
-      // Voeg pijltje aan de hint toe
+      // Voeg pijltje aan de hint toe (nu naar boven)
       popupHint.style.setProperty('--after-content', "''");
       popupHint.style.setProperty('--after-position', 'absolute');
-      popupHint.style.setProperty('--after-bottom', '-10px');
+      popupHint.style.setProperty('--after-top', '-10px'); // Nu aan de bovenkant
       popupHint.style.setProperty('--after-right', '20px');
-      popupHint.style.setProperty('--after-border-width', '10px 10px 0');
+      popupHint.style.setProperty('--after-border-width', '0 10px 10px'); // Omgedraaid pijltje
       popupHint.style.setProperty('--after-border-style', 'solid');
-      popupHint.style.setProperty('--after-border-color', '#4CAF50 transparent transparent');
+      popupHint.style.setProperty('--after-border-color', 'transparent transparent #4CAF50'); // Omgedraaid pijltje
       
       // Animatie voor de hint
       const keyframes = `
@@ -420,8 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
     templateContainer.appendChild(templateMenu);
     controls.appendChild(templateContainer);
     
-    // Voeg controls toe aan de pagina
-    coloringActions.appendChild(controls);
+    // Voeg controls toe aan de toolboxContainer in plaats van coloringActions
+    toolboxContainer.appendChild(controls);
     
     // Bevestigingsdialoog knoppen
     document.getElementById('confirm-yes').addEventListener('click', confirmClearCanvas);
@@ -453,16 +462,16 @@ document.addEventListener('DOMContentLoaded', function() {
       // Verzamel alle elementen die hoogte in beslag nemen
       const topNav = document.getElementById('top-nav-container');
       const bottomNav = document.getElementById('bottom-nav-container');
-      const coloringActions = document.querySelector('.coloring-actions');
+      const toolboxContainer = document.querySelector('.toolbox-container');
       
       // Bereken hoogtes
       const topNavHeight = topNav ? topNav.offsetHeight : 0;
       const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 0;
-      const actionsHeight = coloringActions ? coloringActions.offsetHeight : 0;
+      const toolboxHeight = toolboxContainer ? toolboxContainer.offsetHeight : 0;
       
       // Bereken exacte beschikbare ruimte
       const windowHeight = window.innerHeight;
-      const availableHeight = windowHeight - topNavHeight - bottomNavHeight - actionsHeight;
+      const availableHeight = windowHeight - topNavHeight - bottomNavHeight - toolboxHeight;
       
       // Stel canvas container hoogte in op beschikbare ruimte
       canvasContainer.style.height = `${availableHeight}px`;
@@ -718,6 +727,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       if (document.getElementById('bottom-nav-container')) {
         resizeObserver.observe(document.getElementById('bottom-nav-container'));
+      }
+      if (toolboxContainer) {
+        resizeObserver.observe(toolboxContainer);
       }
     }
   }
