@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Praten met Knof - Knof's Speelbos</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
+</head>
+<body>
+  <!-- SVG filters for hand-drawn effect -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Hoofdcontent - Chat -->
+  <div class="app-container">
+    <h1 class="page-title">Praten met Knof</h1>
+    
+    <div class="chat-container">
+      <div class="chat-header">
+        <img src="images/knof.png" alt="Knof">
+        <h2>Knof</h2>
+      </div>
+      
+      <div id="chat-messages" class="chat-messages">
+        <!-- Berichten worden hier dynamisch ingevoegd -->
+      </div>
+      
+      <form id="chat-form" class="chat-form">
+        <input type="text" id="chat-input" placeholder="Stel een vraag aan Knof...">
+        <button type="submit">Verstuur</button>
+      </form>
+    </div>
+    
+    <div class="chat-suggestions">
+      <h3>Wat kun je vragen aan Knof?</h3>
+      <div class="suggestion-buttons">
+        <button class="suggestion-btn" data-text="Wat zijn je favoriete dieren?">Vraag naar dieren</button>
+        <button class="suggestion-btn" data-text="Vertel me een grapje!">Vraag een grapje</button>
+        <button class="suggestion-btn" data-text="Wat is je lievelingseten?">Vraag naar eten</button>
+        <button class="suggestion-btn" data-text="Wat kun je allemaal in het speelbos doen?">Vraag over het speelbos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/common.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>
