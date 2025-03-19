@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const ctx = coloringCanvas.getContext('2d');
   const drawingToolbar = document.getElementById('drawing-toolbar');
   
+  // Voeg deze variabele toe aan het begin van je script
+  let messageInProgress = false;
+  
   // NIEUW: Berichten die Knof kan zeggen
   const knofMessages = {
     colorPicker: [
@@ -44,15 +47,40 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
   
-  // NIEUW: Functie om een willekeurig bericht te tonen via de bestaande typeSpeechMessage functie
+  // Vervang je showKnofMessage functie door deze versie:
   function showKnofMessage(messageType) {
+    // Controleer eerst of er al een bericht bezig is
+    if (messageInProgress) {
+      // Stop het huidige bericht (als deze functie bestaat in common.js)
+      if (typeof clearTypingSpeech === 'function') {
+        clearTypingSpeech();
+      }
+      // Of als alternatief, leeg gewoon het element
+      const typwriterText = document.getElementById('typwriter-text');
+      if (typwriterText) {
+        typwriterText.textContent = '';
+      }
+    }
+    
+    // Selecteer een willekeurig bericht
     const messages = knofMessages[messageType];
     const randomIndex = Math.floor(Math.random() * messages.length);
     const message = messages[randomIndex];
     
+    // Markeer dat we nu een bericht tonen
+    messageInProgress = true;
+    
     // Controleer of typeSpeechMessage bestaat (komt uit common.js)
     if (typeof typeSpeechMessage === 'function') {
       typeSpeechMessage(message);
+      
+      // Bereken de verwachte duur van het bericht (ca. 50ms per teken + 500ms extra)
+      const messageDuration = message.length * 50 + 500;
+      
+      // Reset de flag na afloop van het bericht
+      setTimeout(function() {
+        messageInProgress = false;
+      }, messageDuration);
     }
   }
   
