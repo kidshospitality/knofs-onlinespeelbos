@@ -5,11 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const ctx = coloringCanvas.getContext('2d');
   const drawingToolbar = document.getElementById('drawing-toolbar');
   
-  // Voeg deze variabele toe aan het begin van je script
+  // Voeg deze variabelen toe aan het begin van je script
   let messageInProgress = false;
+  let messageTimer = null;
   
   // NIEUW: Berichten die Knof kan zeggen
   const knofMessages = {
+    welcome: [
+      "Hallo! Ik ben Knof. Laten we samen tekenen!",
+      "Welkom bij de kleurplaat! Ik help je graag!",
+      "Leuk dat je er bent! Wat ga je vandaag tekenen?"
+    ],
     colorPicker: [
       "Welke kleur wil je gebruiken? Ik vind rood heel mooi!",
       "Kies maar een leuke kleur, ik ben benieuwd!",
@@ -47,22 +53,46 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
   
-  // Vervang je showKnofMessage functie door deze versie:
+  // Vervang je showKnofMessage functie door deze verbeterde versie:
   function showKnofMessage(messageType) {
-    // Controleer eerst of er al een bericht bezig is
+    // Annuleer elke lopende timer
+    if (messageTimer) {
+      clearTimeout(messageTimer);
+      messageTimer = null;
+    }
+    
+    // Stop het huidige bericht als er een bezig is
     if (messageInProgress) {
-      // Stop het huidige bericht (als deze functie bestaat in common.js)
+      // Stop het huidige bericht (functie uit common.js)
       if (typeof clearTypingSpeech === 'function') {
         clearTypingSpeech();
       }
-      // Of als alternatief, leeg gewoon het element
-      const typwriterText = document.getElementById('typwriter-text');
-      if (typwriterText) {
-        typwriterText.textContent = '';
+      
+      // Als alternatief, leeg gewoon het element
+      const typewriterText = document.getElementById('typwriter-text');
+      if (typewriterText) {
+        typewriterText.textContent = '';
       }
+      
+      // Geef een korte pauze om te zorgen dat alles stopt voordat we beginnen
+      messageInProgress = false;
+      setTimeout(() => {
+        startNewMessage(messageType);
+      }, 100);
+    } else {
+      // Direct starten als er niks bezig is
+      startNewMessage(messageType);
+    }
+  }
+
+  // Helper functie om een nieuw bericht te starten
+  function startNewMessage(messageType) {
+    // Selecteer een willekeurig bericht
+    if (!knofMessages[messageType]) {
+      console.warn(`Berichttype '${messageType}' bestaat niet.`);
+      return;
     }
     
-    // Selecteer een willekeurig bericht
     const messages = knofMessages[messageType];
     const randomIndex = Math.floor(Math.random() * messages.length);
     const message = messages[randomIndex];
@@ -74,12 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof typeSpeechMessage === 'function') {
       typeSpeechMessage(message);
       
-      // Bereken de verwachte duur van het bericht (ca. 50ms per teken + 500ms extra)
-      const messageDuration = message.length * 50 + 500;
+      // Bereken de verwachte duur van het bericht (ca. 50ms per teken + 1000ms extra)
+      const messageDuration = message.length * 50 + 1000;
       
       // Reset de flag na afloop van het bericht
-      setTimeout(function() {
+      messageTimer = setTimeout(function() {
         messageInProgress = false;
+        messageTimer = null;
       }, messageDuration);
     }
   }
