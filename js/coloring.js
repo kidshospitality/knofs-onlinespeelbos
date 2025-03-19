@@ -7,11 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // NIEUW: Berichten die Knof kan zeggen
   const knofMessages = {
-    welcome: [
-      "Leuk dat je komt kleuren! Wat zullen we tekenen?",
-      "Welkom in mijn kleurboek! Kies een leuke kleurplaat!",
-      "Hoi! Ga je mee op kleuravontuur?"
-    ],
     colorPicker: [
       "Welke kleur wil je gebruiken? Ik vind rood heel mooi!",
       "Kies maar een leuke kleur, ik ben benieuwd!",
@@ -493,7 +488,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (selectedTemplate) {
       const img = new Image();
       img.onload = function() {
-        templateCtx.drawImage(img, 0, 0, templateCanvas.width, templateCanvas.height);
+        // Bereken de juiste afmetingen om de aspectverhouding te behouden
+        const imgAspectRatio = img.width / img.height;
+        const canvasAspectRatio = templateCanvas.width / templateCanvas.height;
+        
+        let drawWidth, drawHeight, offsetX, offsetY;
+        
+        // Schaal alleen naar hoogte
+        drawHeight = templateCanvas.height;
+        drawWidth = drawHeight * imgAspectRatio;
+        
+        // Centreer horizontaal als de breedte kleiner is dan het canvas
+        offsetX = (templateCanvas.width - drawWidth) / 2;
+        offsetY = 0;
+        
+        // Als de berekende breedte groter is dan de canvas breedte,
+        // pas dan de breedte aan en centreer verticaal
+        if (drawWidth > templateCanvas.width) {
+          drawWidth = templateCanvas.width;
+          drawHeight = drawWidth / imgAspectRatio;
+          offsetX = 0;
+          offsetY = (templateCanvas.height - drawHeight) / 2;
+        }
+        
+        // Teken de afbeelding met de juiste afmetingen en positie
+        templateCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
       };
       img.src = selectedTemplate;
     }
