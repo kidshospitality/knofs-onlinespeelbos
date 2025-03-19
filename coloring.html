@@ -105,6 +105,17 @@
 
   <!-- Scripts -->
   <script src="js/common.js"></script>
+  <script>
+    // Welkomstbericht direct na het laden van common.js
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wacht even om zeker te zijn dat typeSpeechMessage beschikbaar is
+      setTimeout(function() {
+        if (typeof typeSpeechMessage === 'function') {
+          typeSpeechMessage("Leuk dat je komt kleuren! Wat zullen we maken?");
+        }
+      }, 500);
+    });
+  </script>
   <script src="js/coloring.js"></script>
 </body>
 </html>
