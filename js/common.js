@@ -49,8 +49,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Variabele voor type-timer
+let typeTextTimer = null;
+
+// Functie om lopende typende tekst te stoppen
+function clearTypingSpeech() {
+  if (typeTextTimer) {
+    clearTimeout(typeTextTimer);
+    typeTextTimer = null;
+  }
+}
+
 // Functie om tekst letter voor letter te typen
 function typeText(element, text, speed = 50) {
+  // Eerst eventuele lopende tekst stoppen
+  clearTypingSpeech();
+  
   let index = 0;
   element.textContent = '';
   
@@ -79,7 +93,7 @@ function typeText(element, text, speed = 50) {
         element.style.marginLeft = `-${overshoot}px`;
       }
       
-      setTimeout(addNextCharacter, speed);
+      typeTextTimer = setTimeout(addNextCharacter, speed);
     }
   }
   
