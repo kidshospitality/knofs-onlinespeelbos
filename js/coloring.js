@@ -293,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
     undoButton.style.background = 'none';
     undoButton.style.border = 'none';
     undoButton.style.cursor = 'pointer';
-    undoButton.addEventListener('click', undo);
     
     // NIEUW: Toon bericht bij hover
     undoButton.addEventListener('mouseenter', () => {
