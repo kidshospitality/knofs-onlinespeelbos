@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
   
-  // Vervang je showKnofMessage functie door deze verbeterde versie:
+  // Vervang je showKnofMessage functie door deze directe versie:
   function showKnofMessage(messageType) {
     // Annuleer elke lopende timer
     if (messageTimer) {
@@ -61,32 +61,20 @@ document.addEventListener('DOMContentLoaded', function() {
       messageTimer = null;
     }
     
-    // Stop het huidige bericht als er een bezig is
+    // Stop het huidige bericht onmiddellijk
     if (messageInProgress) {
-      // Stop het huidige bericht (functie uit common.js)
+      // Stop de animatie als deze functie bestaat
       if (typeof clearTypingSpeech === 'function') {
         clearTypingSpeech();
       }
       
-      // Als alternatief, leeg gewoon het element
+      // Leeg het element direct
       const typewriterText = document.getElementById('typwriter-text');
       if (typewriterText) {
         typewriterText.textContent = '';
       }
-      
-      // Geef een korte pauze om te zorgen dat alles stopt voordat we beginnen
-      messageInProgress = false;
-      setTimeout(() => {
-        startNewMessage(messageType);
-      }, 100);
-    } else {
-      // Direct starten als er niks bezig is
-      startNewMessage(messageType);
     }
-  }
-
-  // Helper functie om een nieuw bericht te starten
-  function startNewMessage(messageType) {
+    
     // Selecteer een willekeurig bericht
     if (!knofMessages[messageType]) {
       console.warn(`Berichttype '${messageType}' bestaat niet.`);
@@ -100,11 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Markeer dat we nu een bericht tonen
     messageInProgress = true;
     
-    // Controleer of typeSpeechMessage bestaat (komt uit common.js)
+    // Toon het bericht direct
     if (typeof typeSpeechMessage === 'function') {
       typeSpeechMessage(message);
       
-      // Bereken de verwachte duur van het bericht (ca. 50ms per teken + 1000ms extra)
+      // Bereken de verwachte duur van het bericht
       const messageDuration = message.length * 50 + 1000;
       
       // Reset de flag na afloop van het bericht
