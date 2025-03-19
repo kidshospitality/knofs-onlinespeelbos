@@ -4,6 +4,100 @@ document.addEventListener('DOMContentLoaded', function() {
   const coloringCanvas = document.getElementById('coloring-canvas');
   const ctx = coloringCanvas.getContext('2d');
   const drawingToolbar = document.getElementById('drawing-toolbar');
+  const topNavContainer = document.getElementById('top-nav-container');
+  
+  // NIEUW: Voeg een tekstbalk toe voor Knof's berichten
+  const knofMessageBar = document.createElement('div');
+  knofMessageBar.id = 'knof-message-bar';
+  knofMessageBar.style.backgroundColor = '#F8F6E9';
+  knofMessageBar.style.padding = '10px 15px';
+  knofMessageBar.style.textAlign = 'center';
+  knofMessageBar.style.fontFamily = 'Comic Sans MS, cursive, sans-serif';
+  knofMessageBar.style.fontSize = '18px';
+  knofMessageBar.style.color = '#5A4B41';
+  knofMessageBar.style.borderBottom = '2px solid #A7C957';
+  knofMessageBar.style.position = 'relative';
+  knofMessageBar.style.display = 'flex';
+  knofMessageBar.style.alignItems = 'center';
+  knofMessageBar.style.justifyContent = 'center';
+  
+  // Voeg kleine afbeelding van Knof toe
+  const knofIcon = document.createElement('img');
+  knofIcon.src = 'images/knof-icon.png'; // Pas dit aan naar het juiste pad
+  knofIcon.alt = 'Knof';
+  knofIcon.style.height = '35px';
+  knofIcon.style.marginRight = '10px';
+  knofIcon.style.filter = 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))';
+  
+  const messageText = document.createElement('span');
+  messageText.id = 'knof-message-text';
+  
+  knofMessageBar.appendChild(knofIcon);
+  knofMessageBar.appendChild(messageText);
+  topNavContainer.appendChild(knofMessageBar);
+  
+  // NIEUW: Verzameling berichten voor verschillende acties
+  const knofMessages = {
+    welcome: [
+      "Leuk dat je komt kleuren! Wat zullen we tekenen?",
+      "Welkom in mijn kleurboek! Kies een leuke kleurplaat!",
+      "Hoi! Ga je mee op kleuravontuur?"
+    ],
+    colorPicker: [
+      "Welke kleur wil je gebruiken? Ik vind rood heel mooi!",
+      "Kies maar een leuke kleur, ik ben benieuwd!",
+      "Kleuren kiezen is zo leuk! Wat wordt het?"
+    ],
+    brushSize: [
+      "Een dikke of dunne lijn? Jij mag kiezen!",
+      "Wil je dikke of dunne strepen maken?",
+      "Met een grote kwast kun je veel sneller kleuren!"
+    ],
+    undo: [
+      "Oeps, foutje? Geen probleem!",
+      "We maken allemaal wel eens een foutje...",
+      "Terug naar de vorige stap, handig hè?"
+    ],
+    clear: [
+      "Wil je echt helemaal opnieuw beginnen?",
+      "Alles wissen? Ben je zeker?",
+      "Soms is het leuk om met een schone lei te beginnen!"
+    ],
+    download: [
+      "Je kunt je tekening opslaan en later printen!",
+      "Zullen we je kunstwerk bewaren?",
+      "Laat je tekening maar zien aan iedereen!"
+    ],
+    template: [
+      "Kies maar een leuke kleurplaat uit!",
+      "Welke kleurplaat vind jij het leukst?",
+      "Er zijn verschillende kleurplaten, kies er maar eentje!"
+    ],
+    drawing: [
+      "Wat ben je mooi aan het tekenen!",
+      "Je bent echt goed in kleuren!",
+      "Ik ben benieuwd hoe je tekening eruit gaat zien!"
+    ]
+  };
+  
+  // NIEUW: Functie om een willekeurig bericht te tonen
+  function showKnofMessage(messageType) {
+    const messages = knofMessages[messageType];
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    const messageElement = document.getElementById('knof-message-text');
+    
+    messageElement.textContent = messages[randomIndex];
+    
+    // Kleine animatie voor het bericht
+    messageElement.style.opacity = '0';
+    messageElement.style.transform = 'translateY(10px)';
+    messageElement.style.transition = 'opacity 0.3s, transform 0.3s';
+    
+    setTimeout(() => {
+      messageElement.style.opacity = '1';
+      messageElement.style.transform = 'translateY(0)';
+    }, 50);
+  }
   
   // Creëer het sjablooncanvas
   const templateCanvas = document.createElement('canvas');
@@ -83,6 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPickerButton.style.border = 'none';
     colorPickerButton.style.cursor = 'pointer';
     
+    // NIEUW: Toon bericht bij hover
+    colorPickerButton.addEventListener('mouseenter', () => {
+      showKnofMessage('colorPicker');
+    });
+    
     const colorPickerMenu = document.createElement('div');
     colorPickerMenu.style.display = 'none';
     colorPickerMenu.style.position = 'absolute';
@@ -122,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
       colorPickerMenu.style.display = colorPickerMenu.style.display === 'flex' ? 'none' : 'flex';
       brushSizeMenu.style.display = 'none';
       templateMenu.style.display = 'none';
+      showKnofMessage('colorPicker');
     });
     
     colorPickerContainer.appendChild(colorPickerButton);
@@ -138,6 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeButton.style.background = 'none';
     brushSizeButton.style.border = 'none';
     brushSizeButton.style.cursor = 'pointer';
+    
+    // NIEUW: Toon bericht bij hover
+    brushSizeButton.addEventListener('mouseenter', () => {
+      showKnofMessage('brushSize');
+    });
     
     const brushSizeMenu = document.createElement('div');
     brushSizeMenu.style.display = 'none';
@@ -174,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
       brushSizeMenu.style.display = brushSizeMenu.style.display === 'flex' ? 'none' : 'flex';
       colorPickerMenu.style.display = 'none';
       templateMenu.style.display = 'none';
+      showKnofMessage('brushSize');
     });
     
     brushSizeContainer.appendChild(brushSizeButton);
@@ -188,6 +294,17 @@ document.addEventListener('DOMContentLoaded', function() {
     undoButton.style.border = 'none';
     undoButton.style.cursor = 'pointer';
     undoButton.addEventListener('click', undo);
+    
+    // NIEUW: Toon bericht bij hover
+    undoButton.addEventListener('mouseenter', () => {
+      showKnofMessage('undo');
+    });
+    
+    undoButton.addEventListener('click', () => {
+      undo();
+      showKnofMessage('undo');
+    });
+    
     drawingToolbar.appendChild(undoButton);
     
     // Wis knop
@@ -197,7 +314,17 @@ document.addEventListener('DOMContentLoaded', function() {
     clearButton.style.background = 'none';
     clearButton.style.border = 'none';
     clearButton.style.cursor = 'pointer';
-    clearButton.addEventListener('click', handleClearCanvas);
+    
+    // NIEUW: Toon bericht bij hover
+    clearButton.addEventListener('mouseenter', () => {
+      showKnofMessage('clear');
+    });
+    
+    clearButton.addEventListener('click', () => {
+      handleClearCanvas();
+      showKnofMessage('clear');
+    });
+    
     drawingToolbar.appendChild(clearButton);
     
     // Download knop
@@ -207,7 +334,17 @@ document.addEventListener('DOMContentLoaded', function() {
     downloadButton.style.background = 'none';
     downloadButton.style.border = 'none';
     downloadButton.style.cursor = 'pointer';
-    downloadButton.addEventListener('click', downloadImage);
+    
+    // NIEUW: Toon bericht bij hover
+    downloadButton.addEventListener('mouseenter', () => {
+      showKnofMessage('download');
+    });
+    
+    downloadButton.addEventListener('click', () => {
+      downloadImage();
+      showKnofMessage('download');
+    });
+    
     drawingToolbar.appendChild(downloadButton);
     
     // Template knop
@@ -220,6 +357,11 @@ document.addEventListener('DOMContentLoaded', function() {
     templateButton.style.background = 'none';
     templateButton.style.border = 'none';
     templateButton.style.cursor = 'pointer';
+    
+    // NIEUW: Toon bericht bij hover
+    templateButton.addEventListener('mouseenter', () => {
+      showKnofMessage('template');
+    });
     
     const templateMenu = document.createElement('div');
     templateMenu.style.display = 'none';
@@ -276,6 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
       templateMenu.style.display = templateMenu.style.display === 'flex' ? 'none' : 'flex';
       colorPickerMenu.style.display = 'none';
       brushSizeMenu.style.display = 'none';
+      showKnofMessage('template');
     });
     
     templateContainer.appendChild(templateButton);
@@ -327,6 +470,11 @@ document.addEventListener('DOMContentLoaded', function() {
   function startDrawing(e) {
     e.preventDefault();
     isDrawing = true;
+    
+    // NIEUW: Toon teken bericht af en toe
+    if (Math.random() < 0.3) { // 30% kans om bericht te tonen tijdens tekenen
+      showKnofMessage('drawing');
+    }
     
     const rect = coloringCanvas.getBoundingClientRect();
     const x = (e.clientX || e.touches[0].clientX) - rect.left;
@@ -553,6 +701,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Canvas grootte aanpassen
     updateCanvasSize();
+    
+    // NIEUW: Toon welkomstbericht
+    showKnofMessage('welcome');
     
     // Extra updateCanvasSize aanroepen na korte vertraging
     setTimeout(updateCanvasSize, 300);
