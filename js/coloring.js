@@ -4,39 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const coloringCanvas = document.getElementById('coloring-canvas');
   const ctx = coloringCanvas.getContext('2d');
   const drawingToolbar = document.getElementById('drawing-toolbar');
-  const topNavContainer = document.getElementById('top-nav-container');
   
-  // NIEUW: Voeg een tekstbalk toe voor Knof's berichten
-  const knofMessageBar = document.createElement('div');
-  knofMessageBar.id = 'knof-message-bar';
-  knofMessageBar.style.backgroundColor = '#F8F6E9';
-  knofMessageBar.style.padding = '10px 15px';
-  knofMessageBar.style.textAlign = 'center';
-  knofMessageBar.style.fontFamily = 'Comic Sans MS, cursive, sans-serif';
-  knofMessageBar.style.fontSize = '18px';
-  knofMessageBar.style.color = '#5A4B41';
-  knofMessageBar.style.borderBottom = '2px solid #A7C957';
-  knofMessageBar.style.position = 'relative';
-  knofMessageBar.style.display = 'flex';
-  knofMessageBar.style.alignItems = 'center';
-  knofMessageBar.style.justifyContent = 'center';
-  
-  // Voeg kleine afbeelding van Knof toe
-  const knofIcon = document.createElement('img');
-  knofIcon.src = 'images/knof-icon.png'; // Pas dit aan naar het juiste pad
-  knofIcon.alt = 'Knof';
-  knofIcon.style.height = '35px';
-  knofIcon.style.marginRight = '10px';
-  knofIcon.style.filter = 'drop-shadow(2px 2px 2px rgba(0,0,0,0.2))';
-  
-  const messageText = document.createElement('span');
-  messageText.id = 'knof-message-text';
-  
-  knofMessageBar.appendChild(knofIcon);
-  knofMessageBar.appendChild(messageText);
-  topNavContainer.appendChild(knofMessageBar);
-  
-  // NIEUW: Verzameling berichten voor verschillende acties
+  // NIEUW: Berichten die Knof kan zeggen
   const knofMessages = {
     welcome: [
       "Leuk dat je komt kleuren! Wat zullen we tekenen?",
@@ -80,23 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
     ]
   };
   
-  // NIEUW: Functie om een willekeurig bericht te tonen
+  // NIEUW: Functie om een willekeurig bericht te tonen via de bestaande typeSpeechMessage functie
   function showKnofMessage(messageType) {
     const messages = knofMessages[messageType];
     const randomIndex = Math.floor(Math.random() * messages.length);
-    const messageElement = document.getElementById('knof-message-text');
+    const message = messages[randomIndex];
     
-    messageElement.textContent = messages[randomIndex];
-    
-    // Kleine animatie voor het bericht
-    messageElement.style.opacity = '0';
-    messageElement.style.transform = 'translateY(10px)';
-    messageElement.style.transition = 'opacity 0.3s, transform 0.3s';
-    
-    setTimeout(() => {
-      messageElement.style.opacity = '1';
-      messageElement.style.transform = 'translateY(0)';
-    }, 50);
+    // Controleer of typeSpeechMessage bestaat (komt uit common.js)
+    if (typeof typeSpeechMessage === 'function') {
+      typeSpeechMessage(message);
+    }
   }
   
   // Creëer het sjablooncanvas
@@ -177,11 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPickerButton.style.border = 'none';
     colorPickerButton.style.cursor = 'pointer';
     
-    // NIEUW: Toon bericht bij hover
-    colorPickerButton.addEventListener('mouseenter', () => {
-      showKnofMessage('colorPicker');
-    });
-    
     const colorPickerMenu = document.createElement('div');
     colorPickerMenu.style.display = 'none';
     colorPickerMenu.style.position = 'absolute';
@@ -239,11 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
     brushSizeButton.style.border = 'none';
     brushSizeButton.style.cursor = 'pointer';
     
-    // NIEUW: Toon bericht bij hover
-    brushSizeButton.addEventListener('mouseenter', () => {
-      showKnofMessage('brushSize');
-    });
-    
     const brushSizeMenu = document.createElement('div');
     brushSizeMenu.style.display = 'none';
     brushSizeMenu.style.position = 'absolute';
@@ -293,17 +245,10 @@ document.addEventListener('DOMContentLoaded', function() {
     undoButton.style.background = 'none';
     undoButton.style.border = 'none';
     undoButton.style.cursor = 'pointer';
-    
-    // NIEUW: Toon bericht bij hover
-    undoButton.addEventListener('mouseenter', () => {
-      showKnofMessage('undo');
-    });
-    
     undoButton.addEventListener('click', () => {
       undo();
       showKnofMessage('undo');
     });
-    
     drawingToolbar.appendChild(undoButton);
     
     // Wis knop
@@ -313,17 +258,10 @@ document.addEventListener('DOMContentLoaded', function() {
     clearButton.style.background = 'none';
     clearButton.style.border = 'none';
     clearButton.style.cursor = 'pointer';
-    
-    // NIEUW: Toon bericht bij hover
-    clearButton.addEventListener('mouseenter', () => {
-      showKnofMessage('clear');
-    });
-    
     clearButton.addEventListener('click', () => {
       handleClearCanvas();
       showKnofMessage('clear');
     });
-    
     drawingToolbar.appendChild(clearButton);
     
     // Download knop
@@ -333,17 +271,10 @@ document.addEventListener('DOMContentLoaded', function() {
     downloadButton.style.background = 'none';
     downloadButton.style.border = 'none';
     downloadButton.style.cursor = 'pointer';
-    
-    // NIEUW: Toon bericht bij hover
-    downloadButton.addEventListener('mouseenter', () => {
-      showKnofMessage('download');
-    });
-    
     downloadButton.addEventListener('click', () => {
       downloadImage();
       showKnofMessage('download');
     });
-    
     drawingToolbar.appendChild(downloadButton);
     
     // Template knop
@@ -356,11 +287,6 @@ document.addEventListener('DOMContentLoaded', function() {
     templateButton.style.background = 'none';
     templateButton.style.border = 'none';
     templateButton.style.cursor = 'pointer';
-    
-    // NIEUW: Toon bericht bij hover
-    templateButton.addEventListener('mouseenter', () => {
-      showKnofMessage('template');
-    });
     
     const templateMenu = document.createElement('div');
     templateMenu.style.display = 'none';
@@ -470,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     isDrawing = true;
     
-    // NIEUW: Toon teken bericht af en toe
+    // NIEUW: Toon af en toe een bericht tijdens het tekenen
     if (Math.random() < 0.3) { // 30% kans om bericht te tonen tijdens tekenen
       showKnofMessage('drawing');
     }
