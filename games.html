@@ -8,6 +8,203 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    /* Extra stijlen voor de spelletjespagina */
+    .games-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 15px 70px;
+    }
+    
+    .game-item {
+      position: relative;
+      background: #FFFFFF;
+      border: 3px solid #55A54A;
+      border-radius: 15px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      min-height: 150px;
+      filter: url(#rough-filter);
+    }
+    
+    .game-item:active {
+      transform: scale(0.98);
+    }
+    
+    .game-item-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0.15;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+    
+    .game-item h2 {
+      color: #55A54A;
+      margin: 0 0 8px;
+      position: relative;
+      z-index: 1;
+      font-family: 'Patrick Hand', cursive;
+    }
+    
+    .game-item p {
+      color: #6B5344;
+      margin: 0 0 12px;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .game-preview {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: auto;
+      height: 100px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Spelkeuze overlay stijlen */
+    .game-mode-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(248, 246, 233, 0.9);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .game-mode-container {
+      background-color: #FFFFFF;
+      border: 4px solid #55A54A;
+      border-radius: 20px;
+      padding: 20px;
+      width: 90%;
+      max-width: 340px;
+      text-align: center;
+      filter: url(#rough-filter);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .game-mode-title {
+      color: #55A54A;
+      margin: 0 0 15px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.6rem;
+    }
+    
+    .game-mode-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .game-mode-option {
+      background-color: #F4F1E4;
+      border: 3px solid #55A54A;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+      filter: url(#rough-filter);
+    }
+    
+    .game-mode-option:active {
+      transform: scale(0.98);
+      background-color: #E8E4D0;
+    }
+    
+    .option-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #55A54A;
+      border-radius: 50%;
+      margin-right: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .option-icon img {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .option-text {
+      text-align: left;
+      flex: 1;
+    }
+    
+    .option-text h3 {
+      margin: 0 0 5px;
+      color: #55A54A;
+      font-family: 'Patrick Hand', cursive;
+    }
+    
+    .option-text p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #6B5344;
+    }
+    
+    .cancel-button {
+      background-color: #F4F1E4;
+      border: 2px solid #6B5344;
+      border-radius: 10px;
+      padding: 8px 15px;
+      color: #6B5344;
+      font-family: 'Patrick Hand', cursive;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .cancel-button:active {
+      background-color: #E8E4D0;
+    }
+    
+    /* Animatie voor overlay */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .fade-in {
+      display: flex;
+      animation: fadeIn 0.3s forwards;
+    }
+    
+    /* Aangepaste achtergronden voor elk spel */
+    #connect-four .game-item-bg {
+      background-image: url('images/games/connect-four-bg.png');
+    }
+    
+    #tic-tac-toe .game-item-bg {
+      background-image: url('images/games/tic-tac-toe-bg.png');
+    }
+    
+    #pancake-dobble .game-item-bg {
+      background-image: url('images/games/pancake-dobble-bg.png');
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -35,35 +232,60 @@
     <h1 class="page-title">Knof's Spelletjeshoek</h1>
     
     <div class="games-container">
-      <div class="game-item" id="memory-game">
+      <div class="game-item" id="connect-four">
         <div class="game-item-bg"></div>
-        <h2>Memory</h2>
-        <p>Test je geheugen met Knof!</p>
+        <h2>4 op een rij</h2>
+        <p>Krijg 4 schijfjes op een rij, kolom of diagonaal!</p>
         <div class="game-preview">
-          <!-- Game preview content -->
-          <img src="images/memory-preview.png" alt="Memory spel voorbeeld" style="max-height: 100%; width: auto;">
+          <img src="images/games/connect-four-preview.png" alt="4 op een rij voorbeeld" style="max-height: 100%; width: auto;">
         </div>
       </div>
       
-      <div class="game-item" id="puzzle-game">
+      <div class="game-item" id="tic-tac-toe">
         <div class="game-item-bg"></div>
-        <h2>Puzzel</h2>
-        <p>Maak de puzzel compleet</p>
+        <h2>Boter, Kaas en Eieren</h2>
+        <p>Krijg drie op een rij om te winnen!</p>
         <div class="game-preview">
-          <!-- Game preview content -->
-          <img src="images/puzzle-preview.png" alt="Puzzel spel voorbeeld" style="max-height: 100%; width: auto;">
+          <img src="images/games/tic-tac-toe-preview.png" alt="Boter, kaas en eieren voorbeeld" style="max-height: 100%; width: auto;">
         </div>
       </div>
       
-      <div class="game-item" id="drawing-game">
+      <div class="game-item" id="pancake-dobble">
         <div class="game-item-bg"></div>
-        <h2>Raad mijn tekening</h2>
-        <p>Raad wat Knof tekent</p>
+        <h2>Pannenkoeken Dobble</h2>
+        <p>Vind zo snel mogelijk de overeenkomende plaatjes</p>
         <div class="game-preview">
-          <!-- Game preview content -->
-          <img src="images/drawing-preview.png" alt="Tekening spel voorbeeld" style="max-height: 100%; width: auto;">
+          <img src="images/games/pancake-dobble-preview.png" alt="Pannenkoeken dobble voorbeeld" style="max-height: 100%; width: auto;">
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Spelmodus keuze overlay -->
+  <div class="game-mode-overlay" id="game-mode-overlay">
+    <div class="game-mode-container">
+      <h2 class="game-mode-title" id="overlay-title">Hoe wil je spelen?</h2>
+      <div class="game-mode-options">
+        <div class="game-mode-option" id="play-with-knof">
+          <div class="option-icon">
+            <img src="images/knof-icon.png" alt="Knof icoon">
+          </div>
+          <div class="option-text">
+            <h3>Spelen tegen Knof</h3>
+            <p>Speel tegen Knof de computer!</p>
+          </div>
+        </div>
+        <div class="game-mode-option" id="play-with-friend">
+          <div class="option-icon">
+            <img src="images/friend-icon.png" alt="Vrienden icoon">
+          </div>
+          <div class="option-text">
+            <h3>Spelen met een vriend</h3>
+            <p>Speel samen op dezelfde telefoon!</p>
+          </div>
+        </div>
+      </div>
+      <button class="cancel-button" id="cancel-game">Terug</button>
     </div>
   </div>
 
@@ -72,7 +294,6 @@
 
   <!-- Scripts -->
   <script src="js/common.js"></script>
-  <script src="js/games.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Welkomstbericht voor games pagina
@@ -80,17 +301,94 @@
         typeSpeechMessage("Welkom bij de spelletjes! Wat wil je spelen? Ik vind ze allemaal leuk!");
       }, 500);
       
+      // Variabelen voor de overlay en spel selectie
+      const overlay = document.getElementById('game-mode-overlay');
+      const overlayTitle = document.getElementById('overlay-title');
+      const playWithKnof = document.getElementById('play-with-knof');
+      const playWithFriend = document.getElementById('play-with-friend');
+      const cancelButton = document.getElementById('cancel-game');
+      
+      let selectedGame = '';
+      let selectedGameName = '';
+      
+      // Functie om de overlay te tonen
+      function showOverlay(gameId, gameName) {
+        selectedGame = gameId;
+        selectedGameName = gameName;
+        overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
+        overlay.classList.add('fade-in');
+      }
+      
+      // Functie om de overlay te verbergen
+      function hideOverlay() {
+        overlay.classList.remove('fade-in');
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 300);
+      }
+      
       // Event listeners voor spelletjes
-      document.getElementById('memory-game').addEventListener('click', () => {
-        window.location.href = 'games/memory.html';
+      document.getElementById('connect-four').addEventListener('click', () => {
+        showOverlay('connect-four', '4 op een rij');
+        typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
       });
       
-      document.getElementById('puzzle-game').addEventListener('click', () => {
-        window.location.href = 'games/puzzle.html';
+      document.getElementById('tic-tac-toe').addEventListener('click', () => {
+        showOverlay('tic-tac-toe', 'Boter, Kaas en Eieren');
+        typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
       });
       
-      document.getElementById('drawing-game').addEventListener('click', () => {
-        window.location.href = 'games/drawing.html';
+      document.getElementById('pancake-dobble').addEventListener('click', () => {
+        showOverlay('pancake-dobble', 'Pannenkoeken Dobble');
+        typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
+      });
+      
+      // Event listener voor tegen Knof spelen
+      playWithKnof.addEventListener('click', () => {
+        hideOverlay();
+        typeSpeechMessage(`Leuk dat je ${selectedGameName} tegen mij wilt spelen! Ik doe mijn best!`);
+        
+        // Stuur naar de juiste game pagina met mode parameter
+        setTimeout(() => {
+          switch(selectedGame) {
+            case 'connect-four':
+              window.location.href = 'games/connect-four.html?mode=vs-knof';
+              break;
+            case 'tic-tac-toe':
+              window.location.href = 'games/tic-tac-toe.html?mode=vs-knof';
+              break;
+            case 'pancake-dobble':
+              window.location.href = 'games/pancake-dobble.html?mode=vs-knof';
+              break;
+          }
+        }, 1500);
+      });
+      
+      // Event listener voor tegen een vriend spelen
+      playWithFriend.addEventListener('click', () => {
+        hideOverlay();
+        typeSpeechMessage(`${selectedGameName} samen spelen is gezellig! Veel plezier!`);
+        
+        // Stuur naar de juiste game pagina met mode parameter
+        setTimeout(() => {
+          switch(selectedGame) {
+            case 'connect-four':
+              window.location.href = 'games/connect-four.html?mode=vs-friend';
+              break;
+            case 'tic-tac-toe':
+              window.location.href = 'games/tic-tac-toe.html?mode=vs-friend';
+              break;
+            case 'pancake-dobble':
+              window.location.href = 'games/pancake-dobble.html?mode=vs-friend';
+              break;
+          }
+        }, 1500);
+      });
+      
+      // Event listener voor cancel button
+      cancelButton.addEventListener('click', () => {
+        hideOverlay();
+        typeSpeechMessage("Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!");
       });
     });
   </script>
