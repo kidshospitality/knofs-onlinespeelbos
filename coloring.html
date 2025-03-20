@@ -146,5 +146,68 @@
     });
   </script>
   <script src="js/coloring.js"></script>
+  
+  <!-- Stap 3: iOS Safari-specifieke fix voor navigatiebalk -->
+  <script>
+    // iOS Safari-specifieke fix voor navigatiebalk
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check of het een iOS apparaat is
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        const bottomNav = document.getElementById('bottom-nav-container');
+        
+        // Fix voor iOS navigatiebalk
+        function ensureNavigationVisibility() {
+          if (bottomNav) {
+            bottomNav.style.display = 'flex';
+            bottomNav.style.visibility = 'visible';
+            bottomNav.style.opacity = '1';
+          }
+        }
+        
+        // Direct toepassen
+        ensureNavigationVisibility();
+        
+        // Na kleine vertraging opnieuw toepassen
+        setTimeout(ensureNavigationVisibility, 300);
+        
+        // Periodiek controleren
+        setInterval(ensureNavigationVisibility, 1000);
+        
+        // Ook controleren na resize/orientation change
+        window.addEventListener('resize', ensureNavigationVisibility);
+        window.addEventListener('orientationchange', function() {
+          setTimeout(ensureNavigationVisibility, 300);
+        });
+      }
+    });
+  </script>
+
+  <!-- Stap 4: Update aan updateCanvasSize functie wordt toegevoegd via deze script tag -->
+  <script>
+    // Deze code voegt de fix toe aan de updateCanvasSize functie in coloring.js
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wacht tot coloring.js is geladen en uitgevoerd
+      setTimeout(function() {
+        // Check of de updateCanvasSize functie bestaat
+        if (typeof updateCanvasSize === 'function') {
+          // Bewaar de originele functie
+          const originalUpdateCanvasSize = updateCanvasSize;
+          
+          // Overschrijf de functie met onze verbeterde versie
+          window.updateCanvasSize = function() {
+            // Roep de originele functie aan
+            originalUpdateCanvasSize();
+            
+            // Zorg dat de bottom nav zichtbaar blijft, vooral op iOS
+            const bottomNav = document.getElementById('bottom-nav-container');
+            if (bottomNav) {
+              bottomNav.style.display = 'flex';
+              bottomNav.style.visibility = 'visible';
+            }
+          };
+        }
+      }, 100);
+    });
+  </script>
 </body>
 </html>
