@@ -17,9 +17,7 @@
       overflow: hidden;
       position: fixed;
       width: 100%;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: none;
-      background-color: transparent; /* Zorg dat de basis achtergrond transparant is */
+      background-color: transparent !important;
     }
     
     /* App container - Full height layout */
@@ -31,11 +29,9 @@
       bottom: 0;
       display: flex;
       flex-direction: column;
-      -webkit-transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
+      background-color: transparent !important;
       padding-top: 60px; /* Ruimte voor top-nav */
       padding-bottom: 50px; /* Ruimte voor bottom-nav */
-      background-color: transparent; /* Zorg dat deze container ook transparant is */
     }
     
     /* Style voor de chatbot container */
@@ -44,7 +40,7 @@
       width: 100%;
       position: relative;
       overflow: hidden;
-      background-color: transparent; /* Maak chatbot wrapper transparant */
+      background-color: transparent !important;
     }
     
     /* Laad-indicator styles */
@@ -67,10 +63,6 @@
       right: 0;
       z-index: 10;
       height: 50px;
-      display: flex !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      -webkit-transform: translateZ(0);
     }
     
     /* Top navigation fix */
@@ -82,31 +74,28 @@
       right: 0;
       z-index: 10;
     }
-    
-    /* Nieuwe stijlen voor iframe en zijn inhoud */
-    iframe {
-      background-color: transparent !important; /* Maak iframe transparant */
-    }
-    
-    /* Deze CSS wordt toegepast via JavaScript nadat iframe is geladen */
-    .transparent-iframe-fix {
-      background-color: transparent !important; 
-    }
   </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
-  <svg class="svg-filters" style="display:none;">
+  <svg class="svg-filters">
     <defs>
       <filter id="rough-filter">
         <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
       </filter>
     </defs>
   </svg>
 
   <!-- Container voor top navigatie -->
   <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
 
   <!-- Hoofdcontent - Chat met iframe -->
   <div class="app-container">
@@ -141,131 +130,98 @@
           // Verberg loader
           loadingIndicator.style.display = 'none';
           
-          // Pas iframe afmetingen aan
-          resizeIframe();
-          
-          // Maak iframe en inhoud transparant
-          makeIframeTransparent();
+          // Pas iframe aan en maak transparant
+          setupIframe();
         }, 500);
       };
       
       chatbotWrapper.appendChild(script);
       
-      // Functie om iframe aan te passen
-      function resizeIframe() {
+      // Functie om iframe te setuppen en transparant te maken
+      function setupIframe() {
         const iframe = chatbotWrapper.querySelector('iframe');
-        if (iframe) {
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.position = 'absolute';
-          iframe.style.top = '0';
-          iframe.style.left = '0';
-          iframe.style.border = 'none';
-          iframe.style.backgroundColor = 'transparent';
-        }
-      }
-      
-      // Functie om iframe transparant te maken
-      function makeIframeTransparent() {
-        const iframe = chatbotWrapper.querySelector('iframe');
-        if (iframe) {
-          // Maak iframe zelf transparant
-          iframe.style.backgroundColor = 'transparent';
+        if (!iframe) return;
           
-          try {
-            // Probeer toegang te krijgen tot iframe inhoud
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            
-            // Maak HTML en BODY elementen in iframe transparant
-            if (iframeDoc) {
-              // Voeg CSS toe aan iframe document
-              const style = iframeDoc.createElement('style');
-              style.textContent = `
-                html, body, .container, .main, .chat-container, .message-container {
-                  background-color: transparent !important;
-                }
-                .chat-message, .message-bubble {
-                  background-color: rgba(255, 255, 255, 0.7) !important;
-                }
-              `;
-              iframeDoc.head.appendChild(style);
+        // Maak iframe zelf transparant en full-size
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.border = 'none';
+        iframe.style.backgroundColor = 'transparent';
+        
+        // Injecteer CSS om iframe inhoud transparant te maken
+        try {
+          // Deze methode werkt alleen als het iframe dezelfde origin heeft
+          injectTransparentCSS(iframe);
+        } catch(e) {
+          console.log("Directe CSS injectie niet mogelijk");
+        }
+        
+        // Plan B: Voeg transparante stijl toe via iframe.onload
+        iframe.onload = function() {
+          setTimeout(function() {
+            try {
+              injectTransparentCSS(iframe);
+            } catch(e) {
+              console.log("Onload CSS injectie niet mogelijk");
             }
-          } catch(e) {
-            console.log("Kon iframe inhoud niet direct aanpassen vanwege Same-Origin Policy");
-            
-            // Alternatieve aanpak met injectie van stijl na laden
-            iframe.addEventListener('load', function() {
-              setTimeout(function() {
-                try {
-                  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                  if (iframeDoc) {
-                    const style = iframeDoc.createElement('style');
-                    style.textContent = `
-                      html, body, .container, .main, .chat-container, .message-container {
-                        background-color: transparent !important;
-                      }
-                      .chat-message, .message-bubble {
-                        background-color: rgba(255, 255, 255, 0.7) !important;
-                      }
-                    `;
-                    iframeDoc.head.appendChild(style);
-                  }
-                } catch(e) {
-                  console.log("Kon iframe inhoud niet aanpassen na laden");
-                }
-              }, 1000);
-            });
+          }, 100);
+        };
+      }
+      
+      // Functie om transparantie CSS in te injecteren in iframe
+      function injectTransparentCSS(iframe) {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc) return;
+        
+        // Creëer een stijl element
+        const style = document.createElement('style');
+        style.textContent = `
+          html, body, div, main, section, article, 
+          .container, .wrapper, .content, .main, 
+          .chat-container, .message-container, .chat-wrapper,
+          [class*="container"], [class*="wrapper"], [class*="content"],
+          [class*="background"], [class*="bg"] {
+            background-color: transparent !important;
+            background-image: none !important;
           }
+          
+          /* Lichte achtergrond voor berichten zodat ze leesbaar blijven */
+          .message, .chat-message, .user-message, .bot-message,
+          .message-bubble, [class*="message"], [class*="bubble"] {
+            background-color: rgba(255, 255, 255, 0.6) !important;
+          }
+        `;
+        
+        // Voeg stijl toe aan iframe document
+        iframeDoc.head.appendChild(style);
+        
+        // Extra: probeer ook inline achtergronden te verwijderen
+        const allElements = iframeDoc.querySelectorAll('*');
+        allElements.forEach(el => {
+          el.style.backgroundColor = 'transparent';
+          el.style.backgroundImage = 'none';
+        });
+      }
+      
+      // Controleer iframe periodiek
+      function monitorIframe() {
+        const iframe = chatbotWrapper.querySelector('iframe');
+        if (iframe) {
+          setupIframe();
         }
       }
       
-      // Resize event handlers
-      function handleResize() {
-        resizeIframe();
-        
-        // Fix voor iOS hoogte
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        // Zorg ervoor dat bottom-nav zichtbaar blijft
-        const bottomNav = document.getElementById('bottom-nav-container');
-        if (bottomNav) {
-          bottomNav.style.display = 'flex';
-          bottomNav.style.visibility = 'visible';
-        }
-        
-        // Controleer ook iframe transparantie
-        makeIframeTransparent();
-      }
+      // Controleer regelmatig of het iframe bestaat en maak het transparant
+      setInterval(monitorIframe, 1000);
       
-      window.addEventListener('resize', handleResize);
-      window.addEventListener('orientationchange', function() {
-        setTimeout(handleResize, 300);
-      });
-      
-      // Extra resize checks
-      setTimeout(handleResize, 100);
-      setTimeout(handleResize, 500);
-      setTimeout(handleResize, 1000);
-      setTimeout(makeIframeTransparent, 1500);
-      setTimeout(makeIframeTransparent, 2500);
+      // Extra checks na verschillende intervallen
+      setTimeout(monitorIframe, 500);
+      setTimeout(monitorIframe, 1500);
+      setTimeout(monitorIframe, 3000);
     });
-    
-    // iOS Safari-specifieke fix voor navigatiebalk
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-      const bottomNav = document.getElementById('bottom-nav-container');
-      
-      function ensureNavigationVisibility() {
-        if (bottomNav) {
-          bottomNav.style.display = 'flex';
-          bottomNav.style.visibility = 'visible';
-          bottomNav.style.opacity = '1';
-        }
-      }
-      
-      // Periodiek controleren
-      setInterval(ensureNavigationVisibility, 1000);
-    }
   </script>
 </body>
 </html>
