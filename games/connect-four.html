@@ -13,14 +13,7 @@
     .game-container {
       max-width: 600px;
       margin: 0 auto;
-      padding: 20px;
-    }
-
-    .game-title {
-      color: #55A54A;
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 2rem;
+      padding: 10px;
     }
 
     .game-board {
@@ -80,10 +73,9 @@
       background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
     }
 
-    /* Knof's stuk is groene pannenkoek (stroop + groene kleur) */
+    /* Knof's stuk is stroop pannenkoek */
     .cell.knof-piece::after {
       background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
-      filter: hue-rotate(90deg);
     }
 
     .cell.winning {
@@ -187,7 +179,6 @@
 
     .player-icon.knof-piece::after {
       background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
-      filter: hue-rotate(90deg);
     }
 
     .active-player {
@@ -238,6 +229,11 @@
       pointer-events: none;
       z-index: 1000;
     }
+
+    /* Verwijder titel om meer ruimte te maken */
+    .app-container {
+      padding-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -267,7 +263,12 @@
   <!-- Hoofdcontent - 4 op een rij spel -->
   <div class="app-container">
     <div class="game-container">
-      <h1 class="game-title">4 op een rij</h1>
+      <!-- Titel verwijderd om meer ruimte te maken -->
+      
+      <div class="game-board" id="game-board">
+        <div class="column-hover" id="column-hover"></div>
+        <!-- De kolommen worden dynamisch toegevoegd met JavaScript -->
+      </div>
       
       <div class="game-info">
         <div class="score-board">
@@ -291,11 +292,6 @@
           <button class="game-button" id="reset-scores">Reset scores</button>
           <button class="game-button" id="back-button">Terug naar opties</button>
         </div>
-      </div>
-      
-      <div class="game-board" id="game-board">
-        <div class="column-hover" id="column-hover"></div>
-        <!-- De kolommen worden dynamisch toegevoegd met JavaScript -->
       </div>
     </div>
   </div>
@@ -417,7 +413,7 @@
         opponentNameEl.textContent = 'Knof';
         // Welkomstbericht
         setTimeout(() => {
-          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de groene pannenkoeken. Laten we beginnen!");
+          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de strooppannenkoeken. Laten we beginnen!");
         }, 500);
       } else {
         // Speler 2 is een vriend
@@ -628,7 +624,7 @@
               "Ik denk dat ik hier ga winnen!",
               "Kijk eens wat ik hier doe!",
               "Vier op een rij voor mij!",
-              "Mijn groene pannenkoek past hier perfect!"
+              "Mijn strooppannenkoek past hier perfect!"
             ];
             typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
           } 
@@ -665,7 +661,7 @@
                 "Hmm, laat me eens nadenken...",
                 "Ik kies deze plek!",
                 "Mijn beurt!",
-                "Mijn groene pannenkoek gaat hier!",
+                "Mijn strooppannenkoek gaat hier!",
                 "Dit is een goede zet denk ik."
               ];
               
