@@ -2,99 +2,70 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kleurboek - Knof's Speelbos</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
   <style>
-  /* Reset - iOS Safari Fix */
-  body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-  }
-  
-  /* Layout - iOS Safari Fix */
-  .app-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    -webkit-transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-  }
-  
-  /* Top nav container fix */
-  #top-nav-container {
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-  }
-  
-  /* Toolbar fix */
-  #drawing-toolbar {
-    background-color: transparent;
-    border-bottom: 1px solid #ddd;
-    padding: 8px 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 9;
-  }
-  
-  /* Container/Canvas layout fix */
-  .coloring-container {
-    flex: 1 0 auto;
-    position: relative;
-    overflow: hidden;
-    min-height: 0;
-  }
-  
-  #canvas-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
-  #coloring-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    touch-action: none;
-  }
-  
-  #template-canvas {
-    touch-action: none;
-  }
-  
-  /* Bottom navigation fix - meest belangrijk voor je probleem */
-  #bottom-nav-container {
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-    height: 50px; /* Vaste hoogte voor de navigatiebalk */
-    display: flex !important; /* Forceert weergave */
-    visibility: visible !important; /* Forceert zichtbaarheid */
-    opacity: 1 !important;
-    -webkit-transform: translateZ(0); /* Forceert GPU rendering */
-  }
-</style>
+    /* Reset */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* Layout */
+    .app-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Top bar is standaard aanwezig */
+    #top-nav-container {
+      flex-shrink: 0;
+    }
+    
+    /* NIEUWE TOOLBOX - Eenvoudig en direct gepositioneerd */
+    #drawing-toolbar {
+      background-color: transparent;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-shrink: 0; /* Voorkomt krimpen */
+    }
+    
+    /* Oude container wordt flex om ruimte op te vullen */
+    .coloring-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    #canvas-container {
+      flex: 1;
+      position: relative;
+    }
+    
+    #coloring-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Bottom nav standaard aanwezig */
+    #bottom-nav-container {
+      flex-shrink: 0;
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters -->
@@ -146,68 +117,5 @@
     });
   </script>
   <script src="js/coloring.js"></script>
-  
-  <!-- Stap 3: iOS Safari-specifieke fix voor navigatiebalk -->
-  <script>
-    // iOS Safari-specifieke fix voor navigatiebalk
-    document.addEventListener('DOMContentLoaded', function() {
-      // Check of het een iOS apparaat is
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        const bottomNav = document.getElementById('bottom-nav-container');
-        
-        // Fix voor iOS navigatiebalk
-        function ensureNavigationVisibility() {
-          if (bottomNav) {
-            bottomNav.style.display = 'flex';
-            bottomNav.style.visibility = 'visible';
-            bottomNav.style.opacity = '1';
-          }
-        }
-        
-        // Direct toepassen
-        ensureNavigationVisibility();
-        
-        // Na kleine vertraging opnieuw toepassen
-        setTimeout(ensureNavigationVisibility, 300);
-        
-        // Periodiek controleren
-        setInterval(ensureNavigationVisibility, 1000);
-        
-        // Ook controleren na resize/orientation change
-        window.addEventListener('resize', ensureNavigationVisibility);
-        window.addEventListener('orientationchange', function() {
-          setTimeout(ensureNavigationVisibility, 300);
-        });
-      }
-    });
-  </script>
-
-  <!-- Stap 4: Update aan updateCanvasSize functie wordt toegevoegd via deze script tag -->
-  <script>
-    // Deze code voegt de fix toe aan de updateCanvasSize functie in coloring.js
-    document.addEventListener('DOMContentLoaded', function() {
-      // Wacht tot coloring.js is geladen en uitgevoerd
-      setTimeout(function() {
-        // Check of de updateCanvasSize functie bestaat
-        if (typeof updateCanvasSize === 'function') {
-          // Bewaar de originele functie
-          const originalUpdateCanvasSize = updateCanvasSize;
-          
-          // Overschrijf de functie met onze verbeterde versie
-          window.updateCanvasSize = function() {
-            // Roep de originele functie aan
-            originalUpdateCanvasSize();
-            
-            // Zorg dat de bottom nav zichtbaar blijft, vooral op iOS
-            const bottomNav = document.getElementById('bottom-nav-container');
-            if (bottomNav) {
-              bottomNav.style.display = 'flex';
-              bottomNav.style.visibility = 'visible';
-            }
-          };
-        }
-      }, 100);
-    });
-  </script>
 </body>
 </html>
