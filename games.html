@@ -8,204 +8,6 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
-  <style>
-    /* Extra stijlen voor de spelletjespagina */
-    .games-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      padding: 0 15px 70px;
-    }
-    
-    .game-item {
-      position: relative;
-      background: #FFFFFF;
-      border: 3px solid;
-      border-radius: 15px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      min-height: 150px;
-      filter: url(#rough-filter);
-    }
-    
-    .game-item:active {
-      transform: scale(0.98);
-    }
-    
-    /* Unieke kleuren voor elk spel */
-    #connect-four {
-      border-color: #55A54A; /* Groen */
-    }
-    
-    #connect-four h2 {
-      color: #55A54A;
-    }
-    
-    #tic-tac-toe {
-      border-color: #F07C3E; /* Oranje */
-    }
-    
-    #tic-tac-toe h2 {
-      color: #F07C3E;
-    }
-    
-    #pancake-dobble {
-      border-color: #9B5DE5; /* Paars */
-    }
-    
-    #pancake-dobble h2 {
-      color: #9B5DE5;
-    }
-    
-    .game-item h2 {
-      margin: 0 0 8px;
-      position: relative;
-      z-index: 1;
-      font-family: 'Patrick Hand', cursive;
-    }
-    
-    .game-item p {
-      color: #6B5344;
-      margin: 0 0 12px;
-      font-size: 1.1rem; /* VERGROOT: van 0.9rem naar 1.1rem */
-      position: relative;
-      z-index: 1;
-      font-weight: 500; /* Iets dikker voor betere leesbaarheid */
-    }
-    
-    .game-preview {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: auto;
-      position: relative;
-      z-index: 1;
-      height: 100px;
-    }
-    
-    .game-svg {
-      height: 80px;
-      width: auto;
-      filter: url(#squiggly-filter);
-    }
-    
-    /* Spelkeuze overlay stijlen */
-    .game-mode-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(248, 246, 233, 0.9);
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    
-    .game-mode-container {
-      background-color: #FFFFFF;
-      border: 4px solid;
-      border-radius: 20px;
-      padding: 20px;
-      width: 90%;
-      max-width: 340px;
-      text-align: center;
-      filter: url(#rough-filter);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-    
-    /* De border-color wordt dynamisch aangepast op basis van geselecteerd spel */
-    .game-mode-title {
-      margin: 0 0 20px; /* meer ruimte onder de titel */
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.8rem; /* VERGROOT: van 1.6rem naar 1.8rem */
-    }
-    
-    .game-mode-options {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px; /* meer ruimte onder opties */
-    }
-    
-    .game-mode-option {
-      background-color: #F4F1E4;
-      border: 3px solid;
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
-      filter: url(#rough-filter);
-    }
-    
-    .game-mode-option:active {
-      transform: scale(0.98);
-      background-color: #E8E4D0;
-    }
-    
-    .option-icon {
-      width: 45px; /* VERGROOT: van 40px naar 45px */
-      height: 45px; /* VERGROOT: van 40px naar 45px */
-      border-radius: 50%;
-      margin-right: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .option-icon svg {
-      width: 28px; /* VERGROOT: van 24px naar 28px */
-      height: 28px; /* VERGROOT: van 24px naar 28px */
-      fill: white;
-    }
-    
-    .option-text {
-      text-align: left;
-      flex: 1;
-    }
-    
-    .option-text h3 {
-      margin: 0;
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.3rem; /* VERGROOT: nieuwe eigenschap voor grotere tekst */
-    }
-    
-    .cancel-button {
-      background-color: #F4F1E4;
-      border: 2px solid #6B5344;
-      border-radius: 10px;
-      padding: 10px 20px; /* iets grotere padding */
-      color: #6B5344;
-      font-family: 'Patrick Hand', cursive;
-      font-size: 1.1rem; /* VERGROOT: grotere tekst voor de knop */
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    
-    .cancel-button:active {
-      background-color: #E8E4D0;
-    }
-    
-    /* Animatie voor overlay */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    
-    .fade-in {
-      display: flex;
-      animation: fadeIn 0.3s forwards;
-    }
-  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -232,106 +34,54 @@
   <div class="app-container">
     <h1 class="page-title">Knof's Spelletjeshoek</h1>
     
-    <div class="games-container">
-      <div class="game-item" id="connect-four" data-game-color="#55A54A">
-        <h2>4 op een rij</h2>
-        <p>Krijg 4 schijfjes op een rij, kolom of diagonaal!</p>
-        <div class="game-preview">
-          <!-- Connect Four SVG -->
-          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="10" y="5" width="80" height="70" rx="3" fill="#2A75BB" stroke="#1D5A9F" stroke-width="2"/>
-            <circle cx="20" cy="15" r="7" fill="#FFFFFF"/>
-            <circle cx="40" cy="15" r="7" fill="#FFFFFF"/>
-            <circle cx="60" cy="15" r="7" fill="#FFFFFF"/>
-            <circle cx="80" cy="15" r="7" fill="#FFFFFF"/>
-            <circle cx="20" cy="35" r="7" fill="#FFFFFF"/>
-            <circle cx="40" cy="35" r="7" fill="#FFFFFF"/>
-            <circle cx="60" cy="35" r="7" fill="#55A54A"/>
-            <circle cx="80" cy="35" r="7" fill="#FFFFFF"/>
-            <circle cx="20" cy="55" r="7" fill="#E63946"/>
-            <circle cx="40" cy="55" r="7" fill="#E63946"/>
-            <circle cx="60" cy="55" r="7" fill="#55A54A"/>
-            <circle cx="80" cy="55" r="7" fill="#FFFFFF"/>
-          </svg>
-        </div>
+    <div class="sections-container">
+      <!-- 4 op een rij Section -->
+      <div class="section" id="connect-four" data-game-color="#55A54A">
+        <div class="section-bg-games"></div>
+        <div class="section-title">4 op een rij</div>
+        <div class="section-subtitle">Krijg 4 schijfjes op een rij, kolom of diagonaal!</div>
+        <span class="section-arrow"></span>
       </div>
       
-      <div class="game-item" id="tic-tac-toe" data-game-color="#F07C3E">
-        <h2>Boter, Kaas en Eieren</h2>
-        <p>Krijg drie op een rij om te winnen!</p>
-        <div class="game-preview">
-          <!-- Tic Tac Toe SVG -->
-          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="5" width="90" height="70" rx="3" fill="#F4F1E4" stroke="#6B5344" stroke-width="1"/>
-            <!-- Grid lines -->
-            <line x1="33" y1="5" x2="33" y2="75" stroke="#6B5344" stroke-width="2"/>
-            <line x1="67" y1="5" x2="67" y2="75" stroke="#6B5344" stroke-width="2"/>
-            <line x1="5" y1="28" x2="95" y2="28" stroke="#6B5344" stroke-width="2"/>
-            <line x1="5" y1="52" x2="95" y2="52" stroke="#6B5344" stroke-width="2"/>
-            <!-- X and O examples -->
-            <circle cx="18" cy="16" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
-            <path d="M78 12 L88 24 M88 12 L78 24" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="50" cy="40" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
-            <path d="M18 52 L28 64 M28 52 L18 64" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        </div>
+      <!-- Boter Kaas en Eieren Section -->
+      <div class="section" id="tic-tac-toe" data-game-color="#F07C3E">
+        <div class="section-bg-coloring"></div>
+        <div class="section-title">Boter, Kaas en Eieren</div>
+        <div class="section-subtitle">Krijg drie op een rij om te winnen!</div>
+        <span class="section-arrow"></span>
       </div>
-      
-      <div class="game-item" id="pancake-dobble" data-game-color="#9B5DE5">
-        <h2>Pannenkoeken Dobble</h2>
-        <p>Vind zo snel mogelijk de overeenkomende plaatjes</p>
-        <div class="game-preview">
-          <!-- Pancake Dobble SVG -->
-          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="30" cy="40" r="25" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
-            <circle cx="70" cy="40" r="25" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
-            <!-- Card 1 symbols -->
-            <circle cx="20" cy="25" r="5" fill="#FF5733"/>
-            <rect x="35" y="30" width="10" height="10" fill="#9B5DE5"/>
-            <path d="M15 50 L25 45 L30 55 Z" fill="#55A54A"/>
-            <path d="M35 55 L40 45 L45 55 Z" fill="#F07C3E"/>
-            <!-- Card 2 symbols -->
-            <circle cx="60" cy="25" r="5" fill="#9B5DE5"/>
-            <rect x="75" y="30" width="10" height="10" fill="#FF5733"/>
-            <path d="M55 50 L65 45 L70 55 Z" fill="#F07C3E"/>
-            <path d="M75 55 L80 45 L85 55 Z" fill="#3D85C6"/>
-            <!-- Connection line for matching symbol -->
-            <line x1="20" y1="25" x2="60" y2="25" stroke="#FF5733" stroke-width="1" stroke-dasharray="2,2"/>
-          </svg>
-        </div>
+
+      <!-- Pannenkoeken Dobble Section -->
+      <div class="section" id="pancake-dobble" data-game-color="#9B5DE5">
+        <div class="section-bg-placemat"></div>
+        <div class="section-title">Pannenkoeken Dobble</div>
+        <div class="section-subtitle">Vind zo snel mogelijk de overeenkomende plaatjes</div>
+        <span class="section-arrow"></span>
       </div>
     </div>
   </div>
 
   <!-- Spelmodus keuze overlay -->
-  <div class="game-mode-overlay" id="game-mode-overlay">
-    <div class="game-mode-container" id="game-mode-container">
-      <h2 class="game-mode-title" id="overlay-title">Hoe wil je spelen?</h2>
-      <div class="game-mode-options">
-        <div class="game-mode-option" id="play-with-knof">
-          <div class="option-icon" id="knof-icon">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10-4.48 10-10S17.52,2 12,2z M12,6c1.93,0 3.5,1.57 3.5,3.5S13.93,13 12,13s-3.5-1.57 -3.5-3.5S10.07,6 12,6z M12,20c-2.03,0 -4.43,-0.82 -6.14,-2.88C7.55,15.8 9.68,15 12,15s4.45,0.8 6.14,2.12C16.43,19.18 14.03,20 12,20z"/>
-            </svg>
-          </div>
-          <div class="option-text">
-            <h3 id="knof-title">Spelen tegen Knof</h3>
-            <!-- Subtekst verwijderd -->
-          </div>
+  <div class="modal" id="game-mode-overlay">
+    <div class="modal-content" id="game-mode-container">
+      <h2 class="modal-title" id="overlay-title">Hoe wil je spelen?</h2>
+      <div class="buttons-container">
+        <div class="button" id="play-with-knof">
+          <div class="button-bg"></div>
+          <span>
+            <div class="button-emoji" id="knof-icon">👤</div>
+            <div class="button-text" id="knof-title">Spelen tegen Knof</div>
+          </span>
         </div>
-        <div class="game-mode-option" id="play-with-friend">
-          <div class="option-icon" id="friend-icon">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16,11c1.66,0 2.99,-1.34 2.99,-3S17.66,5 16,5c-1.66,0 -3,1.34 -3,3s1.34,3 3,3zm-8,0c1.66,0 2.99,-1.34 2.99,-3S9.66,5 8,5C6.34,5 5,6.34 5,8s1.34,3 3,3zm0,2c-2.33,0 -7,1.17 -7,3.5V19h14v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5zm8,0c-0.29,0 -0.62,0.02 -0.97,0.05c1.16,0.84 1.97,1.97 1.97,3.45V19h6v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5z"/>
-            </svg>
-          </div>
-          <div class="option-text">
-            <h3 id="friend-title">Spelen met een vriend</h3>
-            <!-- Subtekst verwijderd -->
-          </div>
+        <div class="button" id="play-with-friend">
+          <div class="button-bg"></div>
+          <span>
+            <div class="button-emoji" id="friend-icon">👥</div>
+            <div class="button-text" id="friend-title">Spelen met een vriend</div>
+          </span>
         </div>
       </div>
-      <button class="cancel-button" id="cancel-game">Terug</button>
+      <button class="modal-button" id="cancel-game">Terug</button>
     </div>
   </div>
 
@@ -353,9 +103,6 @@
       const playWithKnof = document.getElementById('play-with-knof');
       const playWithFriend = document.getElementById('play-with-friend');
       const cancelButton = document.getElementById('cancel-game');
-      const containerElement = document.getElementById('game-mode-container');
-      const knofIcon = document.getElementById('knof-icon');
-      const friendIcon = document.getElementById('friend-icon');
       const knofTitle = document.getElementById('knof-title');
       const friendTitle = document.getElementById('friend-title');
       
@@ -369,55 +116,44 @@
         selectedGameName = gameName;
         selectedGameColor = gameColor;
         
-        // Pas kleuren aan op basis van het gekozen spel
-        containerElement.style.borderColor = gameColor;
-        overlayTitle.style.color = gameColor;
-        
-        knofIcon.style.backgroundColor = gameColor;
-        friendIcon.style.backgroundColor = gameColor;
-        knofTitle.style.color = gameColor;
-        friendTitle.style.color = gameColor;
-        
-        playWithKnof.style.borderColor = gameColor;
-        playWithFriend.style.borderColor = gameColor;
-        
+        // Pas titel aan
         overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
+        
+        // Toon overlay
         overlay.style.display = 'flex';
-        overlay.classList.add('fade-in');
       }
       
       // Functie om de overlay te verbergen
       function hideOverlay() {
-        overlay.classList.remove('fade-in');
-        setTimeout(() => {
-          overlay.style.display = 'none';
-        }, 300);
+        overlay.style.display = 'none';
       }
       
       // Voeg eventListeners toe voor alle spellen
-      const gameItems = document.querySelectorAll('.game-item');
+      const gameItems = document.querySelectorAll('.section');
       
       gameItems.forEach(item => {
-        item.addEventListener('click', function() {
-          const gameId = this.id;
-          const gameName = this.querySelector('h2').textContent;
-          const gameColor = this.dataset.gameColor;
-          
-          showOverlay(gameId, gameName, gameColor);
-          
-          // Verschillende berichten per spel
-          switch(gameId) {
-            case 'connect-four':
-              typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
-              break;
-            case 'tic-tac-toe':
-              typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
-              break;
-            case 'pancake-dobble':
-              typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
-              break;
-          }
-        });
+        if (item.id === 'connect-four' || item.id === 'tic-tac-toe' || item.id === 'pancake-dobble') {
+          item.addEventListener('click', function() {
+            const gameId = this.id;
+            const gameName = this.querySelector('.section-title').textContent;
+            const gameColor = this.dataset.gameColor;
+            
+            showOverlay(gameId, gameName, gameColor);
+            
+            // Verschillende berichten per spel
+            switch(gameId) {
+              case 'connect-four':
+                typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
+                break;
+              case 'tic-tac-toe':
+                typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
+                break;
+              case 'pancake-dobble':
+                typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
+                break;
+            }
+          });
+        }
       });
       
       // Event listener voor tegen Knof spelen
