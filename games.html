@@ -35,52 +35,64 @@
     .modal-content {
       background-color: #FFFFFF;
       border-radius: 20px;
+      border: 3px solid #DDD8C4;
       padding: 30px 25px;
       width: 85%;
       max-width: 320px;
       text-align: center;
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      filter: url(#rough-filter); /* Hand-drawn effect */
     }
     
     .modal-title {
       margin: 0 0 25px;
       font-size: 1.8rem;
       color: #55A54A;
+      filter: url(#rough-filter); /* Hand-drawn effect */
     }
     
     /* Stijl voor de terugknop */
     .modal-button {
       margin-top: 25px;
       background-color: #F4F1E4;
-      border: none;
-      border-radius: 10px;
+      border: 2px solid #6B5344;
+      border-radius: 12px;
       padding: 12px 25px;
       color: #6B5344;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       cursor: pointer;
       transition: background-color 0.2s;
+      filter: url(#rough-filter); /* Hand-drawn effect */
     }
     
     .modal-button:active {
       background-color: #E8E4D0;
+      transform: scale(0.98);
     }
     
     /* Specifieke stijl voor de knoppen in de pop-up */
     .modal .buttons-container {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 18px;
       margin: 0 auto;
     }
     
     .modal .button {
-      border-radius: 12px;
+      border-radius: 15px;
       overflow: hidden;
+      filter: url(#rough-filter); /* Hand-drawn effect */
+      margin: 0 auto;
+      width: 100%;
     }
     
     .modal .button-bg {
-      border: none;
+      border: 2px solid var(--game-color, #55A54A);
       background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
+    }
+    
+    .modal .button:active {
+      transform: scale(0.98);
     }
     
     /* Achtergrondkleuren voor elke sectie */
@@ -123,12 +135,14 @@
       height: 180px; /* 3x zo groot */
       opacity: 0.15;
       z-index: 0;
+      filter: url(#squiggly-filter); /* Squiggly effect voor game icons */
     }
     
     /* Styling voor de knoppen tekst */
     .modal .button-text {
       color: var(--game-color, #55A54A);
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 1.3rem; /* Grotere tekst */
     }
     
     /* SVG ikoon styling in de knoppen */
@@ -136,14 +150,24 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 32px;
-      height: 32px;
+      width: 38px; /* Iets groter */
+      height: 38px; /* Iets groter */
     }
     
     .button-svg {
-      width: 24px;
-      height: 24px;
+      width: 28px; /* Iets groter */
+      height: 28px; /* Iets groter */
       color: var(--game-color, #55A54A);
+    }
+
+    /* Animatie voor de popup */
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content {
+      animation: popIn 0.3s ease-out forwards;
     }
   </style>
 </head>
