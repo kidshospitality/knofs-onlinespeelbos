@@ -25,22 +25,29 @@
     /* Custom viewport height variable voor betere iOS ondersteuning */
     :root {
       --vh: 1vh;
+      --keyboard-height: 0px; /* Dynamische hoogte voor toetsenbord */
     }
     
-    /* App container - Volledig scherm met 10px boven */
+    /* App container met dynamische hoogte aanpassing */
     .app-container {
       position: absolute;
-      top: -10px; /* 10px hoger dan voorheen */
+      top: 0; /* Geen negatieve marge meer */
       left: 0;
       right: 0;
-      bottom: 50px; /* Alleen ruimte voor bottom-nav */
+      bottom: 50px; /* Ruimte voor bottom-nav */
       display: flex;
       flex-direction: column;
       background-color: transparent !important;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      height: calc(100% - 40px); /* 100% minus bottom nav plus 10px extra hoogte */
-      height: calc(calc(var(--vh, 1vh) * 100) - 40px); /* Alternatieve berekening voor iOS */
+      height: calc(100% - 50px); /* Base height */
+      transition: height 0.3s ease; /* Smooth transition when keyboard appears */
+    }
+    
+    /* Keyboard is active class - wordt dynamisch toegevoegd */
+    body.keyboard-active .app-container {
+      height: calc(100% - 50px - var(--keyboard-height)); /* Adjust for keyboard */
+      bottom: calc(50px + var(--keyboard-height));
     }
     
     /* Style voor de chatbot container */
@@ -52,8 +59,6 @@
       background-color: transparent !important;
       display: flex;
       flex-direction: column;
-      top: -10px; /* Extra verschuiving naar boven */
-      margin-top: -10px; /* Extra negatieve marge om ruimte boven te verkleinen */
     }
     
     /* Laad-indicator styles */
@@ -103,16 +108,45 @@
       overflow: hidden;
     }
     
-    /* Zorg dat iframe volledig vult en 10px hoger begint */
+    /* Zorg dat iframe volledig vult */
     iframe {
       width: 100% !important;
-      height: calc(100% + 10px) !important; /* 10px extra hoogte */
-      min-height: calc(100% + 10px) !important; /* 10px extra hoogte */
+      height: 100% !important;
       position: absolute !important;
-      top: -10px !important; /* 10px hoger beginnen */
+      top: 0 !important;
       left: 0 !important;
       border: none !important;
       background-color: transparent !important;
+      transition: height 0.3s ease;
+    }
+    
+    /* Extra ruimte boven de onderste navigatiebalk */
+    .bottom-buffer-zone {
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      height: 15px;
+      background-color: transparent;
+      z-index: 990;
+      pointer-events: none;
+    }
+    
+    /* Keyboard spacer - wordt getoond als toetsenbord actief is */
+    .keyboard-spacer {
+      display: none;
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      background-color: transparent;
+      z-index: 980;
+      pointer-events: none;
+    }
+    
+    body.keyboard-active .keyboard-spacer {
+      display: block;
+      height: var(--keyboard-height);
     }
     
     /* Safari specifieke fix voor iOS devices */
@@ -121,25 +155,12 @@
         height: -webkit-fill-available;
       }
       .app-container {
-        height: calc(-webkit-fill-available - 40px); /* 50px - 10px extra hoogte */
-        top: -10px;
+        height: calc(-webkit-fill-available - 50px);
       }
-      iframe {
-        height: calc(100% + 20px) !important; /* Extra hoogte voor iOS */
-        top: -10px !important;
+      
+      body.keyboard-active .app-container {
+        height: calc(-webkit-fill-available - 50px - var(--keyboard-height));
       }
-    }
-    
-    /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
-    .bottom-buffer-zone {
-      position: fixed;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-      height: 15px; /* Extra ruimte boven bottom nav */
-      background-color: transparent;
-      z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
-      pointer-events: none; /* Zodat het niet interactief is */
     }
   </style>
 </head>
@@ -173,6 +194,9 @@
 
   <!-- Extra buffer zone boven de bottom nav -->
   <div class="bottom-buffer-zone"></div>
+  
+  <!-- Dynamische spacer voor toetsenbord -->
+  <div class="keyboard-spacer"></div>
 
   <!-- Container voor bottom navigatie - hoge z-index -->
   <div id="bottom-nav-container"></div>
@@ -180,28 +204,99 @@
   <!-- Scripts -->
   <script src="js/common.js"></script>
   
-  <!-- Extra script om top-nav te verbergen en maximale ruimte voor chat -->
+  <!-- Extra script om top-nav te verbergen en toetsenbord te detecteren -->
   <script>
-    // Zorg ervoor dat de top-nav echt verborgen blijft, zelfs als common.js deze probeert te laden
     document.addEventListener('DOMContentLoaded', function() {
       // iOS viewpoorthoogte fix
       function setViewportHeight() {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        // Force redraw
-        document.body.style.display = 'none';
-        document.body.offsetHeight; // Trigger reflow
-        document.body.style.display = '';
+      }
+      
+      // Detecteer toetsenbord op iOS/mobile
+      let initialWindowHeight = window.innerHeight;
+      let keyboardHeight = 0;
+      
+      function detectKeyboard() {
+        // Als de huidige hoogte substantieel kleiner is dan de initiele hoogte, is het toetsenbord waarschijnlijk open
+        if (window.innerHeight < initialWindowHeight * 0.75) {
+          keyboardHeight = initialWindowHeight - window.innerHeight;
+          document.documentElement.style.setProperty('--keyboard-height', `${keyboardHeight}px`);
+          document.body.classList.add('keyboard-active');
+          
+          // Update iframe padding
+          const iframe = document.querySelector('iframe');
+          if (iframe) {
+            try {
+              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+              if (iframeDoc) {
+                const style = iframeDoc.getElementById('keyboard-fix') || iframeDoc.createElement('style');
+                style.id = 'keyboard-fix';
+                style.textContent = `
+                  .input-container, [class*="input-container"], [class*="footer"], footer, .chat-footer {
+                    padding-bottom: ${keyboardHeight + 70}px !important;
+                    margin-bottom: ${keyboardHeight + 65}px !important;
+                  }
+                  
+                  .messages-container, .chat-messages, [class*="messages-container"],
+                  [class*="message-list"], .message-list, .chat-body {
+                    padding-bottom: ${keyboardHeight + 120}px !important;
+                  }
+                `;
+                if (!style.parentNode) {
+                  iframeDoc.head.appendChild(style);
+                }
+              }
+            } catch(e) {
+              console.log('Kan iframe content niet aanpassen vanwege cross-origin beleid:', e);
+            }
+          }
+        } else {
+          document.documentElement.style.setProperty('--keyboard-height', '0px');
+          document.body.classList.remove('keyboard-active');
+          
+          // Reset iframe padding
+          const iframe = document.querySelector('iframe');
+          if (iframe) {
+            try {
+              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+              if (iframeDoc) {
+                const style = iframeDoc.getElementById('keyboard-fix');
+                if (style) {
+                  style.textContent = `
+                    .input-container, [class*="input-container"], [class*="footer"], footer, .chat-footer {
+                      padding-bottom: 70px !important;
+                      margin-bottom: 65px !important;
+                    }
+                    
+                    .messages-container, .chat-messages, [class*="messages-container"],
+                    [class*="message-list"], .message-list, .chat-body {
+                      padding-bottom: 120px !important;
+                    }
+                  `;
+                }
+              }
+            } catch(e) {
+              console.log('Kan iframe content niet resetten vanwege cross-origin beleid:', e);
+            }
+          }
+        }
       }
       
       // Pas viewport hoogte aan bij laden en resize
       setViewportHeight();
-      window.addEventListener('resize', setViewportHeight);
+      window.addEventListener('resize', function() {
+        setViewportHeight();
+        detectKeyboard();
+      });
+      
       window.addEventListener('orientationchange', function() {
-        setTimeout(setViewportHeight, 100);
-        setTimeout(setViewportHeight, 300);
-        setTimeout(setViewportHeight, 500);
+        // Reset initialWindowHeight na orientatieverandering
+        setTimeout(function() {
+          initialWindowHeight = window.innerHeight;
+          setViewportHeight();
+          detectKeyboard();
+        }, 300);
       });
       
       // Verberg top-nav met dwingende stijlen
@@ -221,24 +316,15 @@
             margin: 0 !important;
             padding: 0 !important;
           `;
-          
-          // Verwijder eventuele inhoud
           topNav.innerHTML = '';
         }
         
-        // Forceer app-container om vanaf 10px hoger te beginnen
+        // Forceer app-container om vanaf bovenkant te beginnen
         const appContainer = document.querySelector('.app-container');
         if (appContainer) {
-          appContainer.style.top = '-10px';
+          appContainer.style.top = '0';
           appContainer.style.paddingTop = '0';
           appContainer.style.marginTop = '0';
-        }
-        
-        // Forceer chatbot-wrapper om 10px hoger te beginnen
-        const chatbotWrapper = document.getElementById('chatbot-wrapper');
-        if (chatbotWrapper) {
-          chatbotWrapper.style.top = '-10px';
-          chatbotWrapper.style.marginTop = '-10px';
         }
         
         // Forceer bottom nav zichtbaarheid
@@ -306,13 +392,12 @@
         const iframe = chatbotWrapper.querySelector('iframe');
         if (!iframe) return;
           
-        // Maak iframe zelf transparant en full-size met dwingender stijlen, en 10px naar boven
+        // Maak iframe zelf transparant en full-size met dwingender stijlen
         iframe.style.cssText = `
           width: 100% !important;
-          height: calc(100% + 10px) !important;
-          min-height: calc(100% + 10px) !important;
+          height: 100% !important;
           position: absolute !important;
-          top: -10px !important;
+          top: 0 !important;
           left: 0 !important;
           right: 0 !important;
           bottom: 0 !important;
@@ -341,12 +426,9 @@
           
           // Voor betere iOS ondersteuning
           if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            iframe.style.height = 'calc(100% + 20px)';
-            iframe.style.top = '-10px';
             setTimeout(function() {
-              iframe.style.height = 'calc(100% + 20px)';
-              iframe.style.top = '-10px';
-            }, 100);
+              injectTransparentCSS(iframe);
+            }, 500);
           }
         };
       }
@@ -369,10 +451,10 @@
             background-image: none !important;
           }
           
-          /* Haal padding en margin weg van belangrijke elementen en schuif ze 10px omhoog */
+          /* Haal padding en margin weg van belangrijke elementen */
           html, body, .container, .main, .chat-container {
             padding-top: 0 !important;
-            margin-top: -10px !important; /* 10px hoger beginnen */
+            margin-top: 0 !important;
             height: 100% !important;
             max-height: 100% !important;
             overflow-y: auto !important;
@@ -389,8 +471,8 @@
           .input-container, .message-input, .chat-input, 
           [class*="input-container"], [class*="input-wrapper"],
           [class*="footer"], footer, .chat-footer {
-            padding-bottom: 70px !important; /* Verhoogd van 60px naar 70px */
-            margin-bottom: 65px !important; /* Verhoogd van 50px naar 65px */
+            padding-bottom: 70px !important;
+            margin-bottom: 65px !important;
             position: relative !important;
             z-index: 1 !important;
           }
@@ -411,8 +493,7 @@
             max-height: none !important;
             height: auto !important;
             flex: 1 !important;
-            padding-bottom: 120px !important; /* Verhoogd van 100px naar 120px */
-            margin-top: -10px !important; /* 10px omhoog */
+            padding-bottom: 120px !important;
           }
           
           /* Specifiek voor input velden - extra ruimte aan de onderkant */
@@ -427,11 +508,20 @@
             margin-bottom: 20px !important;
           }
           
-          /* Specifieke fix voor topgedeelte van chat om 10px hoger te beginnen */
-          [class*="header"], [class*="top"], [class*="chat-header"], .chat-header,
-          [class*="message-list"], .message-list, [class*="messages-area"] {
-            margin-top: -10px !important;
-            padding-top: 0 !important;
+          /* Fix voor tekstinvoer en antwoord-zichtbaarheid met toetsenbord */
+          .input-row, .input-area, .text-input-container, [class*="input-row"], [class*="input-area"] {
+            position: relative !important;
+            z-index: 10 !important;
+          }
+          
+          /* Zorgt dat nieuwe berichten altijd zichtbaar zijn */
+          .chat-messages, .messages-wrapper, [class*="messages-wrapper"], [class*="chat-messages"] {
+            scroll-behavior: smooth !important;
+          }
+          
+          /* Laatste bericht moet altijd goed zichtbaar zijn */
+          .message:last-child, .chat-message:last-child, [class*="message"]:last-child {
+            margin-bottom: 30px !important;
           }
         `;
         
@@ -464,21 +554,39 @@
                 el.style.paddingBottom = '70px';
                 el.style.marginBottom = '65px';
               }
-              
-              // Probeer headers/top elementen te vinden en 10px omhoog te brengen
-              if (el.className && (
-                  el.className.includes('header') || 
-                  el.className.includes('top') || 
-                  el.className.includes('messages-container') ||
-                  el.className.includes('message-list'))) {
-                el.style.marginTop = '-10px';
-                el.style.paddingTop = '0';
-              }
             });
           } catch(e) {
             console.log("Inline style removing failed:", e);
           }
         }, 100);
+        
+        // Toetsenbord interactie verbeteren door automatisch scrollen
+        try {
+          // Vind input elementen
+          const inputElements = iframeDoc.querySelectorAll('input, textarea');
+          inputElements.forEach(input => {
+            // Focus event - scroll naar input element wanneer gefocust
+            input.addEventListener('focus', function() {
+              setTimeout(function() {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }, 300);
+            });
+          });
+          
+          // Auto-scroll naar laatste bericht wanneer nieuw bericht binnenkomt
+          const chatContainer = iframeDoc.querySelector('.messages-container, .chat-messages, [class*="messages"]');
+          if (chatContainer) {
+            // Gebruik MutationObserver om nieuwe berichten te detecteren
+            const observer = new MutationObserver(function(mutations) {
+              // Scroll naar beneden na toevoeging van nieuwe elementen
+              chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+            
+            observer.observe(chatContainer, { childList: true, subtree: true });
+          }
+        } catch(e) {
+          console.log("Kan keyboard interactie niet verbeteren:", e);
+        }
       }
       
       // Monitor en fix iframe regelmatig
@@ -490,12 +598,13 @@
       }
       
       // Controleer regelmatig of het iframe bestaat en fix het
-      setInterval(monitorIframe, 1000);
+      setInterval(monitorIframe, 2000);
       
       // Extra checks na verschillende intervallen
       setTimeout(monitorIframe, 500);
       setTimeout(monitorIframe, 1500);
       setTimeout(monitorIframe, 3000);
+      setTimeout(monitorIframe, 5000);
       
       // Extra fixes voor iOS
       if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
@@ -508,27 +617,27 @@
             bottomNav.style.opacity = '1';
             bottomNav.style.zIndex = '999';
           }
-          
-          // Zorg dat de app-container 10px hoger blijft
-          const appContainer = document.querySelector('.app-container');
-          if (appContainer) {
-            appContainer.style.top = '-10px';
-          }
-          
-          // Zorg dat de chatbot-wrapper 10px hoger blijft
-          const chatWrapper = document.getElementById('chatbot-wrapper');
-          if (chatWrapper) {
-            chatWrapper.style.top = '-10px';
-            chatWrapper.style.marginTop = '-10px';
-          }
-          
-          // Zorg dat iframe 10px hoger blijft
-          const iframe = chatWrapper.querySelector('iframe');
-          if (iframe) {
-            iframe.style.top = '-10px';
-            iframe.style.height = 'calc(100% + 20px)';
-          }
         }, 500);
+        
+        // Verbeter reactie op focus events
+        document.addEventListener('focusin', function(e) {
+          // Als een input veld focus krijgt
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            document.body.classList.add('keyboard-active');
+            setTimeout(function() {
+              e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+          }
+        });
+        
+        document.addEventListener('focusout', function(e) {
+          // Als een input veld focus verliest
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            setTimeout(function() {
+              document.body.classList.remove('keyboard-active');
+            }, 100);
+          }
+        });
       }
     });
   </script>
