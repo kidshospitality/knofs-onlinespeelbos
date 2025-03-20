@@ -475,7 +475,7 @@
           for (let row = 0; row < ROWS; row++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
-            cell.dataset.row = ROWS - 1 - row; // Omgekeerd om vanaf onderkant te bouwen
+            cell.dataset.row = row;
             cell.dataset.col = col;
             column.appendChild(cell);
           }
@@ -540,7 +540,7 @@
       function makeMove(colIndex) {
         if (!isValidMove(colIndex) || gameOver) return;
         
-        // Vind de laagste lege cel in de kolom
+        // Vind de laagste lege cel in de kolom (beginnend vanaf de onderkant)
         let rowIndex = ROWS - 1;
         while (rowIndex >= 0 && gameBoard[rowIndex][colIndex] !== 0) {
           rowIndex--;
@@ -680,7 +680,124 @@
         makeMove(bestMove);
       }
       
-      // Vind de beste zet met een eenvoudige implementatie
+      // Implementatie van het minimax algoritme
+      function evaluateBoard() {
+        // Controleer horizontaal
+        for (let row = 0; row < ROWS; row++) {
+          for (let col = 0; col <= COLS - 4; col++) {
+            let player1Count = 0;
+            let player2Count = 0;
+            
+            for (let i = 0; i < 4; i++) {
+              if (gameBoard[row][col + i] === 1) player1Count++;
+              else if (gameBoard[row][col + i] === 2) player2Count++;
+            }
+            
+            if (player1Count === 4) return -100;
+            if (player2Count === 4) return 100;
+            
+            if (player1Count > 0 && player2Count === 0) {
+              if (player1Count === 3) return -50;
+              if (player1Count === 2) return -10;
+              if (player1Count === 1) return -1;
+            }
+            
+            if (player2Count > 0 && player1Count === 0) {
+              if (player2Count === 3) return 50;
+              if (player2Count === 2) return 10;
+              if (player2Count === 1) return 1;
+            }
+          }
+        }
+        
+        // Controleer verticaal
+        for (let row = 0; row <= ROWS - 4; row++) {
+          for (let col = 0; col < COLS; col++) {
+            let player1Count = 0;
+            let player2Count = 0;
+            
+            for (let i = 0; i < 4; i++) {
+              if (gameBoard[row + i][col] === 1) player1Count++;
+              else if (gameBoard[row + i][col] === 2) player2Count++;
+            }
+            
+            if (player1Count === 4) return -100;
+            if (player2Count === 4) return 100;
+            
+            if (player1Count > 0 && player2Count === 0) {
+              if (player1Count === 3) return -50;
+              if (player1Count === 2) return -10;
+              if (player1Count === 1) return -1;
+            }
+            
+            if (player2Count > 0 && player1Count === 0) {
+              if (player2Count === 3) return 50;
+              if (player2Count === 2) return 10;
+              if (player2Count === 1) return 1;
+            }
+          }
+        }
+        
+        // Controleer diagonaal (/)
+        for (let row = 3; row < ROWS; row++) {
+          for (let col = 0; col <= COLS - 4; col++) {
+            let player1Count = 0;
+            let player2Count = 0;
+            
+            for (let i = 0; i < 4; i++) {
+              if (gameBoard[row - i][col + i] === 1) player1Count++;
+              else if (gameBoard[row - i][col + i] === 2) player2Count++;
+            }
+            
+            if (player1Count === 4) return -100;
+            if (player2Count === 4) return 100;
+            
+            if (player1Count > 0 && player2Count === 0) {
+              if (player1Count === 3) return -50;
+              if (player1Count === 2) return -10;
+              if (player1Count === 1) return -1;
+            }
+            
+            if (player2Count > 0 && player1Count === 0) {
+              if (player2Count === 3) return 50;
+              if (player2Count === 2) return 10;
+              if (player2Count === 1) return 1;
+            }
+          }
+        }
+        
+        // Controleer diagonaal (\)
+        for (let row = 0; row <= ROWS - 4; row++) {
+          for (let col = 0; col <= COLS - 4; col++) {
+            let player1Count = 0;
+            let player2Count = 0;
+            
+            for (let i = 0; i < 4; i++) {
+              if (gameBoard[row + i][col + i] === 1) player1Count++;
+              else if (gameBoard[row + i][col + i] === 2) player2Count++;
+            }
+            
+            if (player1Count === 4) return -100;
+            if (player2Count === 4) return 100;
+            
+            if (player1Count > 0 && player2Count === 0) {
+              if (player1Count === 3) return -50;
+              if (player1Count === 2) return -10;
+              if (player1Count === 1) return -1;
+            }
+            
+            if (player2Count > 0 && player1Count === 0) {
+              if (player2Count === 3) return 50;
+              if (player2Count === 2) return 10;
+              if (player2Count === 1) return 1;
+            }
+          }
+        }
+        
+        return 0; // Neutraal
+      }
+      
+      // Vind de beste zet voor Knof
       function findBestMove() {
         // Controleer eerst of we kunnen winnen
         for (let col = 0; col < COLS; col++) {
@@ -724,23 +841,41 @@
           return middleCol;
         }
         
-        // Strategie: probeer dichtbij het midden te spelen
-        const possibleMoves = [];
+        // Evalueer elke mogelijke zet met een eenvoudig minimax
+        let bestScore = -Infinity;
+        let bestMoves = [];
+        
         for (let col = 0; col < COLS; col++) {
           if (isValidMove(col)) {
-            possibleMoves.push({
-              col: col,
-              distance: Math.abs(col - middleCol)
-            });
+            let row = findLowestEmptyRow(col);
+            if (row >= 0) {
+              // Tijdelijk zet doen
+              gameBoard[row][col] = 2;
+              let score = evaluateBoard();
+              // Zet terugdraaien
+              gameBoard[row][col] = 0;
+              
+              if (score > bestScore) {
+                bestScore = score;
+                bestMoves = [col];
+              } else if (score === bestScore) {
+                bestMoves.push(col);
+              }
+            }
           }
         }
         
-        // Sorteer op afstand tot midden
-        possibleMoves.sort((a, b) => a.distance - b.distance);
+        // Als er geen goede zet is gevonden, kies een willekeurige geldige kolom
+        if (bestMoves.length === 0) {
+          for (let col = 0; col < COLS; col++) {
+            if (isValidMove(col)) {
+              bestMoves.push(col);
+            }
+          }
+        }
         
-        // Voeg wat willekeur toe om niet te voorspelbaar te zijn
-        const goodMoves = possibleMoves.slice(0, Math.min(3, possibleMoves.length));
-        return goodMoves[Math.floor(Math.random() * goodMoves.length)].col;
+        // Kies een willekeurige zet uit de beste zetten
+        return bestMoves[Math.floor(Math.random() * bestMoves.length)];
       }
       
       // Vind de laagste lege rij in een kolom
