@@ -33,14 +33,13 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 50px; /* Alleen ruimte voor bottom-nav */
+      bottom: 65px; /* Verhoogd voor betere spacing */
       display: flex;
       flex-direction: column;
       background-color: transparent !important;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      height: calc(100% - 50px); /* 100% minus bottom nav */
-      height: calc(calc(var(--vh, 1vh) * 100) - 50px); /* Alternatieve berekening voor iOS */
+      height: calc(100% - 65px); /* Aangepast */
     }
     
     /* Style voor de chatbot container */
@@ -113,23 +112,13 @@
       background-color: transparent !important;
     }
     
-    /* Safari specifieke fix voor iOS devices */
-    @supports (-webkit-touch-callout: none) {
-      body, html {
-        height: -webkit-fill-available;
-      }
-      .app-container {
-        height: calc(-webkit-fill-available - 50px);
-      }
-    }
-    
     /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
     .bottom-buffer-zone {
       position: fixed;
       bottom: 50px;
       left: 0;
       right: 0;
-      height: 25px; /* Extra ruimte boven bottom nav */
+      height: 15px; /* Extra ruimte boven bottom nav */
       background-color: transparent;
       z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
       pointer-events: none; /* Zodat het niet interactief is */
@@ -181,20 +170,13 @@
       function setViewportHeight() {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        // Force redraw
-        document.body.style.display = 'none';
-        document.body.offsetHeight; // Trigger reflow
-        document.body.style.display = '';
       }
       
       // Pas viewport hoogte aan bij laden en resize
       setViewportHeight();
       window.addEventListener('resize', setViewportHeight);
       window.addEventListener('orientationchange', function() {
-        setTimeout(setViewportHeight, 100);
         setTimeout(setViewportHeight, 300);
-        setTimeout(setViewportHeight, 500);
       });
       
       // Verberg top-nav met dwingende stijlen
@@ -246,16 +228,6 @@
       
       // Voer direct uit en blijf controleren
       forceHideTopNav();
-      
-      // Forceer de stijlen elke 100ms gedurende 5 seconden
-      let checkCount = 0;
-      const interval = setInterval(function() {
-        forceHideTopNav();
-        checkCount++;
-        if (checkCount > 50) clearInterval(interval);
-      }, 100);
-      
-      // Blijf periodiek controleren
       setInterval(forceHideTopNav, 1000);
     });
   </script>
@@ -321,19 +293,8 @@
         iframe.onload = function() {
           try {
             injectTransparentCSS(iframe);
-            
-            // Luister naar berichten om scroll te corrigeren
-            setTimeout(fixScrollPosition, 1000);
           } catch(e) {
             console.log("Onload CSS injectie niet mogelijk:", e);
-          }
-          
-          // Voor betere iOS ondersteuning
-          if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            iframe.style.height = 'calc(100% + 1px)';
-            setTimeout(function() {
-              iframe.style.height = '100%';
-            }, 100);
           }
         };
       }
@@ -372,27 +333,14 @@
             border: 1px solid rgba(200, 200, 200, 0.5) !important;
           }
           
-          /* Berichtcontainer met auto margin-top zodat berichten onder blijven */
-          .messages-container, .chat-messages, [class*="messages-container"],
-          [class*="message-list"], .message-list, .chat-body {
-            max-height: none !important;
-            height: auto !important;
-            display: flex !important;
-            flex-direction: column !important;
-            flex: 1 !important;
-            padding-bottom: 20px !important;
-            padding-top: 10px !important;
-            margin-bottom: 55px !important; /* Ruimte voor invoer */
-            overflow-y: auto !important;
-            justify-content: flex-end !important; /* Belangrijk: berichten onderaan houden */
-          }
-          
-          /* Bericht wrapper om ruimte te maken */
-          .messages-scroll, [class*="messages-scroll"], [class*="scroll-container"], .scroll-container {
-            display: flex !important;
-            flex-direction: column !important;
-            min-height: 100% !important;
-            justify-content: flex-end !important; /* Berichten onderaan houden */
+          /* Extra ruimte onderin voor de bottom nav */
+          .input-container, .message-input, .chat-input, 
+          [class*="input-container"], [class*="input-wrapper"],
+          [class*="footer"], footer, .chat-footer {
+            padding-bottom: 70px !important;
+            margin-bottom: 65px !important;
+            position: relative !important;
+            z-index: 1 !important;
           }
           
           /* Verberg headers of andere potentieel problematische elementen */
@@ -405,176 +353,62 @@
             pointer-events: none !important;
           }
           
-          /* Input container naar beneden */
-          .input-container, .message-input, .chat-input, 
-          [class*="input-container"], [class*="input-wrapper"],
-          [class*="footer"], footer, .chat-footer {
-            position: sticky !important;
-            position: -webkit-sticky !important;
-            bottom: 60px !important;
-            padding-bottom: 10px !important;
-            margin-bottom: 0 !important;
-            background-color: rgba(255, 255, 255, 0.8) !important;
-            z-index: 10 !important;
+          /* Volledige scrol-container max-height fix */
+          .messages-container, .chat-messages, [class*="messages-container"],
+          [class*="message-list"], .message-list, .chat-body {
+            max-height: none !important;
+            height: auto !important;
+            flex: 1 !important;
+            padding-bottom: 120px !important;
           }
           
-          /* Zorg dat invoerveld altijd zichtbaar is */
+          /* Specifiek voor input velden - extra ruimte aan de onderkant */
           textarea, input[type="text"], .message-input, [class*="text-input"],
           .text-field, [class*="text-field"], .input, [class*="input-field"] {
-            margin-bottom: 5px !important;
-          }
-          
-          /* Verzend knop positioneren */
-          .send-button, [class*="send-button"], button[type="submit"],
-          [class*="submit-button"], .submit {
-            margin-bottom: 5px !important;
-          }
-          
-          /* Laatste berichten wat meer ruimte geven zodat ze niet tegen invoer zitten */
-          .message:last-of-type, .chat-message:last-of-type,
-          [class*="message"]:last-of-type, [class*="bubble"]:last-of-type {
             margin-bottom: 20px !important;
           }
           
-          /* Belangrijke fix voor container layouts */
-          .chat, .chat-container, .chatbot, [class*="chat-container"], [class*="chatbot"] {
-            display: flex !important;
-            flex-direction: column !important;
-            height: 100% !important;
-          }
-          
-          /* Belangrijke fix voor flexbox layout */
-          html body .app, html body [class*="app"], 
-          html body .container, html body [class*="container"] {
-            display: flex !important;
-            flex-direction: column !important;
-            height: 100% !important;
+          /* Verzend knop ook omhoog brengen */
+          .send-button, [class*="send-button"], button[type="submit"],
+          [class*="submit-button"], .submit {
+            margin-bottom: 20px !important;
           }
         `;
         
         // Voeg stijl toe aan iframe document
         iframeDoc.head.appendChild(style);
         
-        // Script toevoegen om scrolling te fixen
-        const script = document.createElement('script');
-        script.textContent = `
-          // Functie om automatisch naar beneden te scrollen wanneer nodig
-          function keepScrollAtBottom() {
-            // Zoek alle mogelijke chat containers
-            const containers = document.querySelectorAll('.messages-container, .chat-messages, [class*="messages-container"], [class*="message-list"], .message-list, .chat-body');
-            
-            containers.forEach(container => {
-              // Zorg ervoor dat het einde zichtbaar is
-              setTimeout(() => {
-                container.scrollTop = container.scrollHeight;
-              }, 100);
-            });
-          }
-          
-          // Fix scroll na laden en na elk nieuw bericht
-          setTimeout(keepScrollAtBottom, 500);
-          setTimeout(keepScrollAtBottom, 1000);
-          setTimeout(keepScrollAtBottom, 2000);
-          
-          // Observer voor nieuwe berichten
-          const observer = new MutationObserver(function(mutations) {
-            keepScrollAtBottom();
-          });
-          
-          // Zoek chat containers om te observeren
-          setTimeout(() => {
-            const containers = document.querySelectorAll('.messages-container, .chat-messages, [class*="messages-container"], [class*="message-list"], .message-list, .chat-body');
-            containers.forEach(container => {
-              observer.observe(container, { childList: true, subtree: true });
-            });
-          }, 1000);
-          
-          // Luister naar input focus/blur events voor scroll correctie
-          document.addEventListener('focusin', function(e) {
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-              keepScrollAtBottom();
-            }
-          });
-          
-          document.addEventListener('focusout', function(e) {
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
-              keepScrollAtBottom();
-            }
-          });
-        `;
-        
-        // Voeg script toe aan iframe document
-        iframeDoc.body.appendChild(script);
-        
-        // Verwijder inline achtergronden en pas berichten container aan
+        // Verwijder inline achtergronden van alle elementen
         setTimeout(function() {
           try {
             const allElements = iframeDoc.querySelectorAll('*');
-            
-            // Eerst alle achtergronden verwijderen
             allElements.forEach(el => {
               el.style.backgroundColor = 'transparent';
               el.style.backgroundImage = 'none';
+              
+              // Extra padding voor mogelijke invoervelden
+              if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || 
+                  (el.className && (
+                    el.className.includes('input') || 
+                    el.className.includes('text-field') || 
+                    el.className.includes('message-input')
+                  ))) {
+                el.style.marginBottom = '20px';
+              }
+              
+              // Probeer input container te identificeren en extra ruimte toe te voegen
+              if (el.className && (
+                  el.className.includes('input-container') || 
+                  el.className.includes('footer') || 
+                  el.className.includes('bottom'))) {
+                el.style.paddingBottom = '70px';
+                el.style.marginBottom = '65px';
+              }
             });
-            
-            // Zoek naar berichten containers en fix layout
-            const messageContainers = iframeDoc.querySelectorAll('.messages-container, .chat-messages, [class*="messages-container"], [class*="message-list"], .message-list, .chat-body');
-            messageContainers.forEach(container => {
-              container.style.display = 'flex';
-              container.style.flexDirection = 'column';
-              container.style.flex = '1';
-              container.style.justifyContent = 'flex-end';
-              container.style.minHeight = '100%';
-              container.style.overflow = 'auto';
-              container.style.paddingBottom = '20px';
-              container.style.marginBottom = '55px';
-              container.scrollTop = container.scrollHeight; // Scroll naar beneden
-            });
-            
-            // Zoek naar input containers en positioneer onderaan
-            const inputContainers = iframeDoc.querySelectorAll('.input-container, .message-input, .chat-input, [class*="input-container"], [class*="input-wrapper"], [class*="footer"], footer, .chat-footer');
-            inputContainers.forEach(container => {
-              container.style.position = 'sticky';
-              container.style.bottom = '60px';
-              container.style.paddingBottom = '10px';
-              container.style.marginBottom = '0';
-              container.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-              container.style.zIndex = '10';
-            });
-            
-            // Zoek naar app of main containers en fix layout
-            const appContainers = iframeDoc.querySelectorAll('.app, .chat, .chat-container, .container, [class*="app"], [class*="container"]');
-            appContainers.forEach(container => {
-              container.style.display = 'flex';
-              container.style.flexDirection = 'column';
-              container.style.height = '100%';
-            });
-            
           } catch(e) {
-            console.log("Inline style manipulation failed:", e);
+            console.log("Inline style removing failed:", e);
           }
         }, 100);
-      }
-      
-      // Functie om scroll positie te fixen
-      function fixScrollPosition() {
-        try {
-          const iframe = chatbotWrapper.querySelector('iframe');
-          if (!iframe) return;
-          
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-          if (!iframeDoc) return;
-          
-          // Zoek alle mogelijke chat containers
-          const containers = iframeDoc.querySelectorAll('.messages-container, .chat-messages, [class*="messages-container"], [class*="message-list"], .message-list, .chat-body');
-          
-          containers.forEach(container => {
-            // Zorg ervoor dat het einde zichtbaar is
-            container.scrollTop = container.scrollHeight;
-          });
-        } catch(e) {
-          console.log("Scroll fix failed:", e);
-        }
       }
       
       // Monitor en fix iframe regelmatig
@@ -582,7 +416,6 @@
         const iframe = chatbotWrapper.querySelector('iframe');
         if (iframe) {
           setupIframe();
-          fixScrollPosition();
         }
       }
       
@@ -592,27 +425,6 @@
       // Extra checks na verschillende intervallen
       setTimeout(monitorIframe, 500);
       setTimeout(monitorIframe, 1500);
-      setTimeout(monitorIframe, 3000);
-      
-      // Extra check voor scroll
-      setInterval(fixScrollPosition, 2500);
-      
-      // Extra fixes voor iOS
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        // Zorg dat bottom nav altijd zichtbaar blijft
-        setInterval(function() {
-          const bottomNav = document.getElementById('bottom-nav-container');
-          if (bottomNav) {
-            bottomNav.style.display = 'flex';
-            bottomNav.style.visibility = 'visible';
-            bottomNav.style.opacity = '1';
-            bottomNav.style.zIndex = '999';
-          }
-          
-          // Extra scroll fix voor iOS
-          fixScrollPosition();
-        }, 500);
-      }
     });
   </script>
 </body>
