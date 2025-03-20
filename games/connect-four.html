@@ -504,16 +504,24 @@
         const columns = document.querySelectorAll('.column');
         columns.forEach(column => {
           column.addEventListener('mouseenter', function() {
-            if (!gameOver && currentPlayer === 1) {
-              const colIndex = parseInt(this.dataset.col);
-              showColumnHover(colIndex);
+            if (!gameOver) {
+              // Sta hover alleen toe voor menselijke spelers
+              // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
+              if (gameMode === 'vs-knof' && currentPlayer === 1 || gameMode === 'vs-friend') {
+                const colIndex = parseInt(this.dataset.col);
+                showColumnHover(colIndex);
+              }
             }
           });
           
           column.addEventListener('click', function() {
-            if (!gameOver && currentPlayer === 1) {
-              const colIndex = parseInt(this.dataset.col);
-              makeMove(colIndex);
+            if (!gameOver) {
+              // Sta klikken alleen toe voor menselijke spelers
+              // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
+              if (gameMode === 'vs-knof' && currentPlayer === 1 || gameMode === 'vs-friend') {
+                const colIndex = parseInt(this.dataset.col);
+                makeMove(colIndex);
+              }
             }
           });
         });
@@ -543,7 +551,8 @@
         columnHover.style.display = 'block';
         columnHover.style.left = `${colIndex * columnWidth}px`;
         
-        columnHover.className = 'column-hover player1-piece';
+        // Toon de juiste kleur hover effect afhankelijk van de huidige speler
+        columnHover.className = 'column-hover ' + playerPieces[currentPlayer];
       }
       
       // Verberg hover effect
