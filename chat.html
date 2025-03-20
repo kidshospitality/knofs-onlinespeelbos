@@ -17,25 +17,22 @@
       width: 100%;
       overflow: hidden;
       position: fixed;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: none;
       background-color: transparent !important;
     }
     
-    /* App container - Full height layout zonder padding-top */
+    /* App container - Full height layout */
     .app-container {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 50px; /* Alleen ruimte voor de bottom-nav */
+      bottom: 0;
       display: flex;
       flex-direction: column;
-      -webkit-transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
       background-color: transparent !important;
-      padding-top: 0; /* Geen ruimte voor top-nav */
-      padding-bottom: 0; /* We gebruiken bottom property hierboven in plaats van padding */
+      /* Verwijder padding-top zodat chat volledig tot bovenaan loopt */
+      padding-top: 0; 
+      padding-bottom: 50px; /* Ruimte voor bottom-nav */
     }
     
     /* Style voor de chatbot container */
@@ -45,6 +42,12 @@
       position: relative;
       overflow: hidden;
       background-color: transparent !important;
+      /* Zorg dat deze container de volledige beschikbare ruimte gebruikt */
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
     }
     
     /* Laad-indicator styles */
@@ -70,57 +73,51 @@
       display: flex !important;
       visibility: visible !important;
       opacity: 1 !important;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
     }
     
-    /* Top navigation verbergen */
+    /* Top navigation fix */
+    /* Verplaatst naar inline in de iframe om zichtbaarheid te garanderen */
     #top-nav-container {
-      display: none !important; /* Verberg de top navigatie */
-      height: 0 !important;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9; /* Onder 10 zodat chat controls zichtbaar blijven */
+      height: 60px;
+      pointer-events: none; /* Laat events door naar de chat */
+    }
+    
+    /* Top navigation items moeten klikbaar zijn */
+    #top-nav-container a, #top-nav-container button {
+      pointer-events: auto;
+    }
+    
+    /* Force iframe to take full height */
+    iframe {
       position: absolute !important;
-      visibility: hidden !important;
-      z-index: -1 !important;
-    }
-    
-    /* SVG filters niet laten storen */
-    .svg-filters {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-    
-    /* Safari specifieke fix voor iOS devices */
-    @supports (-webkit-touch-callout: none) {
-      .app-container {
-        height: -webkit-fill-available;
-      }
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+      background-color: transparent !important;
     }
   </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
-  <svg class="svg-filters">
+  <svg class="svg-filters" style="display:none;">
     <defs>
       <filter id="rough-filter">
         <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
-      <filter id="squiggly-filter">
-        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
-      </filter>
     </defs>
   </svg>
 
-  <!-- Container voor top navigatie (nu verborgen) -->
+  <!-- Container voor top navigatie -->
   <div id="top-nav-container"></div>
-
-  <!-- Settings modal container -->
-  <div id="settings-modal-container"></div>
 
   <!-- Hoofdcontent - Chat met iframe -->
   <div class="app-container">
@@ -135,60 +132,28 @@
   <!-- Scripts -->
   <script src="js/common.js"></script>
   
-  <!-- Extra script om top-nav te verbergen en maximale ruimte voor chat -->
-  <script>
-    // Zorg ervoor dat de top-nav echt verborgen blijft, zelfs als common.js deze probeert te laden
-    document.addEventListener('DOMContentLoaded', function() {
-      // Verberg top-nav direct
-      const topNav = document.getElementById('top-nav-container');
-      if (topNav) {
-        topNav.style.display = 'none';
-        topNav.style.height = '0';
-        topNav.style.visibility = 'hidden';
-        topNav.style.opacity = '0';
-        topNav.style.position = 'absolute';
-        topNav.style.zIndex = '-1';
-      }
-      
-      // Blijf controleren of topNav verborgen blijft (voor het geval common.js het weer weergeeft)
-      const keepTopNavHidden = setInterval(function() {
-        if (topNav) {
-          topNav.style.display = 'none';
-          topNav.style.height = '0';
-          topNav.style.visibility = 'hidden';
-          topNav.style.opacity = '0';
-          topNav.style.position = 'absolute';
-          topNav.style.zIndex = '-1';
-        }
-      }, 300);
-      
-      // Zorg dat de app container vanaf de bovenkant begint
-      const appContainer = document.querySelector('.app-container');
-      if (appContainer) {
-        appContainer.style.top = '0';
-        appContainer.style.paddingTop = '0';
-      }
-      
-      // Fix voor iOS hoogte berekening
-      function setViewportHeight() {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-      }
-      
-      // Pas viewport hoogte aan bij laden en resize
-      setViewportHeight();
-      window.addEventListener('resize', setViewportHeight);
-      window.addEventListener('orientationchange', function() {
-        setTimeout(setViewportHeight, 300);
-      });
-    });
-  </script>
-  
   <!-- Chatbot scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const chatbotWrapper = document.getElementById('chatbot-wrapper');
       const loadingIndicator = document.getElementById('loading-indicator');
+      
+      // Zorg dat de app-container de volledige hoogte gebruikt
+      function adjustAppContainer() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Force full height met CSS variabele
+        document.querySelector('.app-container').style.height = `calc(100 * var(--vh, 1vh))`;
+        document.querySelector('.chatbot-wrapper').style.height = `calc(100 * var(--vh, 1vh) - 50px)`;
+      }
+      
+      // Pas container hoogte aan bij laden en resize
+      adjustAppContainer();
+      window.addEventListener('resize', adjustAppContainer);
+      window.addEventListener('orientationchange', function() {
+        setTimeout(adjustAppContainer, 300);
+      });
       
       // Laad de chatbot script
       const script = document.createElement('script');
@@ -204,19 +169,25 @@
           // Verberg loader
           loadingIndicator.style.display = 'none';
           
-          // Pas iframe aan en maak transparant
-          setupIframe();
+          // Zoek en configureer iframe
+          const iframeSetupInterval = setInterval(function() {
+            const iframe = chatbotWrapper.querySelector('iframe');
+            if (iframe) {
+              // Stop zoeken als iframe gevonden is
+              clearInterval(iframeSetupInterval);
+              
+              // Configureer iframe
+              configureIframe(iframe);
+            }
+          }, 100);
         }, 500);
       };
       
       chatbotWrapper.appendChild(script);
       
-      // Functie om iframe te setuppen en transparant te maken
-      function setupIframe() {
-        const iframe = chatbotWrapper.querySelector('iframe');
-        if (!iframe) return;
-          
-        // Maak iframe zelf transparant en full-size
+      // Functie om iframe te configureren
+      function configureIframe(iframe) {
+        // Zorg dat iframe volledige grootte heeft
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.position = 'absolute';
@@ -225,101 +196,87 @@
         iframe.style.border = 'none';
         iframe.style.backgroundColor = 'transparent';
         
-        // Injecteer CSS om iframe inhoud transparant te maken
-        try {
-          // Deze methode werkt alleen als het iframe dezelfde origin heeft
-          injectTransparentCSS(iframe);
-        } catch(e) {
-          console.log("Directe CSS injectie niet mogelijk");
-        }
+        // Forceer deze stijlen om iframe positioning te garanderen
+        applyImportantStyles(iframe);
         
-        // Plan B: Voeg transparante stijl toe via iframe.onload
-        iframe.onload = function() {
-          setTimeout(function() {
-            try {
-              injectTransparentCSS(iframe);
-            } catch(e) {
-              console.log("Onload CSS injectie niet mogelijk");
-            }
-          }, 100);
-        };
-      }
-      
-      // Functie om transparantie CSS in te injecteren in iframe
-      function injectTransparentCSS(iframe) {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc) return;
+        // Probeer iframe inhoud aan te passen
+        tryToAdjustIframeContent(iframe);
         
-        // Creëer een stijl element
-        const style = document.createElement('style');
-        style.textContent = `
-          html, body, div, main, section, article, 
-          .container, .wrapper, .content, .main, 
-          .chat-container, .message-container, .chat-wrapper,
-          [class*="container"], [class*="wrapper"], [class*="content"],
-          [class*="background"], [class*="bg"] {
-            background-color: transparent !important;
-            background-image: none !important;
-          }
-          
-          /* Start vanaf de bovenkant, geen padding */
-          html, body, .container, .main {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-          }
-          
-          /* Lichte achtergrond voor berichten zodat ze leesbaar blijven */
-          .message, .chat-message, .user-message, .bot-message,
-          .message-bubble, [class*="message"], [class*="bubble"] {
-            background-color: rgba(255, 255, 255, 0.6) !important;
-          }
-          
-          /* Extra ruimte voor invoerveld (indien nodig) */
-          .input-container, .message-input, .chat-input, 
-          [class*="input-container"], [class*="input-wrapper"] {
-            margin-bottom: 50px !important; /* Ruimte voor bottom nav */
-          }
-        `;
-        
-        // Voeg stijl toe aan iframe document
-        iframeDoc.head.appendChild(style);
-        
-        // Extra: probeer ook inline achtergronden te verwijderen
-        const allElements = iframeDoc.querySelectorAll('*');
-        allElements.forEach(el => {
-          el.style.backgroundColor = 'transparent';
-          el.style.backgroundImage = 'none';
-        });
-      }
-      
-      // Monitor en fix iframe regelmatig
-      function monitorIframe() {
-        const iframe = chatbotWrapper.querySelector('iframe');
-        if (iframe) {
-          setupIframe();
-        }
-      }
-      
-      // Controleer regelmatig of het iframe bestaat en maak het transparant
-      setInterval(monitorIframe, 1000);
-      
-      // Extra checks na verschillende intervallen
-      setTimeout(monitorIframe, 500);
-      setTimeout(monitorIframe, 1500);
-      setTimeout(monitorIframe, 3000);
-      
-      // Extra fixes voor iOS
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        // Zorg dat bottom nav altijd zichtbaar blijft
+        // Periodiek controleren en aanpassen
         setInterval(function() {
-          const bottomNav = document.getElementById('bottom-nav-container');
-          if (bottomNav) {
-            bottomNav.style.display = 'flex';
-            bottomNav.style.visibility = 'visible';
-            bottomNav.style.opacity = '1';
-          }
-        }, 500);
+          applyImportantStyles(iframe);
+          tryToAdjustIframeContent(iframe);
+        }, 1000);
       }
+      
+      // Forceer belangrijke stijlen op iframe
+      function applyImportantStyles(iframe) {
+        iframe.style.setProperty('position', 'absolute', 'important');
+        iframe.style.setProperty('top', '0', 'important');
+        iframe.style.setProperty('left', '0', 'important');
+        iframe.style.setProperty('width', '100%', 'important');
+        iframe.style.setProperty('height', '100%', 'important');
+        iframe.style.setProperty('background-color', 'transparent', 'important');
+      }
+      
+      // Probeer iframe inhoud aan te passen
+      function tryToAdjustIframeContent(iframe) {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!iframeDoc) return;
+          
+          // Voeg CSS toe aan iframe document
+          let style = iframeDoc.getElementById('custom-transparent-style');
+          if (!style) {
+            style = iframeDoc.createElement('style');
+            style.id = 'custom-transparent-style';
+            style.textContent = `
+              html, body, div, main, section, article, 
+              .container, .wrapper, .content, .main, 
+              .chat-container, .message-container, .chat-wrapper,
+              [class*="container"], [class*="wrapper"], [class*="content"],
+              [class*="background"], [class*="bg"] {
+                background-color: transparent !important;
+                background-image: none !important;
+              }
+              
+              /* Full height fix */
+              html, body {
+                height: 100% !important;
+                min-height: 100% !important;
+                overflow: hidden !important;
+              }
+              
+              /* Chat containers moeten volledige hoogte gebruiken */
+              .chat-container, .message-container, .chat-wrapper {
+                height: 100% !important;
+                min-height: 100% !important;
+                max-height: 100% !important;
+                top: 0 !important;
+              }
+              
+              /* Lichte achtergrond voor berichten zodat ze leesbaar blijven */
+              .message, .chat-message, .user-message, .bot-message,
+              .message-bubble, [class*="message"], [class*="bubble"] {
+                background-color: rgba(255, 255, 255, 0.6) !important;
+              }
+            `;
+            iframeDoc.head.appendChild(style);
+          }
+        } catch(e) {
+          console.log("Cross-origin beperking: kan iframe inhoud niet aanpassen");
+        }
+      }
+      
+      // Controleer en garandeer dat bottom-nav zichtbaar blijft
+      setInterval(function() {
+        const bottomNav = document.getElementById('bottom-nav-container');
+        if (bottomNav) {
+          bottomNav.style.display = 'flex';
+          bottomNav.style.visibility = 'visible';
+          bottomNav.style.opacity = '1';
+        }
+      }, 500);
     });
   </script>
 </body>
