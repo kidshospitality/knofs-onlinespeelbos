@@ -273,7 +273,7 @@
       <div class="game-info">
         <div class="score-board">
           <div class="score-card" id="player-score-card">
-            <h3>Jij</h3>
+            <h3 id="player1-name">Speler 1</h3>
             <p id="player-score">0</p>
           </div>
           <div class="score-card" id="opponent-score-card">
@@ -322,12 +322,14 @@
         player: 0,
         opponent: 0
       };
+      let lastWinner = 0; // Bijhouden wie de laatste winnaar was voor om-en-om starten
       
       // Elementen selecteren
       const gameBoardEl = document.getElementById('game-board');
+      const player1NameEl = document.getElementById('player1-name');
       const playerScoreEl = document.getElementById('player-score');
-      const opponentScoreEl = document.getElementById('opponent-score');
       const opponentNameEl = document.getElementById('opponent-name');
+      const opponentScoreEl = document.getElementById('opponent-score');
       const winMessage = document.getElementById('win-message');
       const restartButton = document.getElementById('restart-button');
       const resetScoresButton = document.getElementById('reset-scores');
@@ -418,6 +420,7 @@
       if (gameMode === 'vs-knof') {
         // Speler 2 is Knof in deze modus
         playerPieces[2] = 'knof-piece';
+        player1NameEl.textContent = 'Jij';
         opponentNameEl.textContent = 'Knof';
         // Welkomstbericht
         setTimeout(() => {
@@ -426,7 +429,8 @@
       } else {
         // Speler 2 is een vriend
         playerPieces[2] = 'player2-piece';
-        opponentNameEl.textContent = 'Vriend';
+        player1NameEl.textContent = 'Speler 1';
+        opponentNameEl.textContent = 'Speler 2';
         // Welkomstbericht
         setTimeout(() => {
           typeSpeechMessage("Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?");
@@ -441,6 +445,7 @@
       resetScoresButton.addEventListener('click', function() {
         scores.player = 0;
         scores.opponent = 0;
+        lastWinner = 0; // Reset ook de laatste winnaar
         updateScores();
         typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
       });
@@ -468,7 +473,16 @@
         }
         
         gameOver = false;
-        currentPlayer = 1;
+        
+        // Bepaal de startende speler op basis van de laatste winnaar
+        if (lastWinner === 1) {
+          currentPlayer = 2; // Als speler 1 de laatste keer won, begint speler 2
+        } else if (lastWinner === 2) {
+          currentPlayer = 1; // Als speler 2 de laatste keer won, begint speler 1
+        } else {
+          currentPlayer = 1; // Standaard begint speler 1
+        }
+        
         winningCells = [];
         
         // Reset UI
@@ -478,6 +492,11 @@
         
         // Stop confetti als dat actief is
         stopConfetti();
+        
+        // Laat Knof automatisch zetten als hij mag beginnen
+        if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
+          setTimeout(makeKnofMove, 1000);
+        }
       }
       
       // Maak het visuele spelbord
@@ -507,7 +526,9 @@
             if (!gameOver) {
               // Sta hover alleen toe voor menselijke spelers
               // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
-              if (gameMode === 'vs-knof' && currentPlayer === 1 || gameMode === 'vs-friend') {
+              if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
+                  (gameMode === 'vs-friend') || 
+                  (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
                 const colIndex = parseInt(this.dataset.col);
                 showColumnHover(colIndex);
               }
@@ -518,7 +539,9 @@
             if (!gameOver) {
               // Sta klikken alleen toe voor menselijke spelers
               // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
-              if (gameMode === 'vs-knof' && currentPlayer === 1 || gameMode === 'vs-friend') {
+              if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
+                  (gameMode === 'vs-friend') || 
+                  (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
                 const colIndex = parseInt(this.dataset.col);
                 makeMove(colIndex);
               }
@@ -596,18 +619,31 @@
             winningCells = winResult;
             highlightWinningCells();
             
-            const winner = currentPlayer === 1 ? 'Jij' : (gameMode === 'vs-knof' ? 'Knof' : 'Speler 2');
+            // Sla op wie de winnaar is voor het om-en-om beginnen
+            lastWinner = currentPlayer;
+            
+            // Bepaal de juiste tekst afhankelijk van spelmodus
+            let winner;
+            if (gameMode === 'vs-knof') {
+              winner = currentPlayer === 1 ? 'Jij' : 'Knof';
+            } else {
+              winner = currentPlayer === 1 ? 'Speler 1' : 'Speler 2';
+            }
+            
             winMessage.textContent = `${winner} wint!`;
             
             // Update scores
             if (currentPlayer === 1) {
               scores.player++;
-              startConfetti();
             } else {
               scores.opponent++;
             }
             updateScores();
             
+            // Toon confetti voor beide spelers
+            startConfetti();
+            
+            // Toon passend bericht afhankelijk van de spelmodus
             if (gameMode === 'vs-knof') {
               if (currentPlayer === 1) {
                 typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
@@ -704,7 +740,7 @@
                 "Dit is een goede zet denk ik."
               ];
               
-              // 80% kans op geen commentaar, 20% kans op een opmerking
+              // 20% kans op een opmerking
               if (Math.random() < 0.2) {
                 typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
               }
