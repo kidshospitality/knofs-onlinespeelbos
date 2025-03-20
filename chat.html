@@ -27,21 +27,20 @@
       --vh: 1vh;
     }
     
-    /* App container - 10px omhoog geschoven */
+    /* App container - Volledig scherm */
     .app-container {
       position: absolute;
-      top: -10px; /* Verschuif 10px omhoog */
+      top: 0;
       left: 0;
       right: 0;
-      bottom: 40px; /* 50px - 10px omhoog = 40px */
+      bottom: 50px; /* Alleen ruimte voor bottom-nav */
       display: flex;
       flex-direction: column;
       background-color: transparent !important;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      height: calc(100% - 40px); /* Aangepast voor 10px verschuiving */
-      height: calc(calc(var(--vh, 1vh) * 100) - 40px); /* Voor iOS */
-      padding-top: 10px; /* Compensatie voor inhoud */
+      height: calc(100% - 50px); /* 100% minus bottom nav */
+      height: calc(calc(var(--vh, 1vh) * 100) - 50px); /* Alternatieve berekening voor iOS */
     }
     
     /* Style voor de chatbot container */
@@ -53,7 +52,6 @@
       background-color: transparent !important;
       display: flex;
       flex-direction: column;
-      margin-top: -10px; /* Extra correctie */
     }
     
     /* Laad-indicator styles */
@@ -103,29 +101,16 @@
       overflow: hidden;
     }
     
-    /* Zorg dat iframe volledig vult en 10px omhoog staat */
+    /* Zorg dat iframe volledig vult */
     iframe {
       width: 100% !important;
-      height: calc(100% + 10px) !important; /* Extra 10px hoogte */
+      height: 100% !important;
+      min-height: 100% !important;
       position: absolute !important;
-      top: -10px !important; /* 10px omhoog */
+      top: 0 !important;
       left: 0 !important;
       border: none !important;
       background-color: transparent !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    
-    /* Extra ruimte boven de onderste navigatiebalk */
-    .bottom-buffer-zone {
-      position: fixed;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-      height: 20px; /* Grotere buffer */
-      background-color: transparent;
-      z-index: 990;
-      pointer-events: none;
     }
     
     /* Safari specifieke fix voor iOS devices */
@@ -134,8 +119,20 @@
         height: -webkit-fill-available;
       }
       .app-container {
-        height: calc(-webkit-fill-available - 40px); /* Aangepast */
+        height: calc(-webkit-fill-available - 50px);
       }
+    }
+    
+    /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
+    .bottom-buffer-zone {
+      position: fixed;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      height: 25px; /* Extra ruimte boven bottom nav */
+      background-color: transparent;
+      z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
+      pointer-events: none; /* Zodat het niet interactief is */
     }
   </style>
 </head>
@@ -178,6 +175,7 @@
   
   <!-- Extra script om top-nav te verbergen en maximale ruimte voor chat -->
   <script>
+    // Zorg ervoor dat de top-nav echt verborgen blijft, zelfs als common.js deze probeert te laden
     document.addEventListener('DOMContentLoaded', function() {
       // iOS viewpoorthoogte fix
       function setViewportHeight() {
@@ -224,8 +222,8 @@
         // Forceer app-container om vanaf bovenkant te beginnen
         const appContainer = document.querySelector('.app-container');
         if (appContainer) {
-          appContainer.style.top = '-10px'; // 10px omhoog
-          appContainer.style.paddingTop = '10px'; // Compensatie
+          appContainer.style.top = '0';
+          appContainer.style.paddingTop = '0';
           appContainer.style.marginTop = '0';
         }
         
@@ -297,9 +295,10 @@
         // Maak iframe zelf transparant en full-size met dwingender stijlen
         iframe.style.cssText = `
           width: 100% !important;
-          height: calc(100% + 10px) !important;
+          height: 100% !important;
+          min-height: 100% !important;
           position: absolute !important;
-          top: -10px !important;
+          top: 0 !important;
           left: 0 !important;
           right: 0 !important;
           bottom: 0 !important;
@@ -328,9 +327,10 @@
           
           // Voor betere iOS ondersteuning
           if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+            iframe.style.height = 'calc(100% + 1px)';
             setTimeout(function() {
-              injectTransparentCSS(iframe);
-            }, 500);
+              iframe.style.height = '100%';
+            }, 100);
           }
         };
       }
@@ -369,14 +369,15 @@
             border: 1px solid rgba(200, 200, 200, 0.5) !important;
           }
           
-          /* Extra ruimte onderin voor de bottom nav - VERHOOGD */
+          /* Extra ruimte onderin voor de bottom nav en omhoog schuiven van inputveld */
           .input-container, .message-input, .chat-input, 
           [class*="input-container"], [class*="input-wrapper"],
           [class*="footer"], footer, .chat-footer {
-            padding-bottom: 80px !important; /* Verhoogd naar 80px */
-            margin-bottom: 70px !important; /* Verhoogd naar 70px */
+            padding-bottom: 75px !important;
+            margin-bottom: 75px !important;
             position: relative !important;
             z-index: 1 !important;
+            transform: translateY(-20px) !important; /* Schuif 20px omhoog */
           }
           
           /* Verberg headers of andere potentieel problematische elementen */
@@ -395,32 +396,27 @@
             max-height: none !important;
             height: auto !important;
             flex: 1 !important;
-            padding-bottom: 130px !important; /* Verhoogd naar 130px */
+            padding-bottom: 120px !important;
           }
           
-          /* Specifiek voor input velden - extra ruimte aan de onderkant */
+          /* Specifiek voor input velden - extra ruimte aan de onderkant en omhoog schuiven */
           textarea, input[type="text"], .message-input, [class*="text-input"],
           .text-field, [class*="text-field"], .input, [class*="input-field"] {
-            margin-bottom: 25px !important; /* Verhoogd naar 25px */
+            margin-bottom: 25px !important;
+            transform: translateY(-15px) !important; /* Omhoog schuiven */
           }
           
           /* Verzend knop ook omhoog brengen */
           .send-button, [class*="send-button"], button[type="submit"],
           [class*="submit-button"], .submit {
-            margin-bottom: 25px !important; /* Verhoogd naar 25px */
+            margin-bottom: 25px !important;
+            transform: translateY(-15px) !important; /* Omhoog schuiven */
           }
           
-          /* Extra ruimte onderaan - nieuwe toevoeging */
-          form, [class*="form"], .input-form, .chat-form {
-            padding-bottom: 25px !important;
-            margin-bottom: 25px !important;
-          }
-          
-          /* Bottom-bar of footer positionering verbeteren */
-          .bottom-bar, [class*="bottom-bar"], .chat-bottom-bar {
-            position: relative !important;
-            bottom: 25px !important;
-            margin-bottom: 25px !important;
+          /* Specifiek voor het laatste bericht, meer ruimte eronder */
+          .message:last-child, .chat-message:last-child, 
+          [class*="message"]:last-child, [class*="bubble"]:last-child {
+            margin-bottom: 40px !important;
           }
         `;
         
@@ -435,7 +431,7 @@
               el.style.backgroundColor = 'transparent';
               el.style.backgroundImage = 'none';
               
-              // Extra padding voor mogelijke invoervelden
+              // Extra padding voor mogelijke invoervelden en omhoog schuiven
               if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || 
                   (el.className && (
                     el.className.includes('input') || 
@@ -443,24 +439,27 @@
                     el.className.includes('message-input')
                   ))) {
                 el.style.marginBottom = '25px';
+                el.style.transform = 'translateY(-15px)';
               }
               
-              // Probeer input container te identificeren en extra ruimte toe te voegen
+              // Probeer input container te identificeren en extra ruimte toe te voegen en omhoog schuiven
               if (el.className && (
                   el.className.includes('input-container') || 
                   el.className.includes('footer') || 
                   el.className.includes('bottom'))) {
-                el.style.paddingBottom = '80px';
-                el.style.marginBottom = '70px';
+                el.style.paddingBottom = '75px';
+                el.style.marginBottom = '75px';
+                el.style.transform = 'translateY(-20px)';
               }
               
-              // Extra voor form-achtige elementen
-              if (el.tagName === 'FORM' || 
+              // Ook verzendknoppen omhoog brengen
+              if (el.tagName === 'BUTTON' || 
                   (el.className && (
-                    el.className.includes('form') || 
-                    el.className.includes('input-form')
+                    el.className.includes('send') || 
+                    el.className.includes('submit') || 
+                    el.className.includes('btn')
                   ))) {
-                el.style.paddingBottom = '25px';
+                el.style.transform = 'translateY(-15px)';
                 el.style.marginBottom = '25px';
               }
             });
@@ -479,7 +478,7 @@
       }
       
       // Controleer regelmatig of het iframe bestaat en fix het
-      setInterval(monitorIframe, 2000);
+      setInterval(monitorIframe, 1000);
       
       // Extra checks na verschillende intervallen
       setTimeout(monitorIframe, 500);
