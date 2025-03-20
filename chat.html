@@ -14,24 +14,28 @@
       margin: 0;
       padding: 0;
       height: 100%;
+      width: 100%;
       overflow: hidden;
       position: fixed;
-      width: 100%;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: none;
       background-color: transparent !important;
     }
     
-    /* App container - Full height layout, ZONDER padding-top */
+    /* App container - Full height layout zonder padding-top */
     .app-container {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: 50px; /* Alleen ruimte voor de bottom-nav */
       display: flex;
       flex-direction: column;
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
       background-color: transparent !important;
       padding-top: 0; /* Geen ruimte voor top-nav */
-      padding-bottom: 50px; /* Ruimte voor bottom-nav */
+      padding-bottom: 0; /* We gebruiken bottom property hierboven in plaats van padding */
     }
     
     /* Style voor de chatbot container */
@@ -66,11 +70,34 @@
       display: flex !important;
       visibility: visible !important;
       opacity: 1 !important;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
     
     /* Top navigation verbergen */
     #top-nav-container {
       display: none !important; /* Verberg de top navigatie */
+      height: 0 !important;
+      position: absolute !important;
+      visibility: hidden !important;
+      z-index: -1 !important;
+    }
+    
+    /* SVG filters niet laten storen */
+    .svg-filters {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+    
+    /* Safari specifieke fix voor iOS devices */
+    @supports (-webkit-touch-callout: none) {
+      .app-container {
+        height: -webkit-fill-available;
+      }
     }
   </style>
 </head>
@@ -108,7 +135,7 @@
   <!-- Scripts -->
   <script src="js/common.js"></script>
   
-  <!-- Extra script om top-nav te verbergen -->
+  <!-- Extra script om top-nav te verbergen en maximale ruimte voor chat -->
   <script>
     // Zorg ervoor dat de top-nav echt verborgen blijft, zelfs als common.js deze probeert te laden
     document.addEventListener('DOMContentLoaded', function() {
@@ -120,15 +147,40 @@
         topNav.style.visibility = 'hidden';
         topNav.style.opacity = '0';
         topNav.style.position = 'absolute';
+        topNav.style.zIndex = '-1';
       }
       
       // Blijf controleren of topNav verborgen blijft (voor het geval common.js het weer weergeeft)
-      setInterval(function() {
+      const keepTopNavHidden = setInterval(function() {
         if (topNav) {
           topNav.style.display = 'none';
+          topNav.style.height = '0';
           topNav.style.visibility = 'hidden';
+          topNav.style.opacity = '0';
+          topNav.style.position = 'absolute';
+          topNav.style.zIndex = '-1';
         }
-      }, 500);
+      }, 300);
+      
+      // Zorg dat de app container vanaf de bovenkant begint
+      const appContainer = document.querySelector('.app-container');
+      if (appContainer) {
+        appContainer.style.top = '0';
+        appContainer.style.paddingTop = '0';
+      }
+      
+      // Fix voor iOS hoogte berekening
+      function setViewportHeight() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      }
+      
+      // Pas viewport hoogte aan bij laden en resize
+      setViewportHeight();
+      window.addEventListener('resize', setViewportHeight);
+      window.addEventListener('orientationchange', function() {
+        setTimeout(setViewportHeight, 300);
+      });
     });
   </script>
   
@@ -210,10 +262,22 @@
             background-image: none !important;
           }
           
+          /* Start vanaf de bovenkant, geen padding */
+          html, body, .container, .main {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+          }
+          
           /* Lichte achtergrond voor berichten zodat ze leesbaar blijven */
           .message, .chat-message, .user-message, .bot-message,
           .message-bubble, [class*="message"], [class*="bubble"] {
             background-color: rgba(255, 255, 255, 0.6) !important;
+          }
+          
+          /* Extra ruimte voor invoerveld (indien nodig) */
+          .input-container, .message-input, .chat-input, 
+          [class*="input-container"], [class*="input-wrapper"] {
+            margin-bottom: 50px !important; /* Ruimte voor bottom nav */
           }
         `;
         
@@ -228,7 +292,7 @@
         });
       }
       
-      // Controleer iframe periodiek
+      // Monitor en fix iframe regelmatig
       function monitorIframe() {
         const iframe = chatbotWrapper.querySelector('iframe');
         if (iframe) {
@@ -243,6 +307,19 @@
       setTimeout(monitorIframe, 500);
       setTimeout(monitorIframe, 1500);
       setTimeout(monitorIframe, 3000);
+      
+      // Extra fixes voor iOS
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        // Zorg dat bottom nav altijd zichtbaar blijft
+        setInterval(function() {
+          const bottomNav = document.getElementById('bottom-nav-container');
+          if (bottomNav) {
+            bottomNav.style.display = 'flex';
+            bottomNav.style.visibility = 'visible';
+            bottomNav.style.opacity = '1';
+          }
+        }, 500);
+      }
     });
   </script>
 </body>
