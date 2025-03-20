@@ -73,9 +73,9 @@
       background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
     }
 
-    /* Knof's stuk is stroop pannenkoek */
+    /* Knof's stuk is suiker pannenkoek */
     .cell.knof-piece::after {
-      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
+      background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
     }
 
     .cell.winning {
@@ -178,7 +178,7 @@
     }
 
     .player-icon.knof-piece::after {
-      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
+      background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
     }
 
     .active-player {
@@ -325,9 +325,6 @@
       
       // Elementen selecteren
       const gameBoardEl = document.getElementById('game-board');
-      const columnHover = document.getElementById('column-hover');
-      const player1Indicator = document.getElementById('player1-indicator');
-      const player2Indicator = document.getElementById('player2-indicator');
       const playerScoreEl = document.getElementById('player-score');
       const opponentScoreEl = document.getElementById('opponent-score');
       const opponentNameEl = document.getElementById('opponent-name');
@@ -338,9 +335,15 @@
       const confettiCanvas = document.getElementById('confetti-canvas');
       const context = confettiCanvas.getContext('2d');
       
+      // Variabelen voor spelelementen die tijdens het spel worden bijgewerkt
+      let player1Indicator;
+      let player2Indicator;
+      let columnHover;
+      
       // Confetti systeem
       let confetti = [];
       let confettiActive = false;
+      let confettiAnimationId = null;
       
       function resizeCanvas() {
         confettiCanvas.width = window.innerWidth;
@@ -348,6 +351,7 @@
       }
       
       function startConfetti() {
+        stopConfetti(); // Stop any existing confetti first
         confettiActive = true;
         confetti = [];
         resizeCanvas();
@@ -370,6 +374,10 @@
       
       function stopConfetti() {
         confettiActive = false;
+        if (confettiAnimationId) {
+          cancelAnimationFrame(confettiAnimationId);
+          confettiAnimationId = null;
+        }
         context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
       }
       
@@ -397,7 +405,7 @@
           }
         }
         
-        requestAnimationFrame(animateConfetti);
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
       }
       
       window.addEventListener('resize', resizeCanvas);
@@ -413,13 +421,11 @@
         opponentNameEl.textContent = 'Knof';
         // Welkomstbericht
         setTimeout(() => {
-          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de strooppannenkoeken. Laten we beginnen!");
+          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Laten we beginnen!");
         }, 500);
       } else {
         // Speler 2 is een vriend
         playerPieces[2] = 'player2-piece';
-        player2Indicator.classList.remove('knof-piece');
-        player2Indicator.classList.add('player2-piece');
         opponentNameEl.textContent = 'Vriend';
         // Welkomstbericht
         setTimeout(() => {
@@ -439,8 +445,19 @@
         typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
       });
       
+      // Opnieuw starten
+      restartButton.addEventListener('click', function() {
+        initializeGame();
+        if (gameMode === 'vs-knof') {
+          typeSpeechMessage("Laten we nog een keer spelen. Veel plezier!");
+        } else {
+          typeSpeechMessage("Nieuwe ronde, nieuwe kansen! Wie wint deze keer?");
+        }
+      });
+      
       // Initialiseer het spelbord
       function initializeGame() {
+        // Reset game state
         gameBoard = [];
         for (let i = 0; i < ROWS; i++) {
           const row = [];
@@ -450,12 +467,16 @@
           gameBoard.push(row);
         }
         
-        createGameBoard();
         gameOver = false;
         currentPlayer = 1;
         winningCells = [];
+        
+        // Reset UI
+        createGameBoard();
         updateTurnIndicator();
         winMessage.textContent = '';
+        
+        // Stop confetti als dat actief is
         stopConfetti();
       }
       
@@ -501,13 +522,22 @@
           hideColumnHover();
         });
         
-        // Update column hover to match the selected cell type
+        // Update references to elements that were recreated
         columnHover = document.getElementById('column-hover');
+        player1Indicator = document.getElementById('player1-indicator');
+        player2Indicator = document.getElementById('player2-indicator');
+        
+        // Reset player indicators to match game mode
+        if (gameMode === 'vs-knof') {
+          player2Indicator.className = 'player-icon knof-piece';
+        } else {
+          player2Indicator.className = 'player-icon player2-piece';
+        }
       }
       
       // Toon hover effect voor een kolom
       function showColumnHover(colIndex) {
-        if (gameOver || !isValidMove(colIndex)) return;
+        if (gameOver || !isValidMove(colIndex) || !columnHover) return;
         
         const columnWidth = gameBoardEl.offsetWidth / COLS;
         columnHover.style.display = 'block';
@@ -518,7 +548,7 @@
       
       // Verberg hover effect
       function hideColumnHover() {
-        columnHover.style.display = 'none';
+        if (columnHover) columnHover.style.display = 'none';
       }
       
       // Update scores
@@ -599,7 +629,7 @@
       function highlightWinningCells() {
         winningCells.forEach(([row, col]) => {
           const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-          cell.classList.add('winning');
+          if (cell) cell.classList.add('winning');
         });
       }
       
@@ -624,7 +654,7 @@
               "Ik denk dat ik hier ga winnen!",
               "Kijk eens wat ik hier doe!",
               "Vier op een rij voor mij!",
-              "Mijn strooppannenkoek past hier perfect!"
+              "Mijn suikerpannenkoek past hier perfect!"
             ];
             typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
           } 
@@ -661,7 +691,7 @@
                 "Hmm, laat me eens nadenken...",
                 "Ik kies deze plek!",
                 "Mijn beurt!",
-                "Mijn strooppannenkoek gaat hier!",
+                "Mijn suikerpannenkoek gaat hier!",
                 "Dit is een goede zet denk ik."
               ];
               
@@ -886,6 +916,8 @@
       
       // Update de beurtindicator
       function updateTurnIndicator() {
+        if (!player1Indicator || !player2Indicator) return;
+        
         if (currentPlayer === 1) {
           player1Indicator.classList.add('active-player');
           player2Indicator.classList.remove('active-player');
@@ -952,18 +984,9 @@
         return true; // Bord is vol
       }
       
-      // Opnieuw starten
-      restartButton.addEventListener('click', function() {
-        initializeGame();
-        if (gameMode === 'vs-knof') {
-          typeSpeechMessage("Laten we nog een keer spelen. Veel plezier!");
-        } else {
-          typeSpeechMessage("Nieuwe ronde, nieuwe kansen! Wie wint deze keer?");
-        }
-      });
-      
       // Start het spel
       initializeGame();
+      updateScores();
       resizeCanvas();
     });
   </script>
