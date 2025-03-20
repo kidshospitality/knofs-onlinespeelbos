@@ -35,35 +35,30 @@
     .modal-content {
       background-color: #FFFFFF;
       border-radius: 20px;
-      border: 1px solid #DDD8C4;
-      padding: 25px 20px;
-      width: 90%;
-      max-width: 340px;
+      padding: 30px 25px;
+      width: 85%;
+      max-width: 320px;
       text-align: center;
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      filter: url(#rough-filter);
     }
     
     .modal-title {
       margin: 0 0 25px;
-      font-family: 'Patrick Hand', cursive;
       font-size: 1.8rem;
       color: #55A54A;
     }
     
     /* Stijl voor de terugknop */
     .modal-button {
-      margin-top: 20px;
+      margin-top: 25px;
       background-color: #F4F1E4;
-      border: 1px solid #6B5344;
+      border: none;
       border-radius: 10px;
-      padding: 10px 25px;
+      padding: 12px 25px;
       color: #6B5344;
-      font-family: 'Patrick Hand', cursive;
       font-size: 1.1rem;
       cursor: pointer;
       transition: background-color 0.2s;
-      filter: url(#rough-filter);
     }
     
     .modal-button:active {
@@ -76,15 +71,16 @@
       flex-direction: column;
       gap: 15px;
       margin: 0 auto;
-      max-width: 300px;
     }
     
     .modal .button {
-      filter: url(#rough-filter);
+      border-radius: 12px;
+      overflow: hidden;
     }
     
     .modal .button-bg {
-      border-width: 1px;
+      border: none;
+      background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
     }
     
     /* Achtergrondkleuren voor elke sectie */
@@ -113,7 +109,7 @@
       color: #9B5DE5;
     }
     
-    /* SVG iconen voor spelknoppen */
+    /* SVG iconen voor spelknoppen - 3x groter */
     .section {
       position: relative;
       overflow: hidden;
@@ -121,28 +117,18 @@
     
     .section svg.game-icon {
       position: absolute;
-      right: 15px;
-      bottom: 15px;
-      width: 65px;
-      height: 65px;
-      opacity: 0.2;
+      right: -20px;
+      bottom: -20px;
+      width: 180px; /* 3x zo groot */
+      height: 180px; /* 3x zo groot */
+      opacity: 0.15;
       z-index: 0;
-      filter: url(#squiggly-filter);
     }
     
-    /* Achtergrond voor de popup-knoppen */
-    #play-with-knof .button-bg {
-      border-color: var(--game-color, #55A54A);
-      background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
-    }
-    
-    #play-with-friend .button-bg {
-      border-color: var(--game-color, #55A54A);
-      background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
-    }
-    
+    /* Styling voor de knoppen tekst */
     .modal .button-text {
       color: var(--game-color, #55A54A);
+      font-weight: 500;
     }
     
     /* SVG ikoon styling in de knoppen */
@@ -155,8 +141,9 @@
     }
     
     .button-svg {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
+      color: var(--game-color, #55A54A);
     }
   </style>
 </head>
@@ -313,10 +300,6 @@
       const playWithFriend = document.getElementById('play-with-friend');
       const cancelButton = document.getElementById('cancel-game');
       const containerElement = document.getElementById('game-mode-container');
-      const knofIcon = document.getElementById('knof-icon');
-      const friendIcon = document.getElementById('friend-icon');
-      const knofTitle = document.getElementById('knof-title');
-      const friendTitle = document.getElementById('friend-title');
       
       let selectedGame = '';
       let selectedGameName = '';
