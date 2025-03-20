@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>4 op een rij - Knof's Spelletjes</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="../images/icon-192.png">
+  <style>
+    /* Stijlen voor het 4 op een rij spel */
+    .game-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .game-title {
+      color: #55A54A;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .game-board {
+      background-color: #2A75BB;
+      border-radius: 15px;
+      padding: 15px;
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      filter: url(#rough-filter);
+      border: 3px solid #1E5C96;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background-color: #F8F6E9;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      filter: url(#rough-filter);
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .player1-piece {
+      background-color: #FF5C5C;
+      filter: url(#rough-filter);
+      border: 2px solid #E63946;
+    }
+
+    .player2-piece {
+      background-color: #FFD700;
+      filter: url(#rough-filter);
+      border: 2px solid #FFA500;
+    }
+
+    /* Knof's stuk is groen */
+    .knof-piece {
+      background-color: #55A54A;
+      filter: url(#rough-filter);
+      border: 2px solid #2A8C43;
+    }
+
+    .column-hover {
+      position: absolute;
+      top: -45px;
+      width: calc(100% / 7 - 10px);
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: translateX(5px);
+      transition: left 0.2s;
+      display: none;
+      pointer-events: none;
+    }
+
+    .game-info {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #FFD6A5;
+      border-radius: 10px;
+      filter: url(#rough-filter);
+      border: 2px solid #FF9A5A;
+    }
+
+    .turn-indicator {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .player-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .player-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .active-player {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    .win-message {
+      font-size: 1.6rem;
+      color: #4B0082;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .restart-button {
+      padding: 12px 25px;
+      background-color: #A5BBFF;
+      border: 2px solid #7A97FF;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: transform 0.2s;
+      filter: url(#rough-filter);
+    }
+
+    .restart-button:hover {
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG filters for hand-drawn effect -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="3" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Hoofdcontent - 4 op een rij spel -->
+  <div class="app-container">
+    <div class="game-container">
+      <h1 class="game-title">4 op een rij</h1>
+      
+      <div class="game-info">
+        <div class="turn-indicator">Nu aan de beurt:</div>
+        <div class="player-indicator">
+          <div class="player-icon player1-piece active-player" id="player1-indicator"></div>
+          <div class="player-icon knof-piece" id="player2-indicator"></div>
+        </div>
+        <div class="win-message" id="win-message"></div>
+        <button class="restart-button" id="restart-button">Opnieuw spelen</button>
+      </div>
+      
+      <div class="game-board" id="game-board">
+        <div class="column-hover" id="column-hover"></div>
+        <!-- De kolommen worden dynamisch toegevoegd met JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Scripts -->
+  <script src="../js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Instellingen voor het spel
+      const ROWS = 6;
+      const COLS = 7;
+      const WINNING_LENGTH = 4;
+      
+      // Spelstatus
+      let gameBoard = [];
+      let currentPlayer = 1; // 1 voor speler 1, 2 voor speler 2 (Knof of vriend)
+      let gameOver = false;
+      let gameMode = '';
+      let playerPieces = {
+        1: 'player1-piece',
+        2: 'player2-piece'
+      };
+      
+      // Elementen selecteren
+      const gameBoardEl = document.getElementById('game-board');
+      const columnHover = document.getElementById('column-hover');
+      const player1Indicator = document.getElementById('player1-indicator');
+      const player2Indicator = document.getElementById('player2-indicator');
+      const winMessage = document.getElementById('win-message');
+      const restartButton = document.getElementById('restart-button');
+      
+      // URL parameters uitlezen voor spelmodus
+      const urlParams = new URLSearchParams(window.location.search);
+      gameMode = urlParams.get('mode') || 'vs-knof';
+      
+      // Aanpassingen voor de verschillende spelmodi
+      if (gameMode === 'vs-knof') {
+        // Speler 2 is Knof in deze modus
+        playerPieces[2] = 'knof-piece';
+        // Welkomstbericht
+        setTimeout(() => {
+          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij begint met de rode schijfjes en ik speel met de groene. Laten we beginnen!");
+        }, 500);
+      } else {
+        // Speler 2 is een vriend
+        playerPieces[2] = 'player2-piece';
+        player2Indicator.classList.remove('knof-piece');
+        player2Indicator.classList.add('player2-piece');
+        // Welkomstbericht
+        setTimeout(() => {
+          typeSpeechMessage("Veel plezier met 4 op een rij! Speler 1 speelt met rood en Speler 2 met geel. Wie wint?");
+        }, 500);
+      }
+      
+      // Initialiseer het spelbord
+      function initializeGame() {
+        gameBoard = [];
+        for (let i = 0; i < ROWS; i++) {
+          const row = [];
+          for (let j = 0; j < COLS; j++) {
+            row.push(0); // 0 betekent lege cel
+          }
+          gameBoard.push(row);
+        }
+        
+        createGameBoard();
+        gameOver = false;
+        currentPlayer = 1;
+        updateTurnIndicator();
+        winMessage.textContent = '';
+      }
+      
+      // Maak het visuele spelbord
+      function createGameBoard() {
+        gameBoardEl.innerHTML = '<div class="column-hover" id="column-hover"></div>';
+        
+        for (let col = 0; col < COLS; col++) {
+          const column = document.createElement('div');
+          column.className = 'column';
+          column.dataset.col = col;
+          
+          for (let row = 0; row < ROWS; row++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.row = ROWS - 1 - row; // Omgekeerd om vanaf onderkant te bouwen
+            cell.dataset.col = col;
+            column.appendChild(cell);
+          }
+          
+          gameBoardEl.appendChild(column);
+        }
+        
+        // Hover effect voor kolommen
+        const columns = document.querySelectorAll('.column');
+        columns.forEach(column => {
+          column.addEventListener('mouseenter', function() {
+            if (!gameOver) {
+              const colIndex = parseInt(this.dataset.col);
+              showColumnHover(colIndex);
+            }
+          });
+          
+          column.addEventListener('click', function() {
+            if (!gameOver) {
+              const colIndex = parseInt(this.dataset.col);
+              makeMove(colIndex);
+            }
+          });
+        });
+        
+        gameBoardEl.addEventListener('mouseleave', function() {
+          hideColumnHover();
+        });
+      }
+      
+      // Toon hover effect voor een kolom
+      function showColumnHover(colIndex) {
+        if (gameOver || !isValidMove(colIndex)) return;
+        
+        const columnWidth = gameBoardEl.offsetWidth / COLS;
+        columnHover.style.display = 'block';
+        columnHover.style.left = `${colIndex * columnWidth}px`;
+        
+        if (currentPlayer === 1) {
+          columnHover.className = 'column-hover player1-piece';
+        } else {
+          columnHover.className = `column-hover ${playerPieces[2]}`;
+        }
+      }
+      
+      // Verberg hover effect
+      function hideColumnHover() {
+        columnHover.style.display = 'none';
+      }
+      
+      // Controleer of een zet geldig is
+      function isValidMove(colIndex) {
+        return gameBoard[0][colIndex] === 0; // Kijk of de bovenste cel in de kolom leeg is
+      }
+      
+      // Voer een zet uit
+      function makeMove(colIndex) {
+        if (!isValidMove(colIndex) || gameOver) return;
+        
+        // Vind de laagste lege cel in de kolom
+        let rowIndex = ROWS - 1;
+        while (rowIndex >= 0 && gameBoard[rowIndex][colIndex] !== 0) {
+          rowIndex--;
+        }
+        
+        if (rowIndex >= 0) {
+          // Zet uitvoeren
+          gameBoard[rowIndex][colIndex] = currentPlayer;
+          
+          // Animeer de schijf
+          const cell = document.querySelector(`.cell[data-row="${rowIndex}"][data-col="${colIndex}"]`);
+          cell.classList.add(currentPlayer === 1 ? 'player1-piece' : playerPieces[2]);
+          
+          // Controleer op winnende zet
+          if (checkWin(rowIndex, colIndex)) {
+            gameOver = true;
+            const winner = currentPlayer === 1 ? 'Rood' : (gameMode === 'vs-knof' ? 'Knof' : 'Geel');
+            winMessage.textContent = `${winner} heeft gewonnen!`;
+            
+            if (gameMode === 'vs-knof') {
+              if (currentPlayer === 1) {
+                typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
+              } else {
+                typeSpeechMessage("Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?");
+              }
+            } else {
+              typeSpeechMessage(`${winner} heeft gewonnen! Dat was spannend!`);
+            }
+          } else if (checkDraw()) {
+            gameOver = true;
+            winMessage.textContent = "Gelijkspel!";
+            typeSpeechMessage("Het is gelijkspel! Jullie zijn aan elkaar gewaagd.");
+          } else {
+            // Wissel van speler
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateTurnIndicator();
+            
+            // Als de huidige speler Knof is en het is vs-knof modus, laat Knof een zet doen
+            if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
+              setTimeout(makeKnofMove, 1000);
+            }
+          }
+        }
+      }
+      
+      // Knof's AI zet
+      function makeKnofMove() {
+        if (gameOver) return;
+        
+        // Eenvoudige AI: zoek eerst winnende zetten, dan blokkerende zetten, anders random
+        
+        // Zoek een winnende zet voor Knof
+        for (let col = 0; col < COLS; col++) {
+          if (isValidMove(col)) {
+            let row = findLowestEmptyRow(col);
+            if (row >= 0) {
+              gameBoard[row][col] = 2; // Probeer de zet
+              if (checkWin(row, col)) {
+                // Winnende zet gevonden, bevestig zet
+                displayMove(row, col, 2);
+                return;
+              }
+              gameBoard[row][col] = 0; // Zet ongedaan maken
+            }
+          }
+        }
+        
+        // Zoek een zet die de speler blokkeert
+        for (let col = 0; col < COLS; col++) {
+          if (isValidMove(col)) {
+            let row = findLowestEmptyRow(col);
+            if (row >= 0) {
+              gameBoard[row][col] = 1; // Doe alsof speler hier zet
+              if (checkWin(row, col)) {
+                // Blokkeer de winnende zet van de speler
+                gameBoard[row][col] = 2;
+                displayMove(row, col, 2);
+                return;
+              }
+              gameBoard[row][col] = 0; // Zet ongedaan maken
+            }
+          }
+        }
+        
+        // Anders, kies een willekeurige geldige kolom
+        let validCols = [];
+        for (let col = 0; col < COLS; col++) {
+          if (isValidMove(col)) {
+            validCols.push(col);
+          }
+        }
+        
+        if (validCols.length > 0) {
+          const randomCol = validCols[Math.floor(Math.random() * validCols.length)];
+          const row = findLowestEmptyRow(randomCol);
+          gameBoard[row][randomCol] = 2;
+          displayMove(row, randomCol, 2);
+        }
+      }
+      
+      // Vind de laagste lege rij in een kolom
+      function findLowestEmptyRow(col) {
+        for (let row = ROWS - 1; row >= 0; row--) {
+          if (gameBoard[row][col] === 0) {
+            return row;
+          }
+        }
+        return -1;
+      }
+      
+      // Toon een zet op het bord
+      function displayMove(row, col, player) {
+        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        cell.classList.add(player === 1 ? 'player1-piece' : playerPieces[2]);
+        
+        // Controleer op winnende zet
+        if (checkWin(row, col)) {
+          gameOver = true;
+          const winner = player === 1 ? 'Rood' : (gameMode === 'vs-knof' ? 'Knof' : 'Geel');
+          winMessage.textContent = `${winner} heeft gewonnen!`;
+          
+          if (gameMode === 'vs-knof') {
+            if (player === 1) {
+              typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
+            } else {
+              typeSpeechMessage("Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?");
+            }
+          } else {
+            typeSpeechMessage(`${winner} heeft gewonnen! Dat was spannend!`);
+          }
+        } else if (checkDraw()) {
+          gameOver = true;
+          winMessage.textContent = "Gelijkspel!";
+          typeSpeechMessage("Het is gelijkspel! Jullie zijn aan elkaar gewaagd.");
+        } else {
+          // Wissel van speler
+          currentPlayer = currentPlayer === 1 ? 2 : 1;
+          updateTurnIndicator();
+        }
+      }
+      
+      // Update de beurtindicator
+      function updateTurnIndicator() {
+        if (currentPlayer === 1) {
+          player1Indicator.classList.add('active-player');
+          player2Indicator.classList.remove('active-player');
+        } else {
+          player1Indicator.classList.remove('active-player');
+          player2Indicator.classList.add('active-player');
+        }
+      }
+      
+      // Controleer op winnende zet
+      function checkWin(row, col) {
+        const player = gameBoard[row][col];
+        
+        // Controleer horizontaal
+        let count = 0;
+        for (let c = 0; c < COLS; c++) {
+          if (gameBoard[row][c] === player) {
+            count++;
+            if (count >= WINNING_LENGTH) return true;
+          } else {
+            count = 0;
+          }
+        }
+        
+        // Controleer verticaal
+        count = 0;
+        for (let r = 0; r < ROWS; r++) {
+          if (gameBoard[r][col] === player) {
+            count++;
+            if (count >= WINNING_LENGTH) return true;
+          } else {
+            count = 0;
+          }
+        }
+        
+        // Controleer diagonaal (/)
+        for (let r = 0; r <= ROWS - WINNING_LENGTH; r++) {
+          for (let c = 0; c <= COLS - WINNING_LENGTH; c++) {
+            let win = true;
+            for (let i = 0; i < WINNING_LENGTH; i++) {
+              if (gameBoard[r + i][c + i] !== player) {
+                win = false;
+                break;
+              }
+            }
+            if (win) return true;
+          }
+        }
+        
+        // Controleer diagonaal (\)
+        for (let r = 0; r <= ROWS - WINNING_LENGTH; r++) {
+          for (let c = WINNING_LENGTH - 1; c < COLS; c++) {
+            let win = true;
+            for (let i = 0; i < WINNING_LENGTH; i++) {
+              if (gameBoard[r + i][c - i] !== player) {
+                win = false;
+                break;
+              }
+            }
+            if (win) return true;
+          }
+        }
+        
+        return false;
+      }
+      
+      // Controleer op gelijkspel
+      function checkDraw() {
+        for (let col = 0; col < COLS; col++) {
+          if (gameBoard[0][col] === 0) {
+            return false; // Er is nog een lege plaats
+          }
+        }
+        return true; // Bord is vol
+      }
+      
+      // Opnieuw starten
+      restartButton.addEventListener('click', function() {
+        initializeGame();
+        if (gameMode === 'vs-knof') {
+          typeSpeechMessage("Laten we nog een keer spelen. Veel plezier!");
+        } else {
+          typeSpeechMessage("Nieuwe ronde, nieuwe kansen! Wie wint deze keer?");
+        }
+      });
+      
+      // Start het spel
+      initializeGame();
+    });
+  </script>
+</body>
+</html>
