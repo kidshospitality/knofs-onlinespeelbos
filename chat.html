@@ -2,24 +2,92 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Praten met Knof - Knof's Speelbos</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    /* Reset - iOS Safari Fix */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: none;
+    }
+    
+    /* App container - Full height layout */
+    .app-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      padding-top: 60px; /* Ruimte voor top-nav */
+      padding-bottom: 50px; /* Ruimte voor bottom-nav */
+    }
+    
+    /* Style voor de chatbot container */
+    .chatbot-wrapper {
+      flex: 1;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Laad-indicator styles */
+    .loading-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-family: 'Fredoka One', cursive;
+      color: #55A54A;
+    }
+    
+    /* Bottom navigation fix */
+    #bottom-nav-container {
+      flex-shrink: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      height: 50px;
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      -webkit-transform: translateZ(0);
+    }
+    
+    /* Top navigation fix */
+    #top-nav-container {
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
-  <svg class="svg-filters">
+  <svg class="svg-filters" style="display:none;">
     <defs>
       <filter id="rough-filter">
         <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-      <filter id="squiggly-filter">
-        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
       </filter>
     </defs>
   </svg>
@@ -27,37 +95,10 @@
   <!-- Container voor top navigatie -->
   <div id="top-nav-container"></div>
 
-  <!-- Settings modal container -->
-  <div id="settings-modal-container"></div>
-
-  <!-- Hoofdcontent - Chat -->
+  <!-- Hoofdcontent - Chat met iframe -->
   <div class="app-container">
-    <h1 class="page-title">Praten met Knof</h1>
-    
-    <div class="chat-container">
-      <div class="chat-header">
-        <img src="images/knof.png" alt="Knof">
-        <h2>Knof</h2>
-      </div>
-      
-      <div id="chat-messages" class="chat-messages">
-        <!-- Berichten worden hier dynamisch ingevoegd -->
-      </div>
-      
-      <form id="chat-form" class="chat-form">
-        <input type="text" id="chat-input" placeholder="Stel een vraag aan Knof...">
-        <button type="submit">Verstuur</button>
-      </form>
-    </div>
-    
-    <div class="chat-suggestions">
-      <h3>Wat kun je vragen aan Knof?</h3>
-      <div class="suggestion-buttons">
-        <button class="suggestion-btn" data-text="Wat zijn je favoriete dieren?">Vraag naar dieren</button>
-        <button class="suggestion-btn" data-text="Vertel me een grapje!">Vraag een grapje</button>
-        <button class="suggestion-btn" data-text="Wat is je lievelingseten?">Vraag naar eten</button>
-        <button class="suggestion-btn" data-text="Wat kun je allemaal in het speelbos doen?">Vraag over het speelbos</button>
-      </div>
+    <div id="chatbot-wrapper" class="chatbot-wrapper">
+      <div id="loading-indicator" class="loading-indicator">Laden...</div>
     </div>
   </div>
 
@@ -66,6 +107,89 @@
 
   <!-- Scripts -->
   <script src="js/common.js"></script>
-  <script src="js/chat.js"></script>
+  
+  <!-- Chatbot scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatbotWrapper = document.getElementById('chatbot-wrapper');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      
+      // Laad de chatbot script
+      const script = document.createElement('script');
+      script.id = "d5595c66-85ed-46ca-9a20-7e4988fb0618";
+      script.setAttribute('data-company-id', "477718fd-e50b-4758-8fcb-7709dedf75ec");
+      script.setAttribute('data-product-name', "alias:aichat");
+      script.setAttribute('data-product-iframe', "create");
+      script.src = "https://fcdn.servicehoster.io/iframe.product.js";
+      
+      // Wanneer script geladen is
+      script.onload = function() {
+        setTimeout(function() {
+          // Verberg loader
+          loadingIndicator.style.display = 'none';
+          
+          // Pas iframe afmetingen aan
+          resizeIframe();
+        }, 500);
+      };
+      
+      chatbotWrapper.appendChild(script);
+      
+      // Functie om iframe aan te passen
+      function resizeIframe() {
+        const iframe = chatbotWrapper.querySelector('iframe');
+        if (iframe) {
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.border = 'none';
+        }
+      }
+      
+      // Resize event handlers
+      function handleResize() {
+        resizeIframe();
+        
+        // Fix voor iOS hoogte
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Zorg ervoor dat bottom-nav zichtbaar blijft
+        const bottomNav = document.getElementById('bottom-nav-container');
+        if (bottomNav) {
+          bottomNav.style.display = 'flex';
+          bottomNav.style.visibility = 'visible';
+        }
+      }
+      
+      window.addEventListener('resize', handleResize);
+      window.addEventListener('orientationchange', function() {
+        setTimeout(handleResize, 300);
+      });
+      
+      // Extra resize checks
+      setTimeout(handleResize, 100);
+      setTimeout(handleResize, 500);
+      setTimeout(handleResize, 1000);
+    });
+    
+    // iOS Safari-specifieke fix voor navigatiebalk
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+      const bottomNav = document.getElementById('bottom-nav-container');
+      
+      function ensureNavigationVisibility() {
+        if (bottomNav) {
+          bottomNav.style.display = 'flex';
+          bottomNav.style.visibility = 'visible';
+          bottomNav.style.opacity = '1';
+        }
+      }
+      
+      // Periodiek controleren
+      setInterval(ensureNavigationVisibility, 1000);
+    }
+  </script>
 </body>
 </html>
