@@ -19,6 +19,7 @@
       width: 100%;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: none;
+      background-color: transparent; /* Zorg dat de basis achtergrond transparant is */
     }
     
     /* App container - Full height layout */
@@ -34,6 +35,7 @@
       -webkit-backface-visibility: hidden;
       padding-top: 60px; /* Ruimte voor top-nav */
       padding-bottom: 50px; /* Ruimte voor bottom-nav */
+      background-color: transparent; /* Zorg dat deze container ook transparant is */
     }
     
     /* Style voor de chatbot container */
@@ -42,6 +44,7 @@
       width: 100%;
       position: relative;
       overflow: hidden;
+      background-color: transparent; /* Maak chatbot wrapper transparant */
     }
     
     /* Laad-indicator styles */
@@ -78,6 +81,16 @@
       left: 0;
       right: 0;
       z-index: 10;
+    }
+    
+    /* Nieuwe stijlen voor iframe en zijn inhoud */
+    iframe {
+      background-color: transparent !important; /* Maak iframe transparant */
+    }
+    
+    /* Deze CSS wordt toegepast via JavaScript nadat iframe is geladen */
+    .transparent-iframe-fix {
+      background-color: transparent !important; 
     }
   </style>
 </head>
@@ -130,6 +143,9 @@
           
           // Pas iframe afmetingen aan
           resizeIframe();
+          
+          // Maak iframe en inhoud transparant
+          makeIframeTransparent();
         }, 500);
       };
       
@@ -145,6 +161,61 @@
           iframe.style.top = '0';
           iframe.style.left = '0';
           iframe.style.border = 'none';
+          iframe.style.backgroundColor = 'transparent';
+        }
+      }
+      
+      // Functie om iframe transparant te maken
+      function makeIframeTransparent() {
+        const iframe = chatbotWrapper.querySelector('iframe');
+        if (iframe) {
+          // Maak iframe zelf transparant
+          iframe.style.backgroundColor = 'transparent';
+          
+          try {
+            // Probeer toegang te krijgen tot iframe inhoud
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            
+            // Maak HTML en BODY elementen in iframe transparant
+            if (iframeDoc) {
+              // Voeg CSS toe aan iframe document
+              const style = iframeDoc.createElement('style');
+              style.textContent = `
+                html, body, .container, .main, .chat-container, .message-container {
+                  background-color: transparent !important;
+                }
+                .chat-message, .message-bubble {
+                  background-color: rgba(255, 255, 255, 0.7) !important;
+                }
+              `;
+              iframeDoc.head.appendChild(style);
+            }
+          } catch(e) {
+            console.log("Kon iframe inhoud niet direct aanpassen vanwege Same-Origin Policy");
+            
+            // Alternatieve aanpak met injectie van stijl na laden
+            iframe.addEventListener('load', function() {
+              setTimeout(function() {
+                try {
+                  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                  if (iframeDoc) {
+                    const style = iframeDoc.createElement('style');
+                    style.textContent = `
+                      html, body, .container, .main, .chat-container, .message-container {
+                        background-color: transparent !important;
+                      }
+                      .chat-message, .message-bubble {
+                        background-color: rgba(255, 255, 255, 0.7) !important;
+                      }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                  }
+                } catch(e) {
+                  console.log("Kon iframe inhoud niet aanpassen na laden");
+                }
+              }, 1000);
+            });
+          }
         }
       }
       
@@ -162,6 +233,9 @@
           bottomNav.style.display = 'flex';
           bottomNav.style.visibility = 'visible';
         }
+        
+        // Controleer ook iframe transparantie
+        makeIframeTransparent();
       }
       
       window.addEventListener('resize', handleResize);
@@ -173,6 +247,8 @@
       setTimeout(handleResize, 100);
       setTimeout(handleResize, 500);
       setTimeout(handleResize, 1000);
+      setTimeout(makeIframeTransparent, 1500);
+      setTimeout(makeIframeTransparent, 2500);
     });
     
     // iOS Safari-specifieke fix voor navigatiebalk
