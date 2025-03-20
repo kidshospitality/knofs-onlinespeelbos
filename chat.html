@@ -326,11 +326,32 @@
             overflow-y: auto !important;
           }
           
-          /* Zorg dat berichten leesbaar blijven */
-          .message, .chat-message, .user-message, .bot-message,
-          .message-bubble, [class*="message"], [class*="bubble"] {
-            background-color: rgba(255, 255, 255, 0.75) !important;
-            border: 1px solid rgba(200, 200, 200, 0.5) !important;
+          /* Zorg dat berichten leesbaar blijven - aparte styling voor gebruiker en bot */
+          /* Gebruiker berichten blijven groen */
+          .user-message, [class*="user-message"], 
+          [class*="message"][class*="user"], 
+          [class*="bubble"][class*="user"] {
+            background-color: #90c387 !important; /* Groen voor gebruiker */
+            border: 1px solid rgba(100, 150, 100, 0.5) !important;
+            color: #ffffff !important; /* Witte tekst voor contrast */
+          }
+          
+          /* Bot berichten krijgen lichtgroene achtergrond */
+          .bot-message, [class*="bot-message"], 
+          [class*="message"][class*="bot"], 
+          [class*="assistant"], [class*="bubble"][class*="bot"],
+          [class*="bubble"][class*="assistant"] {
+            background-color: #e5eee3 !important; /* Lichtgroen voor Knof */
+            border: 1px solid rgba(180, 200, 180, 0.5) !important;
+            color: #333333 !important; /* Donkere tekst voor contrast */
+          }
+          
+          /* Algemene berichten die we niet kunnen identificeren */
+          .message:not([class*="user"]):not([class*="bot"]), 
+          .chat-message:not([class*="user"]):not([class*="bot"]),
+          .message-bubble:not([class*="user"]):not([class*="bot"]) {
+            background-color: #e5eee3 !important; /* Standaard lichtgroen */
+            border: 1px solid rgba(180, 200, 180, 0.5) !important;
           }
           
           /* Extra ruimte onderin voor de bottom nav */
@@ -378,13 +399,39 @@
         // Voeg stijl toe aan iframe document
         iframeDoc.head.appendChild(style);
         
-        // Verwijder inline achtergronden van alle elementen
+        // Verwijder inline achtergronden van alle elementen, maar behoud chatballon achtergronden
         setTimeout(function() {
           try {
             const allElements = iframeDoc.querySelectorAll('*');
             allElements.forEach(el => {
-              el.style.backgroundColor = 'transparent';
-              el.style.backgroundImage = 'none';
+              // Skip elementen die berichten bevatten, we willen hun achtergrond behouden
+              const isMessageElement = el.className && (
+                el.className.includes('message') || 
+                el.className.includes('bubble') ||
+                el.className.includes('assistant') ||
+                el.className.includes('user')
+              );
+              
+              // Als het geen berichtenelement is, maak achtergrond transparant
+              if (!isMessageElement) {
+                el.style.backgroundColor = 'transparent';
+                el.style.backgroundImage = 'none';
+              } else {
+                // Voor berichtenelementen, stel juiste kleuren in op basis van type
+                if (el.className.includes('user')) {
+                  el.style.backgroundColor = '#90c387'; // Gebruiker berichten
+                  el.style.color = '#ffffff';
+                  el.style.border = '1px solid rgba(100, 150, 100, 0.5)';
+                } else if (el.className.includes('bot') || el.className.includes('assistant')) {
+                  el.style.backgroundColor = '#e5eee3'; // Bot berichten
+                  el.style.color = '#333333';
+                  el.style.border = '1px solid rgba(180, 200, 180, 0.5)';
+                } else {
+                  // Algemene berichten zonder duidelijke identificatie
+                  el.style.backgroundColor = '#e5eee3';
+                  el.style.border = '1px solid rgba(180, 200, 180, 0.5)';
+                }
+              }
               
               // Extra padding voor mogelijke invoervelden
               if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || 
@@ -409,6 +456,45 @@
             console.log("Inline style removing failed:", e);
           }
         }, 100);
+        
+        // Blijf controleren op nieuwe berichten om de juiste styling toe te passen
+        try {
+          const messageObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach(function(node) {
+                  // Als een nieuw berichtelement is toegevoegd
+                  if (node.className && (
+                      node.className.includes('message') || 
+                      node.className.includes('bubble')
+                    )) {
+                    // Bepaal of het een gebruikers- of botbericht is
+                    if (node.className.includes('user')) {
+                      node.style.backgroundColor = '#90c387';
+                      node.style.color = '#ffffff';
+                      node.style.border = '1px solid rgba(100, 150, 100, 0.5)';
+                    } else if (node.className.includes('bot') || node.className.includes('assistant')) {
+                      node.style.backgroundColor = '#e5eee3';
+                      node.style.color = '#333333';
+                      node.style.border = '1px solid rgba(180, 200, 180, 0.5)';
+                    } else {
+                      node.style.backgroundColor = '#e5eee3';
+                      node.style.border = '1px solid rgba(180, 200, 180, 0.5)';
+                    }
+                  }
+                });
+              }
+            });
+          });
+          
+          // Zoek naar chat container en observeer veranderingen
+          const chatContainer = iframeDoc.querySelector('.messages-container, .chat-messages, [class*="messages"]');
+          if (chatContainer) {
+            messageObserver.observe(chatContainer, { childList: true, subtree: true });
+          }
+        } catch(e) {
+          console.log("Message observer setup failed:", e);
+        }
       }
       
       // Monitor en fix iframe regelmatig
@@ -425,6 +511,7 @@
       // Extra checks na verschillende intervallen
       setTimeout(monitorIframe, 500);
       setTimeout(monitorIframe, 1500);
+      setTimeout(monitorIframe, 3000); // Extra check om zeker te zijn van styling
     });
   </script>
 </body>
