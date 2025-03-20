@@ -27,10 +27,10 @@
       --vh: 1vh;
     }
     
-    /* App container - Volledig scherm */
+    /* App container - Volledig scherm met 10px boven */
     .app-container {
       position: absolute;
-      top: 0;
+      top: -10px; /* 10px hoger dan voorheen */
       left: 0;
       right: 0;
       bottom: 50px; /* Alleen ruimte voor bottom-nav */
@@ -39,8 +39,8 @@
       background-color: transparent !important;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      height: calc(100% - 50px); /* 100% minus bottom nav */
-      height: calc(calc(var(--vh, 1vh) * 100) - 50px); /* Alternatieve berekening voor iOS */
+      height: calc(100% - 40px); /* 100% minus bottom nav plus 10px extra hoogte */
+      height: calc(calc(var(--vh, 1vh) * 100) - 40px); /* Alternatieve berekening voor iOS */
     }
     
     /* Style voor de chatbot container */
@@ -52,6 +52,8 @@
       background-color: transparent !important;
       display: flex;
       flex-direction: column;
+      top: -10px; /* Extra verschuiving naar boven */
+      margin-top: -10px; /* Extra negatieve marge om ruimte boven te verkleinen */
     }
     
     /* Laad-indicator styles */
@@ -101,13 +103,13 @@
       overflow: hidden;
     }
     
-    /* Zorg dat iframe volledig vult */
+    /* Zorg dat iframe volledig vult en 10px hoger begint */
     iframe {
       width: 100% !important;
-      height: 100% !important;
-      min-height: 100% !important;
+      height: calc(100% + 10px) !important; /* 10px extra hoogte */
+      min-height: calc(100% + 10px) !important; /* 10px extra hoogte */
       position: absolute !important;
-      top: 0 !important;
+      top: -10px !important; /* 10px hoger beginnen */
       left: 0 !important;
       border: none !important;
       background-color: transparent !important;
@@ -119,7 +121,12 @@
         height: -webkit-fill-available;
       }
       .app-container {
-        height: calc(-webkit-fill-available - 50px);
+        height: calc(-webkit-fill-available - 40px); /* 50px - 10px extra hoogte */
+        top: -10px;
+      }
+      iframe {
+        height: calc(100% + 20px) !important; /* Extra hoogte voor iOS */
+        top: -10px !important;
       }
     }
     
@@ -219,12 +226,19 @@
           topNav.innerHTML = '';
         }
         
-        // Forceer app-container om vanaf bovenkant te beginnen
+        // Forceer app-container om vanaf 10px hoger te beginnen
         const appContainer = document.querySelector('.app-container');
         if (appContainer) {
-          appContainer.style.top = '0';
+          appContainer.style.top = '-10px';
           appContainer.style.paddingTop = '0';
           appContainer.style.marginTop = '0';
+        }
+        
+        // Forceer chatbot-wrapper om 10px hoger te beginnen
+        const chatbotWrapper = document.getElementById('chatbot-wrapper');
+        if (chatbotWrapper) {
+          chatbotWrapper.style.top = '-10px';
+          chatbotWrapper.style.marginTop = '-10px';
         }
         
         // Forceer bottom nav zichtbaarheid
@@ -292,13 +306,13 @@
         const iframe = chatbotWrapper.querySelector('iframe');
         if (!iframe) return;
           
-        // Maak iframe zelf transparant en full-size met dwingender stijlen
+        // Maak iframe zelf transparant en full-size met dwingender stijlen, en 10px naar boven
         iframe.style.cssText = `
           width: 100% !important;
-          height: 100% !important;
-          min-height: 100% !important;
+          height: calc(100% + 10px) !important;
+          min-height: calc(100% + 10px) !important;
           position: absolute !important;
-          top: 0 !important;
+          top: -10px !important;
           left: 0 !important;
           right: 0 !important;
           bottom: 0 !important;
@@ -327,9 +341,11 @@
           
           // Voor betere iOS ondersteuning
           if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            iframe.style.height = 'calc(100% + 1px)';
+            iframe.style.height = 'calc(100% + 20px)';
+            iframe.style.top = '-10px';
             setTimeout(function() {
-              iframe.style.height = '100%';
+              iframe.style.height = 'calc(100% + 20px)';
+              iframe.style.top = '-10px';
             }, 100);
           }
         };
@@ -353,10 +369,10 @@
             background-image: none !important;
           }
           
-          /* Haal padding en margin weg van belangrijke elementen */
+          /* Haal padding en margin weg van belangrijke elementen en schuif ze 10px omhoog */
           html, body, .container, .main, .chat-container {
             padding-top: 0 !important;
-            margin-top: 0 !important;
+            margin-top: -10px !important; /* 10px hoger beginnen */
             height: 100% !important;
             max-height: 100% !important;
             overflow-y: auto !important;
@@ -396,6 +412,7 @@
             height: auto !important;
             flex: 1 !important;
             padding-bottom: 120px !important; /* Verhoogd van 100px naar 120px */
+            margin-top: -10px !important; /* 10px omhoog */
           }
           
           /* Specifiek voor input velden - extra ruimte aan de onderkant */
@@ -408,6 +425,13 @@
           .send-button, [class*="send-button"], button[type="submit"],
           [class*="submit-button"], .submit {
             margin-bottom: 20px !important;
+          }
+          
+          /* Specifieke fix voor topgedeelte van chat om 10px hoger te beginnen */
+          [class*="header"], [class*="top"], [class*="chat-header"], .chat-header,
+          [class*="message-list"], .message-list, [class*="messages-area"] {
+            margin-top: -10px !important;
+            padding-top: 0 !important;
           }
         `;
         
@@ -439,6 +463,16 @@
                   el.className.includes('bottom'))) {
                 el.style.paddingBottom = '70px';
                 el.style.marginBottom = '65px';
+              }
+              
+              // Probeer headers/top elementen te vinden en 10px omhoog te brengen
+              if (el.className && (
+                  el.className.includes('header') || 
+                  el.className.includes('top') || 
+                  el.className.includes('messages-container') ||
+                  el.className.includes('message-list'))) {
+                el.style.marginTop = '-10px';
+                el.style.paddingTop = '0';
               }
             });
           } catch(e) {
@@ -473,6 +507,26 @@
             bottomNav.style.visibility = 'visible';
             bottomNav.style.opacity = '1';
             bottomNav.style.zIndex = '999';
+          }
+          
+          // Zorg dat de app-container 10px hoger blijft
+          const appContainer = document.querySelector('.app-container');
+          if (appContainer) {
+            appContainer.style.top = '-10px';
+          }
+          
+          // Zorg dat de chatbot-wrapper 10px hoger blijft
+          const chatWrapper = document.getElementById('chatbot-wrapper');
+          if (chatWrapper) {
+            chatWrapper.style.top = '-10px';
+            chatWrapper.style.marginTop = '-10px';
+          }
+          
+          // Zorg dat iframe 10px hoger blijft
+          const iframe = chatWrapper.querySelector('iframe');
+          if (iframe) {
+            iframe.style.top = '-10px';
+            iframe.style.height = 'calc(100% + 20px)';
           }
         }, 500);
       }
