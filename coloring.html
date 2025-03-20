@@ -9,63 +9,92 @@
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
   <style>
-    /* Reset */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-    
-    /* Layout */
-    .app-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    /* Top bar is standaard aanwezig */
-    #top-nav-container {
-      flex-shrink: 0;
-    }
-    
-    /* NIEUWE TOOLBOX - Eenvoudig en direct gepositioneerd */
-    #drawing-toolbar {
-      background-color: transparent;
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-shrink: 0; /* Voorkomt krimpen */
-    }
-    
-    /* Oude container wordt flex om ruimte op te vullen */
-    .coloring-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    
-    #canvas-container {
-      flex: 1;
-      position: relative;
-    }
-    
-    #coloring-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    
-    /* Bottom nav standaard aanwezig */
-    #bottom-nav-container {
-      flex-shrink: 0;
-    }
-  </style>
+  /* Reset - iOS Safari Fix */
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+  }
+  
+  /* Layout - iOS Safari Fix */
+  .app-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Top nav container fix */
+  #top-nav-container {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Toolbar fix */
+  #drawing-toolbar {
+    background-color: transparent;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 9;
+  }
+  
+  /* Container/Canvas layout fix */
+  .coloring-container {
+    flex: 1 0 auto;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
+  
+  #canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  #coloring-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+  
+  #template-canvas {
+    touch-action: none;
+  }
+  
+  /* Bottom navigation fix - meest belangrijk voor je probleem */
+  #bottom-nav-container {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+    height: 50px; /* Vaste hoogte voor de navigatiebalk */
+    display: flex !important; /* Forceert weergave */
+    visibility: visible !important; /* Forceert zichtbaarheid */
+    opacity: 1 !important;
+    -webkit-transform: translateZ(0); /* Forceert GPU rendering */
+  }
+</style>
 </head>
 <body>
   <!-- SVG filters -->
