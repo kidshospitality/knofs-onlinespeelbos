@@ -20,7 +20,7 @@
     .game-item {
       position: relative;
       background: #FFFFFF;
-      border: 3px solid #55A54A;
+      border: 3px solid;
       border-radius: 15px;
       padding: 15px;
       display: flex;
@@ -36,20 +36,32 @@
       transform: scale(0.98);
     }
     
-    .game-item-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      opacity: 0.15;
-      background-size: cover;
-      background-position: center;
-      z-index: 0;
+    /* Unieke kleuren voor elk spel */
+    #connect-four {
+      border-color: #55A54A; /* Groen */
+    }
+    
+    #connect-four h2 {
+      color: #55A54A;
+    }
+    
+    #tic-tac-toe {
+      border-color: #F07C3E; /* Oranje */
+    }
+    
+    #tic-tac-toe h2 {
+      color: #F07C3E;
+    }
+    
+    #pancake-dobble {
+      border-color: #9B5DE5; /* Paars */
+    }
+    
+    #pancake-dobble h2 {
+      color: #9B5DE5;
     }
     
     .game-item h2 {
-      color: #55A54A;
       margin: 0 0 8px;
       position: relative;
       z-index: 1;
@@ -69,9 +81,15 @@
       justify-content: center;
       align-items: center;
       margin-top: auto;
-      height: 100px;
       position: relative;
       z-index: 1;
+      height: 100px;
+    }
+    
+    .game-svg {
+      height: 80px;
+      width: auto;
+      filter: url(#squiggly-filter);
     }
     
     /* Spelkeuze overlay stijlen */
@@ -92,7 +110,7 @@
     
     .game-mode-container {
       background-color: #FFFFFF;
-      border: 4px solid #55A54A;
+      border: 4px solid;
       border-radius: 20px;
       padding: 20px;
       width: 90%;
@@ -102,8 +120,8 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
     
+    /* De border-color wordt dynamisch aangepast op basis van geselecteerd spel */
     .game-mode-title {
-      color: #55A54A;
       margin: 0 0 15px;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.6rem;
@@ -118,7 +136,7 @@
     
     .game-mode-option {
       background-color: #F4F1E4;
-      border: 3px solid #55A54A;
+      border: 3px solid;
       border-radius: 12px;
       padding: 15px;
       display: flex;
@@ -136,7 +154,6 @@
     .option-icon {
       width: 40px;
       height: 40px;
-      background-color: #55A54A;
       border-radius: 50%;
       margin-right: 15px;
       display: flex;
@@ -144,9 +161,10 @@
       align-items: center;
     }
     
-    .option-icon img {
+    .option-icon svg {
       width: 24px;
       height: 24px;
+      fill: white;
     }
     
     .option-text {
@@ -156,7 +174,6 @@
     
     .option-text h3 {
       margin: 0 0 5px;
-      color: #55A54A;
       font-family: 'Patrick Hand', cursive;
     }
     
@@ -191,19 +208,6 @@
       display: flex;
       animation: fadeIn 0.3s forwards;
     }
-    
-    /* Aangepaste achtergronden voor elk spel */
-    #connect-four .game-item-bg {
-      background-image: url('images/games/connect-four-bg.png');
-    }
-    
-    #tic-tac-toe .game-item-bg {
-      background-image: url('images/games/tic-tac-toe-bg.png');
-    }
-    
-    #pancake-dobble .game-item-bg {
-      background-image: url('images/games/pancake-dobble-bg.png');
-    }
   </style>
 </head>
 <body>
@@ -232,30 +236,71 @@
     <h1 class="page-title">Knof's Spelletjeshoek</h1>
     
     <div class="games-container">
-      <div class="game-item" id="connect-four">
-        <div class="game-item-bg"></div>
+      <div class="game-item" id="connect-four" data-game-color="#55A54A">
         <h2>4 op een rij</h2>
         <p>Krijg 4 schijfjes op een rij, kolom of diagonaal!</p>
         <div class="game-preview">
-          <img src="images/games/connect-four-preview.png" alt="4 op een rij voorbeeld" style="max-height: 100%; width: auto;">
+          <!-- Connect Four SVG -->
+          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="5" width="80" height="70" rx="3" fill="#2A75BB" stroke="#1D5A9F" stroke-width="2"/>
+            <circle cx="20" cy="15" r="7" fill="#FFFFFF"/>
+            <circle cx="40" cy="15" r="7" fill="#FFFFFF"/>
+            <circle cx="60" cy="15" r="7" fill="#FFFFFF"/>
+            <circle cx="80" cy="15" r="7" fill="#FFFFFF"/>
+            <circle cx="20" cy="35" r="7" fill="#FFFFFF"/>
+            <circle cx="40" cy="35" r="7" fill="#FFFFFF"/>
+            <circle cx="60" cy="35" r="7" fill="#55A54A"/>
+            <circle cx="80" cy="35" r="7" fill="#FFFFFF"/>
+            <circle cx="20" cy="55" r="7" fill="#E63946"/>
+            <circle cx="40" cy="55" r="7" fill="#E63946"/>
+            <circle cx="60" cy="55" r="7" fill="#55A54A"/>
+            <circle cx="80" cy="55" r="7" fill="#FFFFFF"/>
+          </svg>
         </div>
       </div>
       
-      <div class="game-item" id="tic-tac-toe">
-        <div class="game-item-bg"></div>
+      <div class="game-item" id="tic-tac-toe" data-game-color="#F07C3E">
         <h2>Boter, Kaas en Eieren</h2>
         <p>Krijg drie op een rij om te winnen!</p>
         <div class="game-preview">
-          <img src="images/games/tic-tac-toe-preview.png" alt="Boter, kaas en eieren voorbeeld" style="max-height: 100%; width: auto;">
+          <!-- Tic Tac Toe SVG -->
+          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="90" height="70" rx="3" fill="#F4F1E4" stroke="#6B5344" stroke-width="1"/>
+            <!-- Grid lines -->
+            <line x1="33" y1="5" x2="33" y2="75" stroke="#6B5344" stroke-width="2"/>
+            <line x1="67" y1="5" x2="67" y2="75" stroke="#6B5344" stroke-width="2"/>
+            <line x1="5" y1="28" x2="95" y2="28" stroke="#6B5344" stroke-width="2"/>
+            <line x1="5" y1="52" x2="95" y2="52" stroke="#6B5344" stroke-width="2"/>
+            <!-- X and O examples -->
+            <circle cx="18" cy="16" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
+            <path d="M78 12 L88 24 M88 12 L78 24" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="50" cy="40" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
+            <path d="M18 52 L28 64 M28 52 L18 64" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
         </div>
       </div>
       
-      <div class="game-item" id="pancake-dobble">
-        <div class="game-item-bg"></div>
+      <div class="game-item" id="pancake-dobble" data-game-color="#9B5DE5">
         <h2>Pannenkoeken Dobble</h2>
         <p>Vind zo snel mogelijk de overeenkomende plaatjes</p>
         <div class="game-preview">
-          <img src="images/games/pancake-dobble-preview.png" alt="Pannenkoeken dobble voorbeeld" style="max-height: 100%; width: auto;">
+          <!-- Pancake Dobble SVG -->
+          <svg class="game-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="40" r="25" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
+            <circle cx="70" cy="40" r="25" fill="#F5DEB3" stroke="#D2B48C" stroke-width="2"/>
+            <!-- Card 1 symbols -->
+            <circle cx="20" cy="25" r="5" fill="#FF5733"/>
+            <rect x="35" y="30" width="10" height="10" fill="#9B5DE5"/>
+            <path d="M15 50 L25 45 L30 55 Z" fill="#55A54A"/>
+            <path d="M35 55 L40 45 L45 55 Z" fill="#F07C3E"/>
+            <!-- Card 2 symbols -->
+            <circle cx="60" cy="25" r="5" fill="#9B5DE5"/>
+            <rect x="75" y="30" width="10" height="10" fill="#FF5733"/>
+            <path d="M55 50 L65 45 L70 55 Z" fill="#F07C3E"/>
+            <path d="M75 55 L80 45 L85 55 Z" fill="#3D85C6"/>
+            <!-- Connection line for matching symbol -->
+            <line x1="20" y1="25" x2="60" y2="25" stroke="#FF5733" stroke-width="1" stroke-dasharray="2,2"/>
+          </svg>
         </div>
       </div>
     </div>
@@ -263,24 +308,28 @@
 
   <!-- Spelmodus keuze overlay -->
   <div class="game-mode-overlay" id="game-mode-overlay">
-    <div class="game-mode-container">
+    <div class="game-mode-container" id="game-mode-container">
       <h2 class="game-mode-title" id="overlay-title">Hoe wil je spelen?</h2>
       <div class="game-mode-options">
         <div class="game-mode-option" id="play-with-knof">
-          <div class="option-icon">
-            <img src="images/knof-icon.png" alt="Knof icoon">
+          <div class="option-icon" id="knof-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10-4.48 10-10S17.52,2 12,2z M12,6c1.93,0 3.5,1.57 3.5,3.5S13.93,13 12,13s-3.5-1.57 -3.5-3.5S10.07,6 12,6z M12,20c-2.03,0 -4.43,-0.82 -6.14,-2.88C7.55,15.8 9.68,15 12,15s4.45,0.8 6.14,2.12C16.43,19.18 14.03,20 12,20z"/>
+            </svg>
           </div>
           <div class="option-text">
-            <h3>Spelen tegen Knof</h3>
+            <h3 id="knof-title">Spelen tegen Knof</h3>
             <p>Speel tegen Knof de computer!</p>
           </div>
         </div>
         <div class="game-mode-option" id="play-with-friend">
-          <div class="option-icon">
-            <img src="images/friend-icon.png" alt="Vrienden icoon">
+          <div class="option-icon" id="friend-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16,11c1.66,0 2.99,-1.34 2.99,-3S17.66,5 16,5c-1.66,0 -3,1.34 -3,3s1.34,3 3,3zm-8,0c1.66,0 2.99,-1.34 2.99,-3S9.66,5 8,5C6.34,5 5,6.34 5,8s1.34,3 3,3zm0,2c-2.33,0 -7,1.17 -7,3.5V19h14v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5zm8,0c-0.29,0 -0.62,0.02 -0.97,0.05c1.16,0.84 1.97,1.97 1.97,3.45V19h6v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5z"/>
+            </svg>
           </div>
           <div class="option-text">
-            <h3>Spelen met een vriend</h3>
+            <h3 id="friend-title">Spelen met een vriend</h3>
             <p>Speel samen op dezelfde telefoon!</p>
           </div>
         </div>
@@ -307,15 +356,36 @@
       const playWithKnof = document.getElementById('play-with-knof');
       const playWithFriend = document.getElementById('play-with-friend');
       const cancelButton = document.getElementById('cancel-game');
+      const containerElement = document.getElementById('game-mode-container');
+      const knofIcon = document.getElementById('knof-icon');
+      const friendIcon = document.getElementById('friend-icon');
+      const knofTitle = document.getElementById('knof-title');
+      const friendTitle = document.getElementById('friend-title');
       
       let selectedGame = '';
       let selectedGameName = '';
+      let selectedGameColor = '#55A54A'; // Standaard groen
       
-      // Functie om de overlay te tonen
-      function showOverlay(gameId, gameName) {
+      // Functie om de overlay te tonen met juiste kleur
+      function showOverlay(gameId, gameName, gameColor) {
         selectedGame = gameId;
         selectedGameName = gameName;
+        selectedGameColor = gameColor;
+        
+        // Pas kleuren aan op basis van het gekozen spel
+        containerElement.style.borderColor = gameColor;
+        overlayTitle.style.color = gameColor;
+        
+        knofIcon.style.backgroundColor = gameColor;
+        friendIcon.style.backgroundColor = gameColor;
+        knofTitle.style.color = gameColor;
+        friendTitle.style.color = gameColor;
+        
+        playWithKnof.style.borderColor = gameColor;
+        playWithFriend.style.borderColor = gameColor;
+        
         overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
+        overlay.style.display = 'flex';
         overlay.classList.add('fade-in');
       }
       
@@ -327,20 +397,30 @@
         }, 300);
       }
       
-      // Event listeners voor spelletjes
-      document.getElementById('connect-four').addEventListener('click', () => {
-        showOverlay('connect-four', '4 op een rij');
-        typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
-      });
+      // Voeg eventListeners toe voor alle spellen
+      const gameItems = document.querySelectorAll('.game-item');
       
-      document.getElementById('tic-tac-toe').addEventListener('click', () => {
-        showOverlay('tic-tac-toe', 'Boter, Kaas en Eieren');
-        typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
-      });
-      
-      document.getElementById('pancake-dobble').addEventListener('click', () => {
-        showOverlay('pancake-dobble', 'Pannenkoeken Dobble');
-        typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
+      gameItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const gameId = this.id;
+          const gameName = this.querySelector('h2').textContent;
+          const gameColor = this.dataset.gameColor;
+          
+          showOverlay(gameId, gameName, gameColor);
+          
+          // Verschillende berichten per spel
+          switch(gameId) {
+            case 'connect-four':
+              typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
+              break;
+            case 'tic-tac-toe':
+              typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
+              break;
+            case 'pancake-dobble':
+              typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
+              break;
+          }
+        });
       });
       
       // Event listener voor tegen Knof spelen
@@ -350,17 +430,7 @@
         
         // Stuur naar de juiste game pagina met mode parameter
         setTimeout(() => {
-          switch(selectedGame) {
-            case 'connect-four':
-              window.location.href = 'games/connect-four.html?mode=vs-knof';
-              break;
-            case 'tic-tac-toe':
-              window.location.href = 'games/tic-tac-toe.html?mode=vs-knof';
-              break;
-            case 'pancake-dobble':
-              window.location.href = 'games/pancake-dobble.html?mode=vs-knof';
-              break;
-          }
+          window.location.href = `games/${selectedGame}.html?mode=vs-knof`;
         }, 1500);
       });
       
@@ -371,17 +441,7 @@
         
         // Stuur naar de juiste game pagina met mode parameter
         setTimeout(() => {
-          switch(selectedGame) {
-            case 'connect-four':
-              window.location.href = 'games/connect-four.html?mode=vs-friend';
-              break;
-            case 'tic-tac-toe':
-              window.location.href = 'games/tic-tac-toe.html?mode=vs-friend';
-              break;
-            case 'pancake-dobble':
-              window.location.href = 'games/pancake-dobble.html?mode=vs-friend';
-              break;
-          }
+          window.location.href = `games/${selectedGame}.html?mode=vs-friend`;
         }, 1500);
       });
       
