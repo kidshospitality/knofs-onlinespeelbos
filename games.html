@@ -28,15 +28,17 @@
     .modal-content {
       background-color: #FFFFFF;
       border-radius: 20px;
+      border: 1px solid #DDD8C4;
       padding: 25px 20px;
       width: 90%;
       max-width: 340px;
       text-align: center;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      filter: url(#rough-filter);
     }
     
     .modal-title {
-      margin: 0 0 20px;
+      margin: 0 0 25px;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.8rem;
       color: #55A54A;
@@ -44,23 +46,41 @@
     
     /* Stijl voor de terugknop */
     .modal-button {
-      margin-top: 15px;
+      margin-top: 20px;
       background-color: #F4F1E4;
       border: 1px solid #6B5344;
       border-radius: 10px;
-      padding: 10px 20px;
+      padding: 10px 25px;
       color: #6B5344;
       font-family: 'Patrick Hand', cursive;
       font-size: 1.1rem;
       cursor: pointer;
       transition: background-color 0.2s;
+      filter: url(#rough-filter);
     }
     
     .modal-button:active {
       background-color: #E8E4D0;
     }
     
-    /* Achtergrondkleuren voor elke sectie */
+    /* Specifieke stijl voor de knoppen in de pop-up */
+    .modal .buttons-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 0 auto;
+      max-width: 300px;
+    }
+    
+    .modal .button {
+      filter: url(#rough-filter);
+    }
+    
+    .modal .button-bg {
+      border-width: 1px;
+    }
+    
+    /* Achtergrondkleuren voor de sectie-knoppen */
     #connect-four .section-bg-games {
       background-color: rgba(85, 165, 74, 0.15); /* Groen */
     }
@@ -84,6 +104,52 @@
     
     #pancake-dobble .section-title {
       color: #9B5DE5;
+    }
+    
+    /* Achtergrond stijlen voor de spelknoppen */
+    .section {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .section svg.game-icon {
+      position: absolute;
+      right: 15px;
+      bottom: 15px;
+      width: 65px;
+      height: 65px;
+      opacity: 0.2;
+      z-index: 0;
+      filter: url(#squiggly-filter);
+    }
+    
+    /* Achtergrond voor de popup-knoppen */
+    #play-with-knof .button-bg {
+      border-color: var(--game-color, #55A54A);
+      background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
+    }
+    
+    #play-with-friend .button-bg {
+      border-color: var(--game-color, #55A54A);
+      background-color: rgba(var(--game-color-rgb, 85, 165, 74), 0.1);
+    }
+    
+    .modal .button-text {
+      color: var(--game-color, #55A54A);
+    }
+    
+    /* SVG ikoon styling in de knoppen */
+    .button-svg-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 32px;
+      height: 32px;
+    }
+    
+    .button-svg {
+      width: 28px;
+      height: 28px;
     }
   </style>
 </head>
@@ -114,27 +180,77 @@
     
     <div class="sections-container">
       <!-- 4 op een rij Section -->
-      <div class="section" id="connect-four" data-game-color="#55A54A">
+      <div class="section" id="connect-four" data-game-color="#55A54A" data-game-color-rgb="85, 165, 74">
         <div class="section-bg-games"></div>
         <div class="section-title">4 op een rij</div>
         <div class="section-subtitle">Krijg 4 schijfjes op een rij, kolom of diagonaal!</div>
         <span class="section-arrow"></span>
+        <!-- Connect Four SVG icon -->
+        <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="10" width="70" height="80" rx="3" fill="#2A75BB" fill-opacity="0.7"/>
+          <circle cx="25" cy="20" r="7" fill="#55A54A"/>
+          <circle cx="45" cy="20" r="7" fill="#FFFFFF"/>
+          <circle cx="65" cy="20" r="7" fill="#FFFFFF"/>
+          <circle cx="85" cy="20" r="7" fill="#FFFFFF"/>
+          <circle cx="25" cy="40" r="7" fill="#FFFFFF"/>
+          <circle cx="45" cy="40" r="7" fill="#FFFFFF"/>
+          <circle cx="65" cy="40" r="7" fill="#E63946"/>
+          <circle cx="85" cy="40" r="7" fill="#FFFFFF"/>
+          <circle cx="25" cy="60" r="7" fill="#55A54A"/>
+          <circle cx="45" cy="60" r="7" fill="#E63946"/>
+          <circle cx="65" cy="60" r="7" fill="#E63946"/>
+          <circle cx="85" cy="60" r="7" fill="#FFFFFF"/>
+          <circle cx="25" cy="80" r="7" fill="#55A54A"/>
+          <circle cx="45" cy="80" r="7" fill="#55A54A"/>
+          <circle cx="65" cy="80" r="7" fill="#E63946"/>
+          <circle cx="85" cy="80" r="7" fill="#FFFFFF"/>
+        </svg>
       </div>
       
       <!-- Boter Kaas en Eieren Section -->
-      <div class="section" id="tic-tac-toe" data-game-color="#F07C3E">
+      <div class="section" id="tic-tac-toe" data-game-color="#F07C3E" data-game-color-rgb="240, 124, 62">
         <div class="section-bg-coloring"></div>
         <div class="section-title">Boter, Kaas en Eieren</div>
         <div class="section-subtitle">Krijg drie op een rij om te winnen!</div>
         <span class="section-arrow"></span>
+        <!-- Tic Tac Toe SVG icon -->
+        <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="80" height="80" rx="3" fill="#F4F1E4" fill-opacity="0.7"/>
+          <line x1="37" y1="10" x2="37" y2="90" stroke="#6B5344" stroke-width="2"/>
+          <line x1="63" y1="10" x2="63" y2="90" stroke="#6B5344" stroke-width="2"/>
+          <line x1="10" y1="37" x2="90" y2="37" stroke="#6B5344" stroke-width="2"/>
+          <line x1="10" y1="63" x2="90" y2="63" stroke="#6B5344" stroke-width="2"/>
+          <circle cx="24" cy="24" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
+          <path d="M76 24 L86 36 M86 24 L76 36" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
+          <path d="M24 76 L34 88 M34 76 L24 88" stroke="#55A54A" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="76" cy="76" r="8" stroke="#F07C3E" stroke-width="3" fill="none"/>
+        </svg>
       </div>
 
       <!-- Pannenkoeken Dobble Section -->
-      <div class="section" id="pancake-dobble" data-game-color="#9B5DE5">
+      <div class="section" id="pancake-dobble" data-game-color="#9B5DE5" data-game-color-rgb="155, 93, 229">
         <div class="section-bg-placemat"></div>
         <div class="section-title">Pannenkoeken Dobble</div>
         <div class="section-subtitle">Vind zo snel mogelijk de overeenkomende plaatjes</div>
         <span class="section-arrow"></span>
+        <!-- Pancake Dobble SVG icon -->
+        <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="35" cy="50" r="25" fill="#F5DEB3" fill-opacity="0.8" stroke="#D2B48C" stroke-width="2"/>
+          <circle cx="75" cy="50" r="25" fill="#F5DEB3" fill-opacity="0.8" stroke="#D2B48C" stroke-width="2"/>
+          <!-- Card 1 symbols -->
+          <circle cx="25" cy="35" r="5" fill="#FF5733"/>
+          <rect x="35" cy="35" width="10" height="10" fill="#9B5DE5"/>
+          <path d="M25 60 L35 55 L40 65 Z" fill="#55A54A"/>
+          <path d="M40 65 L45 55 L50 65 Z" fill="#F07C3E"/>
+          <!-- Card 2 symbols -->
+          <circle cx="65" cy="35" r="5" fill="#9B5DE5"/>
+          <rect x="75" y="35" width="10" height="10" fill="#FF5733"/>
+          <path d="M65 60 L75 55 L80 65 Z" fill="#F07C3E"/>
+          <path d="M75 70 L85 60 L90 70 Z" fill="#3D85C6"/>
+          <!-- Connection line for matching symbol -->
+          <line x1="25" y1="35" x2="65" y2="35" stroke="#FF5733" stroke-width="1" stroke-dasharray="2,2"/>
+        </svg>
       </div>
     </div>
   </div>
@@ -147,14 +263,22 @@
         <div class="button" id="play-with-knof">
           <div class="button-bg"></div>
           <span>
-            <div class="button-emoji" id="knof-icon">👤</div>
+            <div class="button-svg-container" id="knof-icon">
+              <svg class="button-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10-4.48 10-10S17.52,2 12,2zM12,6c1.93,0 3.5,1.57 3.5,3.5S13.93,13 12,13s-3.5-1.57 -3.5-3.5S10.07,6 12,6zM12,20c-2.03,0 -4.43,-0.82 -6.14,-2.88C7.55,15.8 9.68,15 12,15s4.45,0.8 6.14,2.12C16.43,19.18 14.03,20 12,20z" fill="currentColor"/>
+              </svg>
+            </div>
             <div class="button-text" id="knof-title">Spelen tegen Knof</div>
           </span>
         </div>
         <div class="button" id="play-with-friend">
           <div class="button-bg"></div>
           <span>
-            <div class="button-emoji" id="friend-icon">👥</div>
+            <div class="button-svg-container" id="friend-icon">
+              <svg class="button-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16,11c1.66,0 2.99,-1.34 2.99,-3S17.66,5 16,5c-1.66,0 -3,1.34 -3,3s1.34,3 3,3zm-8,0c1.66,0 2.99,-1.34 2.99,-3S9.66,5 8,5C6.34,5 5,6.34 5,8s1.34,3 3,3zm0,2c-2.33,0 -7,1.17 -7,3.5V19h14v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5zm8,0c-0.29,0 -0.62,0.02 -0.97,0.05c1.16,0.84 1.97,1.97 1.97,3.45V19h6v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5z" fill="currentColor"/>
+              </svg>
+            </div>
             <div class="button-text" id="friend-title">Spelen met een vriend</div>
           </span>
         </div>
@@ -182,21 +306,29 @@
       const playWithFriend = document.getElementById('play-with-friend');
       const cancelButton = document.getElementById('cancel-game');
       const containerElement = document.getElementById('game-mode-container');
+      const knofIcon = document.getElementById('knof-icon');
+      const friendIcon = document.getElementById('friend-icon');
       const knofTitle = document.getElementById('knof-title');
       const friendTitle = document.getElementById('friend-title');
       
       let selectedGame = '';
       let selectedGameName = '';
       let selectedGameColor = '#55A54A'; // Standaard groen
+      let selectedGameColorRGB = '85, 165, 74'; // Standaard groen in RGB
       
       // Functie om de overlay te tonen met juiste kleur
-      function showOverlay(gameId, gameName, gameColor) {
+      function showOverlay(gameId, gameName, gameColor, gameColorRGB) {
         selectedGame = gameId;
         selectedGameName = gameName;
         selectedGameColor = gameColor;
+        selectedGameColorRGB = gameColorRGB;
         
         // Pas kleuren aan op basis van het gekozen spel
         overlayTitle.style.color = gameColor;
+        
+        // Update CSS variabelen voor de knoppen
+        document.documentElement.style.setProperty('--game-color', gameColor);
+        document.documentElement.style.setProperty('--game-color-rgb', gameColorRGB);
         
         // Pas titel aan
         overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
@@ -219,8 +351,9 @@
             const gameId = this.id;
             const gameName = this.querySelector('.section-title').textContent;
             const gameColor = this.dataset.gameColor;
+            const gameColorRGB = this.dataset.gameColorRgb;
             
-            showOverlay(gameId, gameName, gameColor);
+            showOverlay(gameId, gameName, gameColor, gameColorRGB);
             
             // Verschillende berichten per spel
             switch(gameId) {
