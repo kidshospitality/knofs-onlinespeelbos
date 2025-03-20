@@ -8,6 +8,84 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    /* Stijlen voor de spel-popup */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(248, 246, 233, 0.9);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .modal-content {
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      padding: 25px 20px;
+      width: 90%;
+      max-width: 340px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .modal-title {
+      margin: 0 0 20px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.8rem;
+      color: #55A54A;
+    }
+    
+    /* Stijl voor de terugknop */
+    .modal-button {
+      margin-top: 15px;
+      background-color: #F4F1E4;
+      border: 1px solid #6B5344;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: #6B5344;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .modal-button:active {
+      background-color: #E8E4D0;
+    }
+    
+    /* Achtergrondkleuren voor elke sectie */
+    #connect-four .section-bg-games {
+      background-color: rgba(85, 165, 74, 0.15); /* Groen */
+    }
+    
+    #tic-tac-toe .section-bg-coloring {
+      background-color: rgba(240, 124, 62, 0.15); /* Oranje */
+    }
+    
+    #pancake-dobble .section-bg-placemat {
+      background-color: rgba(155, 93, 229, 0.15); /* Paars */
+    }
+    
+    /* Aangepaste titelkleuren voor elk spel */
+    #connect-four .section-title {
+      color: #55A54A;
+    }
+    
+    #tic-tac-toe .section-title {
+      color: #F07C3E;
+    }
+    
+    #pancake-dobble .section-title {
+      color: #9B5DE5;
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -103,6 +181,7 @@
       const playWithKnof = document.getElementById('play-with-knof');
       const playWithFriend = document.getElementById('play-with-friend');
       const cancelButton = document.getElementById('cancel-game');
+      const containerElement = document.getElementById('game-mode-container');
       const knofTitle = document.getElementById('knof-title');
       const friendTitle = document.getElementById('friend-title');
       
@@ -115,6 +194,9 @@
         selectedGame = gameId;
         selectedGameName = gameName;
         selectedGameColor = gameColor;
+        
+        // Pas kleuren aan op basis van het gekozen spel
+        overlayTitle.style.color = gameColor;
         
         // Pas titel aan
         overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
