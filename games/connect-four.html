@@ -54,33 +54,53 @@
       cursor: pointer;
       filter: url(#rough-filter);
       box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      position: relative;
     }
 
-    .player1-piece {
-      background-color: #FF5C5C;
-      filter: url(#rough-filter);
-      border: 2px solid #E63946;
+    .cell.player1-piece::after, 
+    .cell.player2-piece::after,
+    .cell.knof-piece::after {
+      content: '';
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
-    .player2-piece {
-      background-color: #FFD700;
-      filter: url(#rough-filter);
-      border: 2px solid #FFA500;
+    .cell.player1-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
     }
 
-    /* Knof's stuk is groen */
-    .knof-piece {
-      background-color: #55A54A;
-      filter: url(#rough-filter);
-      border: 2px solid #2A8C43;
+    .cell.player2-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
+    }
+
+    /* Knof's stuk is groene pannenkoek (stroop + groene kleur) */
+    .cell.knof-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
+      filter: hue-rotate(90deg);
+    }
+
+    .cell.winning {
+      animation: blink 0.5s alternate infinite;
+    }
+
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.5; }
     }
 
     .column-hover {
       position: absolute;
-      top: -45px;
+      top: -50px;
       width: calc(100% / 7 - 10px);
       height: 40px;
-      background-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       transform: translateX(5px);
       transition: left 0.2s;
@@ -98,6 +118,30 @@
       border: 2px solid #FF9A5A;
     }
 
+    .score-board {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 15px;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .score-card {
+      text-align: center;
+    }
+
+    .score-card h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.1rem;
+    }
+
+    .score-card p {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
     .turn-indicator {
       font-size: 1.4rem;
       margin-bottom: 10px;
@@ -111,15 +155,44 @@
     }
 
     .player-icon {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: inline-block;
+      position: relative;
+    }
+
+    .player-icon.player1-piece::after, 
+    .player-icon.player2-piece::after,
+    .player-icon.knof-piece::after {
+      content: '';
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .player-icon.player1-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
+    }
+
+    .player-icon.player2-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-suiker.png');
+    }
+
+    .player-icon.knof-piece::after {
+      background-image: url('../images/pannenkoek-vrijstaand-rond-stroop.png');
+      filter: hue-rotate(90deg);
     }
 
     .active-player {
       transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      box-shadow: 0 0 10px rgba(255,165,0,0.7);
     }
 
     .win-message {
@@ -129,20 +202,41 @@
       font-weight: bold;
     }
 
-    .restart-button {
-      padding: 12px 25px;
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .game-button {
+      padding: 12px 20px;
       background-color: #A5BBFF;
       border: 2px solid #7A97FF;
       border-radius: 10px;
       font-size: 1.1rem;
       cursor: pointer;
-      margin-top: 15px;
       transition: transform 0.2s;
       filter: url(#rough-filter);
     }
 
-    .restart-button:hover {
+    .game-button:hover {
       transform: translateY(-3px);
+    }
+
+    .game-button:active {
+      transform: scale(0.98);
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -167,19 +261,36 @@
   <!-- Settings modal container -->
   <div id="settings-modal-container"></div>
 
+  <!-- Canvas voor confetti effect -->
+  <canvas id="confetti-canvas"></canvas>
+
   <!-- Hoofdcontent - 4 op een rij spel -->
   <div class="app-container">
     <div class="game-container">
       <h1 class="game-title">4 op een rij</h1>
       
       <div class="game-info">
+        <div class="score-board">
+          <div class="score-card" id="player-score-card">
+            <h3>Jij</h3>
+            <p id="player-score">0</p>
+          </div>
+          <div class="score-card" id="opponent-score-card">
+            <h3 id="opponent-name">Knof</h3>
+            <p id="opponent-score">0</p>
+          </div>
+        </div>
         <div class="turn-indicator">Nu aan de beurt:</div>
         <div class="player-indicator">
           <div class="player-icon player1-piece active-player" id="player1-indicator"></div>
           <div class="player-icon knof-piece" id="player2-indicator"></div>
         </div>
         <div class="win-message" id="win-message"></div>
-        <button class="restart-button" id="restart-button">Opnieuw spelen</button>
+        <div class="buttons-container">
+          <button class="game-button" id="restart-button">Nieuw spel</button>
+          <button class="game-button" id="reset-scores">Reset scores</button>
+          <button class="game-button" id="back-button">Terug naar opties</button>
+        </div>
       </div>
       
       <div class="game-board" id="game-board">
@@ -210,14 +321,90 @@
         1: 'player1-piece',
         2: 'player2-piece'
       };
+      let winningCells = [];
+      let scores = {
+        player: 0,
+        opponent: 0
+      };
       
       // Elementen selecteren
       const gameBoardEl = document.getElementById('game-board');
       const columnHover = document.getElementById('column-hover');
       const player1Indicator = document.getElementById('player1-indicator');
       const player2Indicator = document.getElementById('player2-indicator');
+      const playerScoreEl = document.getElementById('player-score');
+      const opponentScoreEl = document.getElementById('opponent-score');
+      const opponentNameEl = document.getElementById('opponent-name');
       const winMessage = document.getElementById('win-message');
       const restartButton = document.getElementById('restart-button');
+      const resetScoresButton = document.getElementById('reset-scores');
+      const backButton = document.getElementById('back-button');
+      const confettiCanvas = document.getElementById('confetti-canvas');
+      const context = confettiCanvas.getContext('2d');
+      
+      // Confetti systeem
+      let confetti = [];
+      let confettiActive = false;
+      
+      function resizeCanvas() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+      }
+      
+      function startConfetti() {
+        confettiActive = true;
+        confetti = [];
+        resizeCanvas();
+        
+        // Create confetti particles
+        for (let i = 0; i < 100; i++) {
+          confetti.push({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * -confettiCanvas.height,
+            size: Math.random() * 10 + 5,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 2 - 1,
+            speed: Math.random() * 5 + 2
+          });
+        }
+        
+        animateConfetti();
+      }
+      
+      function stopConfetti() {
+        confettiActive = false;
+        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+      
+      function animateConfetti() {
+        if (!confettiActive) return;
+        
+        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        
+        for (let i = 0; i < confetti.length; i++) {
+          const p = confetti[i];
+          
+          context.save();
+          context.translate(p.x, p.y);
+          context.rotate(p.rotation * Math.PI / 180);
+          context.fillStyle = p.color;
+          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          context.restore();
+          
+          p.y += p.speed;
+          p.rotation += p.rotationSpeed;
+          
+          if (p.y > confettiCanvas.height) {
+            p.y = -10;
+            p.x = Math.random() * confettiCanvas.width;
+          }
+        }
+        
+        requestAnimationFrame(animateConfetti);
+      }
+      
+      window.addEventListener('resize', resizeCanvas);
       
       // URL parameters uitlezen voor spelmodus
       const urlParams = new URLSearchParams(window.location.search);
@@ -227,20 +414,34 @@
       if (gameMode === 'vs-knof') {
         // Speler 2 is Knof in deze modus
         playerPieces[2] = 'knof-piece';
+        opponentNameEl.textContent = 'Knof';
         // Welkomstbericht
         setTimeout(() => {
-          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij begint met de rode schijfjes en ik speel met de groene. Laten we beginnen!");
+          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de groene pannenkoeken. Laten we beginnen!");
         }, 500);
       } else {
         // Speler 2 is een vriend
         playerPieces[2] = 'player2-piece';
         player2Indicator.classList.remove('knof-piece');
         player2Indicator.classList.add('player2-piece');
+        opponentNameEl.textContent = 'Vriend';
         // Welkomstbericht
         setTimeout(() => {
-          typeSpeechMessage("Veel plezier met 4 op een rij! Speler 1 speelt met rood en Speler 2 met geel. Wie wint?");
+          typeSpeechMessage("Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?");
         }, 500);
       }
+      
+      // Event listeners
+      backButton.addEventListener('click', function() {
+        window.location.href = '../games.html';
+      });
+      
+      resetScoresButton.addEventListener('click', function() {
+        scores.player = 0;
+        scores.opponent = 0;
+        updateScores();
+        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
+      });
       
       // Initialiseer het spelbord
       function initializeGame() {
@@ -256,8 +457,10 @@
         createGameBoard();
         gameOver = false;
         currentPlayer = 1;
+        winningCells = [];
         updateTurnIndicator();
         winMessage.textContent = '';
+        stopConfetti();
       }
       
       // Maak het visuele spelbord
@@ -284,14 +487,14 @@
         const columns = document.querySelectorAll('.column');
         columns.forEach(column => {
           column.addEventListener('mouseenter', function() {
-            if (!gameOver) {
+            if (!gameOver && currentPlayer === 1) {
               const colIndex = parseInt(this.dataset.col);
               showColumnHover(colIndex);
             }
           });
           
           column.addEventListener('click', function() {
-            if (!gameOver) {
+            if (!gameOver && currentPlayer === 1) {
               const colIndex = parseInt(this.dataset.col);
               makeMove(colIndex);
             }
@@ -301,6 +504,9 @@
         gameBoardEl.addEventListener('mouseleave', function() {
           hideColumnHover();
         });
+        
+        // Update column hover to match the selected cell type
+        columnHover = document.getElementById('column-hover');
       }
       
       // Toon hover effect voor een kolom
@@ -311,16 +517,18 @@
         columnHover.style.display = 'block';
         columnHover.style.left = `${colIndex * columnWidth}px`;
         
-        if (currentPlayer === 1) {
-          columnHover.className = 'column-hover player1-piece';
-        } else {
-          columnHover.className = `column-hover ${playerPieces[2]}`;
-        }
+        columnHover.className = 'column-hover player1-piece';
       }
       
       // Verberg hover effect
       function hideColumnHover() {
         columnHover.style.display = 'none';
+      }
+      
+      // Update scores
+      function updateScores() {
+        playerScoreEl.textContent = scores.player;
+        opponentScoreEl.textContent = scores.opponent;
       }
       
       // Controleer of een zet geldig is
@@ -344,13 +552,26 @@
           
           // Animeer de schijf
           const cell = document.querySelector(`.cell[data-row="${rowIndex}"][data-col="${colIndex}"]`);
-          cell.classList.add(currentPlayer === 1 ? 'player1-piece' : playerPieces[2]);
+          cell.classList.add(playerPieces[currentPlayer]);
           
           // Controleer op winnende zet
-          if (checkWin(rowIndex, colIndex)) {
+          const winResult = checkWin(rowIndex, colIndex);
+          if (winResult) {
             gameOver = true;
-            const winner = currentPlayer === 1 ? 'Rood' : (gameMode === 'vs-knof' ? 'Knof' : 'Geel');
-            winMessage.textContent = `${winner} heeft gewonnen!`;
+            winningCells = winResult;
+            highlightWinningCells();
+            
+            const winner = currentPlayer === 1 ? 'Jij' : (gameMode === 'vs-knof' ? 'Knof' : 'Speler 2');
+            winMessage.textContent = `${winner} wint!`;
+            
+            // Update scores
+            if (currentPlayer === 1) {
+              scores.player++;
+              startConfetti();
+            } else {
+              scores.opponent++;
+            }
+            updateScores();
             
             if (gameMode === 'vs-knof') {
               if (currentPlayer === 1) {
@@ -378,59 +599,148 @@
         }
       }
       
+      // Highlight de winnende cellen
+      function highlightWinningCells() {
+        winningCells.forEach(([row, col]) => {
+          const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+          cell.classList.add('winning');
+        });
+      }
+      
       // Knof's AI zet
       function makeKnofMove() {
         if (gameOver) return;
         
-        // Eenvoudige AI: zoek eerst winnende zetten, dan blokkerende zetten, anders random
+        // Implementeer Minimax algoritme voor beter AI gedrag
+        const bestMove = findBestMove();
         
-        // Zoek een winnende zet voor Knof
-        for (let col = 0; col < COLS; col++) {
-          if (isValidMove(col)) {
-            let row = findLowestEmptyRow(col);
-            if (row >= 0) {
-              gameBoard[row][col] = 2; // Probeer de zet
-              if (checkWin(row, col)) {
-                // Winnende zet gevonden, bevestig zet
-                displayMove(row, col, 2);
-                return;
+        // Leuk commentaar van Knof toevoegen afhankelijk van de situatie
+        // Kijk of Knof kan winnen met deze zet
+        let rowIndex = findLowestEmptyRow(bestMove);
+        if (rowIndex >= 0) {
+          gameBoard[rowIndex][bestMove] = 2; // Proefzet
+          const willWin = checkWin(rowIndex, bestMove);
+          gameBoard[rowIndex][bestMove] = 0; // Zet terugdraaien
+          
+          if (willWin) {
+            // Knof weet dat hij gaat winnen
+            const taunts = [
+              "Ik denk dat ik hier ga winnen!",
+              "Kijk eens wat ik hier doe!",
+              "Vier op een rij voor mij!",
+              "Mijn groene pannenkoek past hier perfect!"
+            ];
+            typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
+          } 
+          else {
+            // Kijk of Knof een blokkerend zet doet
+            let isBlocking = false;
+            for (let col = 0; col < COLS; col++) {
+              if (col === bestMove) continue; // Skip de huidige zet
+              
+              let r = findLowestEmptyRow(col);
+              if (r >= 0) {
+                gameBoard[r][col] = 1; // Doe alsof speler 1 hier zet
+                const wouldWin = checkWin(r, col);
+                gameBoard[r][col] = 0; // Zet terugdraaien
+                
+                if (wouldWin && col !== bestMove) {
+                  // Knof's bestMove is anders dan deze kolom, maar er was een blokkerende zet nodig
+                  isBlocking = true;
+                  const blockMessages = [
+                    "Dat was bijna gelukt!",
+                    "Ik zie wat je probeert te doen!",
+                    "Niet zo snel!",
+                    "Ik blokkeer je pannenkoek-plan!"
+                  ];
+                  typeSpeechMessage(blockMessages[Math.floor(Math.random() * blockMessages.length)]);
+                  break;
+                }
               }
-              gameBoard[row][col] = 0; // Zet ongedaan maken
+            }
+            
+            // Als het geen blokkerende zet is, willekeurig commentaar
+            if (!isBlocking) {
+              const normalMoves = [
+                "Hmm, laat me eens nadenken...",
+                "Ik kies deze plek!",
+                "Mijn beurt!",
+                "Mijn groene pannenkoek gaat hier!",
+                "Dit is een goede zet denk ik."
+              ];
+              
+              // 80% kans op geen commentaar, 20% kans op een opmerking
+              if (Math.random() < 0.2) {
+                typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
+              }
             }
           }
         }
         
-        // Zoek een zet die de speler blokkeert
+        makeMove(bestMove);
+      }
+      
+      // Vind de beste zet met een eenvoudige implementatie
+      function findBestMove() {
+        // Controleer eerst of we kunnen winnen
         for (let col = 0; col < COLS; col++) {
           if (isValidMove(col)) {
             let row = findLowestEmptyRow(col);
             if (row >= 0) {
-              gameBoard[row][col] = 1; // Doe alsof speler hier zet
-              if (checkWin(row, col)) {
-                // Blokkeer de winnende zet van de speler
-                gameBoard[row][col] = 2;
-                displayMove(row, col, 2);
-                return;
+              // Tijdelijk zet doen
+              gameBoard[row][col] = 2;
+              const win = checkWin(row, col);
+              // Zet terugdraaien
+              gameBoard[row][col] = 0;
+              
+              if (win) {
+                return col; // Winnende zet
               }
-              gameBoard[row][col] = 0; // Zet ongedaan maken
             }
           }
         }
         
-        // Anders, kies een willekeurige geldige kolom
-        let validCols = [];
+        // Controleer of we een winnende zet van de tegenstander moeten blokkeren
         for (let col = 0; col < COLS; col++) {
           if (isValidMove(col)) {
-            validCols.push(col);
+            let row = findLowestEmptyRow(col);
+            if (row >= 0) {
+              // Tijdelijk zet doen alsof speler 1 hier zou zetten
+              gameBoard[row][col] = 1;
+              const win = checkWin(row, col);
+              // Zet terugdraaien
+              gameBoard[row][col] = 0;
+              
+              if (win) {
+                return col; // Blokkeer winnende zet
+              }
+            }
           }
         }
         
-        if (validCols.length > 0) {
-          const randomCol = validCols[Math.floor(Math.random() * validCols.length)];
-          const row = findLowestEmptyRow(randomCol);
-          gameBoard[row][randomCol] = 2;
-          displayMove(row, randomCol, 2);
+        // Probeer centrum kolom als die beschikbaar is
+        const middleCol = 3;
+        if (isValidMove(middleCol)) {
+          return middleCol;
         }
+        
+        // Strategie: probeer dichtbij het midden te spelen
+        const possibleMoves = [];
+        for (let col = 0; col < COLS; col++) {
+          if (isValidMove(col)) {
+            possibleMoves.push({
+              col: col,
+              distance: Math.abs(col - middleCol)
+            });
+          }
+        }
+        
+        // Sorteer op afstand tot midden
+        possibleMoves.sort((a, b) => a.distance - b.distance);
+        
+        // Voeg wat willekeur toe om niet te voorspelbaar te zijn
+        const goodMoves = possibleMoves.slice(0, Math.min(3, possibleMoves.length));
+        return goodMoves[Math.floor(Math.random() * goodMoves.length)].col;
       }
       
       // Vind de laagste lege rij in een kolom
@@ -441,37 +751,6 @@
           }
         }
         return -1;
-      }
-      
-      // Toon een zet op het bord
-      function displayMove(row, col, player) {
-        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-        cell.classList.add(player === 1 ? 'player1-piece' : playerPieces[2]);
-        
-        // Controleer op winnende zet
-        if (checkWin(row, col)) {
-          gameOver = true;
-          const winner = player === 1 ? 'Rood' : (gameMode === 'vs-knof' ? 'Knof' : 'Geel');
-          winMessage.textContent = `${winner} heeft gewonnen!`;
-          
-          if (gameMode === 'vs-knof') {
-            if (player === 1) {
-              typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
-            } else {
-              typeSpeechMessage("Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?");
-            }
-          } else {
-            typeSpeechMessage(`${winner} heeft gewonnen! Dat was spannend!`);
-          }
-        } else if (checkDraw()) {
-          gameOver = true;
-          winMessage.textContent = "Gelijkspel!";
-          typeSpeechMessage("Het is gelijkspel! Jullie zijn aan elkaar gewaagd.");
-        } else {
-          // Wissel van speler
-          currentPlayer = currentPlayer === 1 ? 2 : 1;
-          updateTurnIndicator();
-        }
       }
       
       // Update de beurtindicator
@@ -488,58 +767,48 @@
       // Controleer op winnende zet
       function checkWin(row, col) {
         const player = gameBoard[row][col];
+        if (player === 0) return null;
         
-        // Controleer horizontaal
-        let count = 0;
-        for (let c = 0; c < COLS; c++) {
-          if (gameBoard[row][c] === player) {
+        const directions = [
+          [0, 1],  // horizontaal
+          [1, 0],  // verticaal
+          [1, 1],  // diagonaal rechtsonder
+          [1, -1]  // diagonaal linksonder
+        ];
+        
+        for (const [dRow, dCol] of directions) {
+          const cells = [];
+          cells.push([row, col]);
+          
+          // Controleer in één richting
+          let r = row + dRow;
+          let c = col + dCol;
+          let count = 1;
+          
+          while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
+            cells.push([r, c]);
             count++;
-            if (count >= WINNING_LENGTH) return true;
-          } else {
-            count = 0;
+            r += dRow;
+            c += dCol;
           }
-        }
-        
-        // Controleer verticaal
-        count = 0;
-        for (let r = 0; r < ROWS; r++) {
-          if (gameBoard[r][col] === player) {
+          
+          // Controleer in tegenovergestelde richting
+          r = row - dRow;
+          c = col - dCol;
+          
+          while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
+            cells.push([r, c]);
             count++;
-            if (count >= WINNING_LENGTH) return true;
-          } else {
-            count = 0;
+            r -= dRow;
+            c -= dCol;
+          }
+          
+          if (count >= 4) {
+            return cells;
           }
         }
         
-        // Controleer diagonaal (/)
-        for (let r = 0; r <= ROWS - WINNING_LENGTH; r++) {
-          for (let c = 0; c <= COLS - WINNING_LENGTH; c++) {
-            let win = true;
-            for (let i = 0; i < WINNING_LENGTH; i++) {
-              if (gameBoard[r + i][c + i] !== player) {
-                win = false;
-                break;
-              }
-            }
-            if (win) return true;
-          }
-        }
-        
-        // Controleer diagonaal (\)
-        for (let r = 0; r <= ROWS - WINNING_LENGTH; r++) {
-          for (let c = WINNING_LENGTH - 1; c < COLS; c++) {
-            let win = true;
-            for (let i = 0; i < WINNING_LENGTH; i++) {
-              if (gameBoard[r + i][c - i] !== player) {
-                win = false;
-                break;
-              }
-            }
-            if (win) return true;
-          }
-        }
-        
-        return false;
+        return null;
       }
       
       // Controleer op gelijkspel
@@ -564,6 +833,7 @@
       
       // Start het spel
       initializeGame();
+      resizeCanvas();
     });
   </script>
 </body>
