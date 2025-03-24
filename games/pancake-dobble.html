@@ -320,11 +320,11 @@
     .scores-container {
       display: flex;
       align-items: center;
-      background-color: #FFE4B5;
+      background-color: #A5BBFF;
       padding: 8px 15px;
       border-radius: 12px;
       filter: url(#rough-filter);
-      border: 2px solid #FF9A5A;
+      border: 2px solid #7A97FF;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
@@ -339,32 +339,28 @@
     .score-name {
       font-weight: bold;
       margin-bottom: 3px;
-      color: #7A4127;
+      color: #3A4875;
       font-size: 0.9rem;
     }
 
     .score-value {
       font-size: 1.5rem;
       font-weight: bold;
-      color: #5A3612;
+      color: #3A4875;
     }
 
     .vs-decoration {
       font-size: 1.2rem;
       margin: 0 10px;
-      color: #FF9A5A;
+      color: #3A4875;
       font-weight: bold;
     }
 
     .time-display {
-      background-color: #A5BBFF;
-      padding: 8px 15px;
-      border-radius: 12px;
+      display: inline-block;
+      margin-left: 20px;
       font-weight: bold;
-      filter: url(#rough-filter);
-      border: 2px solid #7A97FF;
       color: #3A4875;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .pancake-container {
@@ -653,23 +649,6 @@
       z-index: 1000;
     }
 
-    /* Round counter */
-    .round-display {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #FF9A5A;
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-weight: bold;
-      filter: url(#rough-filter);
-      border: 2px solid #F27D30;
-      z-index: 5;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-
     /* Media queries voor responsiveness */
     @media (max-width: 768px) {
       .target-ingredient {
@@ -827,7 +806,7 @@
         <div class="level-title">Ingrediënten Zoeken</div>
         
         <div class="knof-challenge">
-          <img src="../images/knof.png" alt="Knof" class="knof-image">
+          <img src="../images/knof-hoofd.png" alt="Knof" class="knof-image">
           <div class="knof-message">
             "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Kies maar hoe moeilijk je het wilt maken!"
           </div>
@@ -884,15 +863,13 @@
               <div class="score-name">Knof</div>
               <div class="score-value" id="knof-score">0</div>
             </div>
-          </div>
-          
-          <div class="time-display">
-            Tijd: <span id="time-value">30</span>s
+            <div class="time-display">
+              Tijd: <span id="time-value">30</span>s
+            </div>
           </div>
         </div>
         
         <div class="pancake-container">
-          <div class="round-display" id="round-display">Ronde 1/10</div>
           <div class="pancake" id="pancake">
             <!-- Ingrediënten worden hier dynamisch toegevoegd -->
           </div>
@@ -969,7 +946,6 @@
       const playerScoreEl = document.getElementById('player-score');
       const knofScoreEl = document.getElementById('knof-score');
       const timeValue = document.getElementById('time-value');
-      const roundDisplay = document.getElementById('round-display');
       const finalPlayerScore = document.getElementById('final-player-score');
       const finalKnofScore = document.getElementById('final-knof-score');
       const winnerBanner = document.getElementById('winner-banner');
@@ -997,14 +973,12 @@
       const MAX_SCORE = 10; // Wie als eerste 10 punten heeft, wint
       
       const LEVELS = {
-        easy: { count: 5, rounds: 10, time: 30, knofDelay: 5000 },
-        medium: { count: 7, rounds: 10, time: 20, knofDelay: 3000 },
-        hard: { count: 9, rounds: 10, time: 10, knofDelay: 1500 }
+        easy: { count: 5, time: 30, knofDelay: 5000 },
+        medium: { count: 7, time: 20, knofDelay: 3000 },
+        hard: { count: 9, time: 10, knofDelay: 1500 }
       };
       
       let currentLevel = 'easy';
-      let currentRound = 0;
-      let totalRounds = 10;
       let playerScore = 0;
       let knofScore = 0;
       let timeLeft = 0;
@@ -1104,8 +1078,6 @@
       
       function startGame(level) {
         currentLevel = level;
-        totalRounds = LEVELS[level].rounds;
-        currentRound = 0;
         playerScore = 0;
         knofScore = 0;
         playerScoreEl.textContent = playerScore;
@@ -1138,15 +1110,11 @@
       }
       
       function prepareNextRound() {
-        currentRound++;
-        
-        if (currentRound > totalRounds || playerScore >= MAX_SCORE || knofScore >= MAX_SCORE) {
+        // Check voor winnaars
+        if (playerScore >= MAX_SCORE || knofScore >= MAX_SCORE) {
           showResults();
           return;
         }
-        
-        // Update rondeteller
-        roundDisplay.textContent = `Ronde ${currentRound}/${totalRounds}`;
         
         // Selecteer ingrediënten voor deze ronde
         const shuffled = shuffleArray(INGREDIENTS);
