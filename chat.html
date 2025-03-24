@@ -53,17 +53,6 @@
       flex-direction: column;
     }
     
-    /* Laad-indicator styles */
-    .loading-indicator {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.5rem;
-      font-family: 'Patrick Hand';
-      color: #55A54A;
-    }
-    
     /* Bottom navigation fix */
     #bottom-nav-container {
       flex-shrink: 0;
@@ -100,18 +89,6 @@
       overflow: hidden;
     }
     
-    /* Zorg dat iframe volledig vult */
-    iframe {
-      width: 100% !important;
-      height: 100% !important;
-      min-height: 100% !important;
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      border: none !important;
-      background-color: transparent !important;
-    }
-    
     /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
     .bottom-buffer-zone {
       position: fixed;
@@ -122,6 +99,14 @@
       background-color: transparent;
       z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
       pointer-events: none; /* Zodat het niet interactief is */
+    }
+    
+    /* Pickaxe chatbot stijl */
+    #pickaxe-inline-Knof_de_Pad_0BLW7 {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: block;
     }
   </style>
 </head>
@@ -146,10 +131,11 @@
   <!-- Settings modal container -->
   <div id="settings-modal-container"></div>
 
-  <!-- Hoofdcontent - Chat met iframe -->
+  <!-- Hoofdcontent - Chat met Pickaxe chatbot -->
   <div class="app-container">
     <div id="chatbot-wrapper" class="chatbot-wrapper">
-      <div id="loading-indicator" class="loading-indicator">Laden...</div>
+      <!-- Pickaxe chatbot -->
+      <div id="pickaxe-inline-Knof_de_Pad_0BLW7"></div>
     </div>
   </div>
 
@@ -232,287 +218,9 @@
     });
   </script>
   
-  <!-- Chatbot scripts -->
+  <!-- Pickaxe Chatbot Script -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const chatbotWrapper = document.getElementById('chatbot-wrapper');
-      const loadingIndicator = document.getElementById('loading-indicator');
-      
-      // Laad de chatbot script
-      const script = document.createElement('script');
-      script.id = "d5595c66-85ed-46ca-9a20-7e4988fb0618";
-      script.setAttribute('data-company-id', "477718fd-e50b-4758-8fcb-7709dedf75ec");
-      script.setAttribute('data-product-name', "alias:aichat");
-      script.setAttribute('data-product-iframe', "create");
-      script.src = "https://fcdn.servicehoster.io/iframe.product.js";
-      
-      // Wanneer script geladen is
-      script.onload = function() {
-        setTimeout(function() {
-          // Verberg loader
-          if (loadingIndicator) loadingIndicator.style.display = 'none';
-          
-          // Pas iframe aan
-          setupIframe();
-        }, 500);
-      };
-      
-      chatbotWrapper.appendChild(script);
-      
-      // Functie om iframe te setuppen en transparant te maken
-      function setupIframe() {
-        const iframe = chatbotWrapper.querySelector('iframe');
-        if (!iframe) return;
-          
-        // Maak iframe zelf transparant en full-size met dwingender stijlen
-        iframe.style.cssText = `
-          width: 100% !important;
-          height: 100% !important;
-          min-height: 100% !important;
-          position: absolute !important;
-          top: 0 !important;
-          left: 0 !important;
-          right: 0 !important;
-          bottom: 0 !important;
-          border: none !important;
-          background-color: transparent !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          display: block !important;
-          overflow: hidden !important;
-        `;
-        
-        // Probeer CSS te injecteren (kan mislukken bij cross-origin)
-        try {
-          injectTransparentCSS(iframe);
-        } catch(e) {
-          console.log("Directe CSS injectie niet mogelijk:", e);
-        }
-        
-        // Plan B: Onload event voor CSS injectie
-        iframe.onload = function() {
-          try {
-            injectTransparentCSS(iframe);
-          } catch(e) {
-            console.log("Onload CSS injectie niet mogelijk:", e);
-          }
-        };
-      }
-      
-      // Functie om transparantie CSS in te injecteren in iframe
-      function injectTransparentCSS(iframe) {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc) return;
-        
-        // Creëer een stijl element
-        const style = document.createElement('style');
-        style.textContent = `
-          /* Basis elementen transparant maken */
-          html, body, div, main, section, article, 
-          .container, .wrapper, .content, .main, 
-          .chat-container, .message-container, .chat-wrapper,
-          [class*="container"], [class*="wrapper"], [class*="content"],
-          [class*="background"], [class*="bg"], header, footer {
-            background-color: transparent !important;
-            background-image: none !important;
-          }
-          
-          /* Haal padding en margin weg van belangrijke elementen */
-          html, body, .container, .main, .chat-container {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            overflow-y: auto !important;
-          }
-          
-          /* Zorg dat berichten leesbaar blijven - aparte styling voor gebruiker en bot */
-          /* Gebruiker berichten blijven groen */
-          .user-message, [class*="user-message"], 
-          [class*="message"][class*="user"], 
-          [class*="bubble"][class*="user"] {
-            background-color: #90c387 !important; /* Groen voor gebruiker */
-            border: 1px solid rgba(100, 150, 100, 0.5) !important;
-            color: #ffffff !important; /* Witte tekst voor contrast */
-          }
-          
-          /* Bot berichten krijgen lichtgroene achtergrond */
-          .bot-message, [class*="bot-message"], 
-          [class*="message"][class*="bot"], 
-          [class*="assistant"], [class*="bubble"][class*="bot"],
-          [class*="bubble"][class*="assistant"] {
-            background-color: #e5eee3 !important; /* Lichtgroen voor Knof */
-            border: 1px solid rgba(180, 200, 180, 0.5) !important;
-            color: #333333 !important; /* Donkere tekst voor contrast */
-          }
-          
-          /* Algemene berichten die we niet kunnen identificeren */
-          .message:not([class*="user"]):not([class*="bot"]), 
-          .chat-message:not([class*="user"]):not([class*="bot"]),
-          .message-bubble:not([class*="user"]):not([class*="bot"]) {
-            background-color: #e5eee3 !important; /* Standaard lichtgroen */
-            border: 1px solid rgba(180, 200, 180, 0.5) !important;
-          }
-          
-          /* Extra ruimte onderin voor de bottom nav */
-          .input-container, .message-input, .chat-input, 
-          [class*="input-container"], [class*="input-wrapper"],
-          [class*="footer"], footer, .chat-footer {
-            padding-bottom: 70px !important;
-            margin-bottom: 65px !important;
-            position: relative !important;
-            z-index: 1 !important;
-          }
-          
-          /* Verberg headers of andere potentieel problematische elementen */
-          header, .header, [class*="header"], .toolbar, .navbar, .nav-bar {
-            display: none !important;
-            height: 0 !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            position: absolute !important;
-            pointer-events: none !important;
-          }
-          
-          /* Volledige scrol-container max-height fix */
-          .messages-container, .chat-messages, [class*="messages-container"],
-          [class*="message-list"], .message-list, .chat-body {
-            max-height: none !important;
-            height: auto !important;
-            flex: 1 !important;
-            padding-bottom: 120px !important;
-          }
-          
-          /* Specifiek voor input velden - extra ruimte aan de onderkant */
-          textarea, input[type="text"], .message-input, [class*="text-input"],
-          .text-field, [class*="text-field"], .input, [class*="input-field"] {
-            margin-bottom: 20px !important;
-          }
-          
-          /* Verzend knop ook omhoog brengen */
-          .send-button, [class*="send-button"], button[type="submit"],
-          [class*="submit-button"], .submit {
-            margin-bottom: 20px !important;
-          }
-        `;
-        
-        // Voeg stijl toe aan iframe document
-        iframeDoc.head.appendChild(style);
-        
-        // Verwijder inline achtergronden van alle elementen, maar behoud chatballon achtergronden
-        setTimeout(function() {
-          try {
-            const allElements = iframeDoc.querySelectorAll('*');
-            allElements.forEach(el => {
-              // Skip elementen die berichten bevatten, we willen hun achtergrond behouden
-              const isMessageElement = el.className && (
-                el.className.includes('message') || 
-                el.className.includes('bubble') ||
-                el.className.includes('assistant') ||
-                el.className.includes('user')
-              );
-              
-              // Als het geen berichtenelement is, maak achtergrond transparant
-              if (!isMessageElement) {
-                el.style.backgroundColor = 'transparent';
-                el.style.backgroundImage = 'none';
-              } else {
-                // Voor berichtenelementen, stel juiste kleuren in op basis van type
-                if (el.className.includes('user')) {
-                  el.style.backgroundColor = '#90c387'; // Gebruiker berichten
-                  el.style.color = '#ffffff';
-                  el.style.border = '1px solid rgba(100, 150, 100, 0.5)';
-                } else if (el.className.includes('bot') || el.className.includes('assistant')) {
-                  el.style.backgroundColor = '#e5eee3'; // Bot berichten
-                  el.style.color = '#333333';
-                  el.style.border = '1px solid rgba(180, 200, 180, 0.5)';
-                } else {
-                  // Algemene berichten zonder duidelijke identificatie
-                  el.style.backgroundColor = '#e5eee3';
-                  el.style.border = '1px solid rgba(180, 200, 180, 0.5)';
-                }
-              }
-              
-              // Extra padding voor mogelijke invoervelden
-              if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || 
-                  (el.className && (
-                    el.className.includes('input') || 
-                    el.className.includes('text-field') || 
-                    el.className.includes('message-input')
-                  ))) {
-                el.style.marginBottom = '20px';
-              }
-              
-              // Probeer input container te identificeren en extra ruimte toe te voegen
-              if (el.className && (
-                  el.className.includes('input-container') || 
-                  el.className.includes('footer') || 
-                  el.className.includes('bottom'))) {
-                el.style.paddingBottom = '70px';
-                el.style.marginBottom = '65px';
-              }
-            });
-          } catch(e) {
-            console.log("Inline style removing failed:", e);
-          }
-        }, 100);
-        
-        // Blijf controleren op nieuwe berichten om de juiste styling toe te passen
-        try {
-          const messageObserver = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-              if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                mutation.addedNodes.forEach(function(node) {
-                  // Als een nieuw berichtelement is toegevoegd
-                  if (node.className && (
-                      node.className.includes('message') || 
-                      node.className.includes('bubble')
-                    )) {
-                    // Bepaal of het een gebruikers- of botbericht is
-                    if (node.className.includes('user')) {
-                      node.style.backgroundColor = '#90c387';
-                      node.style.color = '#ffffff';
-                      node.style.border = '1px solid rgba(100, 150, 100, 0.5)';
-                    } else if (node.className.includes('bot') || node.className.includes('assistant')) {
-                      node.style.backgroundColor = '#e5eee3';
-                      node.style.color = '#333333';
-                      node.style.border = '1px solid rgba(180, 200, 180, 0.5)';
-                    } else {
-                      node.style.backgroundColor = '#e5eee3';
-                      node.style.border = '1px solid rgba(180, 200, 180, 0.5)';
-                    }
-                  }
-                });
-              }
-            });
-          });
-          
-          // Zoek naar chat container en observeer veranderingen
-          const chatContainer = iframeDoc.querySelector('.messages-container, .chat-messages, [class*="messages"]');
-          if (chatContainer) {
-            messageObserver.observe(chatContainer, { childList: true, subtree: true });
-          }
-        } catch(e) {
-          console.log("Message observer setup failed:", e);
-        }
-      }
-      
-      // Monitor en fix iframe regelmatig
-      function monitorIframe() {
-        const iframe = chatbotWrapper.querySelector('iframe');
-        if (iframe) {
-          setupIframe();
-        }
-      }
-      
-      // Controleer regelmatig of het iframe bestaat en fix het
-      setInterval(monitorIframe, 2000);
-      
-      // Extra checks na verschillende intervallen
-      setTimeout(monitorIframe, 500);
-      setTimeout(monitorIframe, 1500);
-      setTimeout(monitorIframe, 3000); // Extra check om zeker te zijn van styling
-    });
+    window.PICKAXE=window.PICKAXE||{pickaxes:[],style:"kHsjoCQGgI0GWASmgIdIAxiDA6wgM6CMbgC4UgDDAXYEAvDIBoGEBgG4CAWQIGYBgwCqApdoEjggjIaCcCoCA9gGzOBUToIQygtAyDw4IGoGgCkxAAC6AQCsAAD4BILgJ6AkV0ALDQAFA+YiAkjEDFLoEEywHkKgMCHAzVmBfPMBUIIAaXQC7ggIDFAilWBXGkAmVIFVJQAAigIDBAQvSAJLkAKIgHZAAGqAxiOAFRCArgmAQjSADFiACCIASoAACIBA+oAAeoBI8IAdGIAgEYAmCYAqaYAuIYA3M4A/O4BGJYAJTYBCFoAQfIAlcoCDKYBBaoA9boB3QYA7T4B8SYCFgYCJYYAAI4AwaoA5j4Alk4BQroBPS4BUVYCDn4BjX4CNZ4CzNYBFc4AJvYAqLoAYTIBIkoAUDIDVUIAAzYAA4oDgM4AuWE6AAWyAAuiAAxGAgYyAEH+ALAqAo8AAxYAWK4AcKoACgIBSkEARqCAAAxABdIgEIuwAAAYAhQsAmYOAEIWAOiAAILAAMggENAQAJl4AXBsAKQ6ACBJAKJxgEWCQA3GIB88UAchiAZNJAABigDw2QBQ0YBiiMARAaALUTANJugGRoQCncYAIJEATySAMS1AMIJgAKiQAbA4AOLEASa2AFKBAJ1TgE+QQDztoAUtMAryiADQTAGhogEigQAAsIA9nsAMKCAIuTAMZkgAUQQAABoA+Qn+gAIoAAHgEjAQC+SoAFMsAZa4AHEAAoSAGA1AAAkgAY/QAM2YAahUA/JuAYBTAKGrgDHNwCPyIBMZsAwDCAF6FAGoogABqQBRBIAsqcAM9qAFPRANT1gHc4wD4bIAzF0AaRSAJQ9AJvwgButwAMu4BLKsAiryATFDACgxgG7LwBeqoAFZsAOCqAEsbAEAwgBEEQAIZIBw/EAi8SAT43AHybgHlQwDMDYBnzUADn2AS97ACYWgASvQBMQgBYQBCxoAtpsA/hGAAo1AARBgELgQDz2oASVcAWNOALXigBFwoADAiADqvgCvwYATJiALg0gA+D4AEEuAIUhgByl4AsIKAJbGgBAdIApuGAAEUAAAQA==="},window.PICKAXE.pickaxes.push({id:"Knof_de_Pad_0BLW7",type:"inline"});const{id:_fid}=window.PICKAXE.pickaxes[0];fetch(`https://embed.pickaxeproject.com/axe/api/script/${_fid}`).then((e=>e.json())).then((({v:e})=>{const t=`https://cdn.jsdelivr.net/gh/pickaxeproject/cdn@${e}/dist`;if(!document.querySelector(`script[src="${t}/bundle.js"]`)){const e=document.createElement("script");e.src=t+"/bundle.js",e.defer=!0,document.head.appendChild(e)}}));
   </script>
 </body>
 </html>
