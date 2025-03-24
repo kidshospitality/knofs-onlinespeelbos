@@ -1,5 +1,31 @@
 // Functie om gedeelde componenten in te voegen
 document.addEventListener('DOMContentLoaded', function() {
+  // Voeg de popup toe aan elke pagina als deze nog niet bestaat
+  if (!document.getElementById('popup-message')) {
+    const popupDiv = document.createElement('div');
+    popupDiv.id = 'popup-message';
+    popupDiv.className = 'popup';
+    popupDiv.innerHTML = `
+      <div class="popup-content">
+        <span class="close-popup">&times;</span>
+        <p>Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
+      </div>
+    `;
+    document.body.appendChild(popupDiv);
+    
+    // Popup sluiten wanneer op het X icoontje wordt geklikt
+    popupDiv.querySelector('.close-popup').addEventListener('click', function() {
+      document.getElementById('popup-message').style.display = 'none';
+    });
+    
+    // Popup sluiten wanneer ergens anders wordt geklikt
+    window.addEventListener('click', function(event) {
+      if (event.target == document.getElementById('popup-message')) {
+        document.getElementById('popup-message').style.display = 'none';
+      }
+    });
+  }
+
   // Laad de Top Navigation Bar
   fetch('/components/top-nav.html')
     .then(response => response.text())
