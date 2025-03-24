@@ -116,10 +116,10 @@
     }
 
     .pancake {
-      width: 85vmin;
-      height: 85vmin;
-      max-width: 500px;
-      max-height: 500px;
+      width: 90vmin;
+      height: 90vmin;
+      max-width: 600px;
+      max-height: 600px;
       background-color: #FFEEB3;
       border-radius: 50%;
       position: relative;
@@ -181,7 +181,7 @@
 
     .ingredient {
       position: absolute;
-      font-size: 2.5rem;
+      font-size: 3rem;
       z-index: 1;
       display: flex;
       justify-content: center;
@@ -189,13 +189,12 @@
       transform-origin: center;
       transition: transform 0.2s;
       cursor: pointer;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
     }
 
     .ingredient:hover {
       transform: scale(1.2);
-      z-index: 5;
     }
 
     .ingredient:active {
@@ -204,7 +203,6 @@
 
     .ingredient.highlighted {
       animation: highlight-pop 0.5s forwards;
-      z-index: 10;
     }
 
     @keyframes highlight-pop {
@@ -252,11 +250,8 @@
       border-radius: 50%;
       border: 3px solid #FF6B6B;
       clip: rect(0px, 60px, 60px, 30px);
+      animation: countdown-animation 30s linear 1 forwards;
       transform: rotate(-90deg);
-    }
-
-    .timer-animation {
-      animation: countdown-animation var(--timer-duration) linear 1 forwards;
     }
 
     @keyframes countdown-animation {
@@ -322,7 +317,6 @@
       color: #4B0082;
       margin-top: 10px;
       font-weight: bold;
-      min-height: 2.5rem;
     }
 
     .buttons-container {
@@ -396,7 +390,6 @@
       font-size: 1.5rem;
       animation: float-up 1s forwards;
       z-index: 100;
-      pointer-events: none;
     }
 
     @keyframes float-up {
@@ -426,8 +419,8 @@
     .tutorial-content {
       background-color: #F8F6E9;
       border-radius: 15px;
-      padding: 20px;
-      max-width: 80%;
+      padding: 25px;
+      max-width: 85%;
       text-align: center;
       position: relative;
       filter: url(#rough-filter);
@@ -437,54 +430,65 @@
     .tutorial-content h2 {
       color: #FF9A5A;
       margin-top: 0;
+      font-size: 1.8rem;
     }
 
     .tutorial-content p {
       margin-bottom: 20px;
+      font-size: 1.2rem;
+      line-height: 1.5;
     }
 
     .example-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 20px 0;
+      margin: 30px 0;
     }
 
     .example-target {
-      font-size: 2rem;
+      font-size: 3rem;
       background-color: #FFEF9E;
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: 2px solid #FFDDA1;
     }
 
     .example-pancake {
-      width: 150px;
-      height: 150px;
+      width: 200px;
+      height: 200px;
       background-color: #FFEEB3;
       border-radius: 50%;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
       position: relative;
       padding: 10px;
+      border: 4px solid #FFDDA1;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
 
     .example-ingredient {
-      font-size: 1.5rem;
-      margin: 5px;
+      position: absolute;
+      font-size: 2.5rem;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .highlight-arrow {
       position: absolute;
-      font-size: 2rem;
+      font-size: 2.5rem;
       color: #FF6B6B;
-      top: -30px;
+      top: -40px;
       left: 50%;
       transform: translateX(-50%);
       animation: bounce 1s infinite alternate;
@@ -497,6 +501,80 @@
       to {
         transform: translateX(-50%) translateY(-10px);
       }
+    }
+
+    /* Kies moeilijkheidsgraad overlay */
+    .difficulty-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .difficulty-content {
+      background-color: #F8F6E9;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      filter: url(#rough-filter);
+      border: 4px solid #FFDDA1;
+    }
+
+    .difficulty-content h2 {
+      color: #FF9A5A;
+      margin-top: 0;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .difficulty-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .difficulty-button {
+      padding: 15px 30px;
+      background-color: #FFDDA1;
+      border: 3px solid #FFCC80;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      filter: url(#rough-filter);
+      min-width: 140px;
+    }
+
+    .difficulty-button:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .difficulty-button.easy {
+      background-color: #A5E6A5;
+      border-color: #8BCC8B;
+    }
+
+    .difficulty-button.medium {
+      background-color: #FFD6A5;
+      border-color: #FFBA76;
+    }
+
+    .difficulty-button.hard {
+      background-color: #FFA5A5;
+      border-color: #FF7676;
     }
 
     /* Countdown stijlen */
@@ -559,29 +637,17 @@
       }
     }
 
-    /* Block overlay tijdens transities */
-    .block-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1200;
-      display: none;
-      cursor: not-allowed;
-    }
-
     /* Aanpassingen voor mobiele schermen */
     @media (max-width: 768px) {
       .pancake {
-        width: 80vmin;
-        height: 80vmin;
+        width: 85vmin;
+        height: 85vmin;
       }
       
       .ingredient {
-        font-size: 2rem;
-        width: 40px;
-        height: 40px;
+        font-size: 2.5rem;
+        width: 50px;
+        height: 50px;
       }
       
       .target-ingredient {
@@ -601,18 +667,36 @@
       .start-text {
         font-size: 4rem;
       }
+      
+      .tutorial-content h2 {
+        font-size: 1.6rem;
+      }
+      
+      .tutorial-content p {
+        font-size: 1.1rem;
+      }
+      
+      .difficulty-content h2 {
+        font-size: 1.8rem;
+      }
+      
+      .difficulty-button {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        min-width: 120px;
+      }
     }
 
     @media (max-width: 480px) {
       .pancake {
-        width: 75vmin;
-        height: 75vmin;
+        width: 80vmin;
+        height: 80vmin;
       }
       
       .ingredient {
-        font-size: 1.8rem;
-        width: 35px;
-        height: 35px;
+        font-size: 2rem;
+        width: 40px;
+        height: 40px;
       }
       
       .target-ingredient {
@@ -642,6 +726,24 @@
       
       .start-text {
         font-size: 3rem;
+      }
+      
+      .tutorial-content h2 {
+        font-size: 1.4rem;
+      }
+      
+      .tutorial-content p {
+        font-size: 1rem;
+      }
+      
+      .difficulty-content h2 {
+        font-size: 1.5rem;
+      }
+      
+      .difficulty-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        min-width: 100px;
       }
     }
   </style>
@@ -675,8 +777,39 @@
     <div class="countdown-number" id="countdown-number">3</div>
   </div>
 
-  <!-- Block overlay tijdens transities -->
-  <div class="block-overlay" id="block-overlay"></div>
+  <!-- Tutorial overlay - verbeterde versie -->
+  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
+    <div class="tutorial-content">
+      <h2>Ingrediënten Zoeken</h2>
+      <p>Zoek zo snel mogelijk het juiste ingrediënt op de pannenkoek!</p>
+
+      <div class="example-container">
+        <div class="example-target">🍓</div>
+        <div class="highlight-arrow">↓</div>
+        <div class="example-pancake">
+          <div class="example-ingredient" style="top: 30%; left: 30%;">🍌</div>
+          <div class="example-ingredient" style="top: 70%; left: 40%;">🍫</div>
+          <div class="example-ingredient highlighted" style="top: 50%; left: 65%;">🍓</div>
+          <div class="example-ingredient" style="top: 25%; left: 70%;">🧀</div>
+        </div>
+      </div>
+
+      <p>Klik op het juiste ingrediënt voordat de tijd om is of Knof het vindt!<br>De eerste die 10 punten heeft, wint!</p>
+      <button class="game-button" id="tutorial-close">Begrepen!</button>
+    </div>
+  </div>
+  
+  <!-- Difficulty selection overlay -->
+  <div class="difficulty-overlay" id="difficulty-overlay" style="display: none;">
+    <div class="difficulty-content">
+      <h2>Kies een moeilijkheidsgraad</h2>
+      <div class="difficulty-buttons">
+        <button class="difficulty-button easy" data-level="easy">Makkelijk</button>
+        <button class="difficulty-button medium" data-level="medium">Normaal</button>
+        <button class="difficulty-button hard" data-level="hard">Moeilijk</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Hoofdcontent - Ingrediënten Zoeken spel -->
   <div class="app-container">
@@ -739,39 +872,17 @@
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
 
-  <!-- Tutorial overlay -->
-  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
-    <div class="tutorial-content">
-      <h2>Hoe speel je Ingrediënten Zoeken?</h2>
-      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek!</p>
-
-      <div class="example-container">
-        <div class="example-target">🍓</div>
-        <div class="highlight-arrow">↓</div>
-        <div class="example-pancake">
-          <div class="example-ingredient">🍌</div>
-          <div class="example-ingredient">🍫</div>
-          <div class="example-ingredient">🍓</div>
-          <div class="example-ingredient">🧀</div>
-        </div>
-      </div>
-
-      <p>Klik op het juiste ingrediënt om een punt te scoren. Wie het eerst 10 punten heeft, wint!</p>
-      <button class="game-button" id="tutorial-close">Ik snap het!</button>
-    </div>
-  </div>
-
   <!-- Scripts -->
   <script src="../js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // ===== GAME CONSTANTS =====
+      // Game constants and variables
       const ROUNDS_PER_GAME = 10;
       const MAX_SCORE = 10;
       const INGREDIENTS_PER_ROUND = {
-        easy: 7,
-        medium: 10,
-        hard: 13
+        easy: 5,
+        medium: 7,
+        hard: 9
       };
       
       // Eetbare ingrediënten (emoji's)
@@ -783,7 +894,7 @@
         '🍏', '🍕', '🍔', '🍟', '🌭', '🍿'
       ];
       
-      // ===== DOM ELEMENTS =====
+      // Elementen in de DOM
       const pancakeEl = document.getElementById('pancake');
       const targetIngredientEl = document.getElementById('target-ingredient');
       const playerScoreEl = document.getElementById('player-score');
@@ -795,6 +906,8 @@
       const helpButton = document.getElementById('help-button');
       const tutorialOverlay = document.getElementById('tutorial-overlay');
       const tutorialClose = document.getElementById('tutorial-close');
+      const difficultyOverlay = document.getElementById('difficulty-overlay');
+      const difficultyButtons = document.querySelectorAll('.difficulty-button');
       const confettiCanvas = document.getElementById('confetti-canvas');
       const roundCounter = document.getElementById('round-counter');
       const timerContainer = document.getElementById('timer-container');
@@ -803,9 +916,8 @@
       const levelButtons = document.querySelectorAll('.level-button');
       const countdownOverlay = document.getElementById('countdown-overlay');
       const countdownNumber = document.getElementById('countdown-number');
-      const blockOverlay = document.getElementById('block-overlay');
       
-      // ===== GAME STATE =====
+      // Game state variables
       let gameMode = '';
       let scores = {
         player: 0,
@@ -817,7 +929,6 @@
       let pancakeIngredients = [];
       let timerInterval = null;
       let remainingTime = 30;
-      let gamePaused = false;
       let difficulty = 'easy'; // default moeilijkheidsgraad
       let difficultySettings = {
         easy: { time: 30, knofDelay: 5000 },
@@ -829,15 +940,7 @@
       let confettiActive = false;
       let confettiAnimationId = null;
       let countdownActive = false;
-      let interactionBlocked = false;
-      
-      // ===== UTILITY FUNCTIONS =====
-      
-      // Block or unblock user interaction
-      function toggleInteractionBlocking(block) {
-        interactionBlocked = block;
-        blockOverlay.style.display = block ? 'block' : 'none';
-      }
+      let isFirstPlay = !localStorage.getItem('ingredientGameTutorialSeen');
       
       // Resize canvas for confetti
       function resizeCanvas() {
@@ -845,23 +948,7 @@
         confettiCanvas.height = window.innerHeight;
       }
       
-      // Shuffle array using Fisher-Yates algorithm
-      function shuffleArray(array) {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-        }
-        return newArray;
-      }
-      
-      // Generate random number between min and max (inclusive)
-      function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-      
-      // ===== CONFETTI EFFECT =====
-      
+      // Handle confetti effect
       function startConfetti() {
         stopConfetti(); // Stop any existing confetti first
         confettiActive = true;
@@ -922,67 +1009,158 @@
         confettiAnimationId = requestAnimationFrame(animateConfetti);
       }
       
-      // ===== GAME INITIALIZATION =====
+      window.addEventListener('resize', resizeCanvas);
       
-      // Get URL parameters for game mode
-      function initGameMode() {
-        const urlParams = new URLSearchParams(window.location.search);
-        gameMode = urlParams.get('mode') || 'vs-knof';
+      // URL parameters for game mode
+      const urlParams = new URLSearchParams(window.location.search);
+      gameMode = urlParams.get('mode') || 'vs-knof';
+      
+      // Adjust UI for different game modes
+      if (gameMode === 'vs-knof') {
+        document.getElementById('player1-name').textContent = 'Jij';
+        document.getElementById('opponent-name').textContent = 'Knof';
+        // Welkom bericht voor Knof-modus wordt later getoond, na de tutorial
+      } else {
+        document.getElementById('player1-name').textContent = 'Speler 1';
+        document.getElementById('opponent-name').textContent = 'Speler 2';
+        // Welkom bericht voor twee-speler-modus wordt later getoond, na de tutorial
+      }
+      
+      // Event listeners
+      backButton.addEventListener('click', function() {
+        window.location.href = '../games.html';
+      });
+      
+      resetScoresButton.addEventListener('click', function() {
+        scores.player = 0;
+        scores.opponent = 0;
+        updateScores();
+        winMessage.textContent = '';
+        stopConfetti();
         
-        // Adjust UI for different game modes
-        if (gameMode === 'vs-knof') {
-          document.getElementById('player1-name').textContent = 'Jij';
-          document.getElementById('opponent-name').textContent = 'Knof';
-          // Welkom bericht voor Knof-modus
-          setTimeout(() => {
-            typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Klik zo snel mogelijk op het juiste ingrediënt op de pannenkoek. Veel plezier!");
-          }, 500);
+        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
+        
+        initializeGame();
+      });
+      
+      restartButton.addEventListener('click', function() {
+        winMessage.textContent = '';
+        stopConfetti();
+        initializeGame();
+        
+        typeSpeechMessage("Nieuw spel! Succes!");
+      });
+      
+      helpButton.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'flex';
+        pauseTimer();
+      });
+      
+      tutorialClose.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'none';
+        
+        // Als dit de eerste keer is, dan gaan we door naar de moeilijkheidsgraad selectie
+        if (isFirstPlay) {
+          showDifficultySelection();
+          isFirstPlay = false;
+          localStorage.setItem('ingredientGameTutorialSeen', 'true');
         } else {
-          document.getElementById('player1-name').textContent = 'Speler 1';
-          document.getElementById('opponent-name').textContent = 'Speler 2';
-          // Welkom bericht voor twee-speler-modus
-          setTimeout(() => {
-            typeSpeechMessage("Ingrediënten Zoeken met z'n tweeën! Gebruik dezelfde knop om het juiste ingrediënt aan te wijzen. Wie het eerst ziet, klikt en wint!");
-          }, 500);
+          resumeTimer();
+        }
+      });
+
+      // Setup difficulty selection buttons
+      difficultyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          difficulty = this.dataset.level;
+          
+          // Update level buttons in main UI
+          levelButtons.forEach(btn => {
+            if (btn.dataset.level === difficulty) {
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
+          });
+          
+          // Hide difficulty overlay and start the game
+          difficultyOverlay.style.display = 'none';
+          startNewGame();
+        });
+      });
+
+      // Difficulty selection in main UI
+      levelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          levelButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          difficulty = this.dataset.level;
+          
+          // Update timer values based on difficulty
+          remainingTime = difficultySettings[difficulty].time;
+          timerCount.textContent = remainingTime;
+          
+          // Reset timer animation
+          if (timerCircle.style.animation) {
+            timerCircle.style.animation = 'none';
+            void timerCircle.offsetWidth; // Force reflow
+            timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
+          }
+          
+          typeSpeechMessage(`Moeilijkheidsgraad aangepast naar ${getReadableDifficulty(difficulty)}!`);
+        });
+      });
+      
+      function getReadableDifficulty(diff) {
+        switch(diff) {
+          case 'easy': return 'makkelijk';
+          case 'medium': return 'normaal';
+          case 'hard': return 'moeilijk';
+          default: return diff;
         }
       }
       
-      // ===== COUNTDOWN FUNCTIONALITY =====
-      
-      // Display and animate countdown
-      function showCountdown(callback) {
-        countdownActive = true;
-        toggleInteractionBlocking(true);
-        countdownOverlay.style.display = 'flex';
-        countdownNumber.textContent = '3';
-        countdownNumber.className = 'countdown-number';
-        
-        // Start de countdown
-        let count = 3;
-        
-        const countdownInterval = setInterval(() => {
-          count--;
-          
-          if (count > 0) {
-            countdownNumber.textContent = count;
-            // Trigger animation restart
-            countdownNumber.classList.remove('countdown-number');
-            void countdownNumber.offsetWidth; // Force reflow
-            countdownNumber.classList.add('countdown-number');
-          } else if (count === 0) {
-            countdownNumber.textContent = 'START!';
-            countdownNumber.className = 'start-text';
-          } else {
-            clearInterval(countdownInterval);
-            countdownOverlay.style.display = 'none';
-            countdownActive = false;
-            toggleInteractionBlocking(false);
-            if (callback) callback();
-          }
-        }, 1000);
+      // Show difficulty selection screen
+      function showDifficultySelection() {
+        difficultyOverlay.style.display = 'flex';
       }
       
-      // ===== GAME LOGIC =====
+      // Start a new game after difficulty selection
+      function startNewGame() {
+        showCountdown(() => {
+          // Generate ingredients for first round
+          pancakeIngredients = generateIngredients();
+          
+          // Display the pancake and target
+          displayPancake();
+          displayTargetIngredient();
+          
+          // Start timer
+          startTimer();
+          
+          // If playing against Knof, schedule his move
+          if (gameMode === 'vs-knof') {
+            scheduleKnofMove();
+          }
+          
+          // Show welcome message based on game mode
+          if (gameMode === 'vs-knof') {
+            typeSpeechMessage("Zoek de ingrediënten sneller dan ik! Veel plezier!");
+          } else {
+            typeSpeechMessage("Wie vindt de ingrediënten het snelst? Speel tegen elkaar en win!");
+          }
+        });
+      }
+      
+      // Shuffle array using Fisher-Yates algorithm
+      function shuffleArray(array) {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+      }
       
       // Generate ingredients for the current round
       function generateIngredients() {
@@ -1011,24 +1189,26 @@
         const pancakeHeight = pancakeEl.offsetHeight;
         const centerX = pancakeWidth / 2;
         const centerY = pancakeHeight / 2;
-        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 30; // 30px marge
+        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 40; // 40px marge
         
         let x, y, distance;
         
         // Loop totdat we een positie vinden die binnen de cirkel valt
         do {
           // Genereer willekeurige positie binnen een vierkant
-          const angle = Math.random() * 2 * Math.PI;
-          const radius = Math.random() * maxRadius;
-          x = centerX + radius * Math.cos(angle);
-          y = centerY + radius * Math.sin(angle);
+          x = Math.random() * pancakeWidth - centerX;
+          y = Math.random() * pancakeHeight - centerY;
           
           // Bereken afstand tot het centrum (Pythagoras)
-          distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+          distance = Math.sqrt(x * x + y * y);
           
         } while (distance > maxRadius);
         
-        return { x, y };
+        // Converteer terug naar absolute posities
+        return {
+          x: centerX + x,
+          y: centerY + y
+        };
       }
       
       // Check of twee ingrediënten elkaar overlappen
@@ -1044,7 +1224,7 @@
         pancakeEl.innerHTML = ''; // Clear pancake
         
         const positions = [];
-        const ingredientSize = 50; // Grootte van ingredient element
+        const ingredientSize = 60; // Grootte van ingredient element
         const minDistance = ingredientSize * 1.2; // Minimale afstand tussen ingrediënten
         
         // Plaats elk ingredient op een willekeurige niet-overlappende positie
@@ -1076,18 +1256,15 @@
           ingredientEl.style.top = `${position.y - (ingredientSize / 2)}px`;
           
           // Random rotation voor meer speelsheid
-          const rotation = randomInt(-15, 15);
+          const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
           ingredientEl.style.transform = `rotate(${rotation}deg)`;
           
           // Add click handler for the ingredient
-          ingredientEl.addEventListener('click', function(e) {
-            if (gameOver || countdownActive || interactionBlocked || gamePaused) return;
+          ingredientEl.addEventListener('click', function() {
+            if (gameOver || countdownActive) return;
             
             const clickedIngredient = this.dataset.ingredient;
             handleIngredientClick(clickedIngredient, 'player');
-            
-            // Voorkom bubblen van events
-            e.stopPropagation();
           });
           
           pancakeEl.appendChild(ingredientEl);
@@ -1097,6 +1274,94 @@
       // Display the target ingredient
       function displayTargetIngredient() {
         targetIngredientEl.textContent = targetIngredient;
+      }
+      
+      // Handle ingredient click
+      function handleIngredientClick(ingredient, clickedBy) {
+        if (gameOver || countdownActive) return;
+        
+        clearTimeout(knofMoveTimeout); // Cancel Knof's pending move if player clicks first
+        
+        if (ingredient === targetIngredient) {
+          // Correct match!
+          if (clickedBy === 'player') {
+            scores.player++;
+            showPointAnimation(pancakeEl, '+1');
+            pancakeEl.classList.add('correct');
+            
+            // Highlight the correct ingredient
+            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
+            if (ingredientEl) {
+              ingredientEl.classList.add('highlighted');
+            }
+            
+            setTimeout(() => {
+              pancakeEl.classList.remove('correct');
+              nextRound();
+            }, 1000);
+          } else {
+            scores.opponent++;
+            showPointAnimation(pancakeEl, '+1');
+            pancakeEl.classList.add('correct');
+            
+            // Highlight the correct ingredient
+            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
+            if (ingredientEl) {
+              ingredientEl.classList.add('highlighted');
+            }
+            
+            setTimeout(() => {
+              pancakeEl.classList.remove('correct');
+              nextRound();
+            }, 1000);
+          }
+          
+          updateScores();
+          
+          if (scores.player >= MAX_SCORE || scores.opponent >= MAX_SCORE) {
+            endGame();
+            return;
+          }
+          
+          // Give feedback
+          if (clickedBy === 'player') {
+            if (gameMode === 'vs-knof') {
+              const praises = [
+                "Goed gedaan!", 
+                "Slim!", 
+                "Je bent snel!", 
+                "Super!", 
+                "Je hebt goede ogen!"
+              ];
+              typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+            }
+          } else if (clickedBy === 'opponent' && gameMode === 'vs-knof') {
+            const knofComments = [
+              "Ha! Die zag ik meteen!", 
+              "Ik was sneller!", 
+              "Dat was makkelijk!", 
+              "Mijn beurt om te scoren!"
+            ];
+            typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
+          }
+        } else {
+          // Incorrect match
+          if (clickedBy === 'player') {
+            pancakeEl.classList.add('wrong');
+            setTimeout(() => {
+              pancakeEl.classList.remove('wrong');
+            }, 500);
+            
+            if (gameMode === 'vs-knof') {
+              const incorrectComments = [
+                "Oeps, dat is niet het juiste ingrediënt!", 
+                "Probeer nog eens!", 
+                "Kijk goed naar welk ingrediënt je moet zoeken!"
+              ];
+              typeSpeechMessage(incorrectComments[Math.floor(Math.random() * incorrectComments.length)]);
+            }
+          }
+        }
       }
       
       // Show +1 point animation
@@ -1120,124 +1385,35 @@
         }, 1000);
       }
       
-      // Handle ingredient click
-      function handleIngredientClick(ingredient, clickedBy) {
-        // Voorkom dubbele klikken tijdens de animatie
-        if (interactionBlocked) return;
+      // Display and animate countdown
+      function showCountdown(callback) {
+        countdownActive = true;
+        countdownOverlay.style.display = 'flex';
+        countdownNumber.textContent = '3';
+        countdownNumber.className = 'countdown-number';
         
-        toggleInteractionBlocking(true);
+        // Start de countdown
+        let count = 3;
         
-        // Cancel Knof's pending move if player clicks first
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
-        }
-        
-        if (ingredient === targetIngredient) {
-          // Correct match!
-          if (clickedBy === 'player') {
-            scores.player++;
-            showPointAnimation(pancakeEl, '+1');
-            pancakeEl.classList.add('correct');
-            
-            // Highlight the correct ingredient
-            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
-            if (ingredientEl) {
-              ingredientEl.classList.add('highlighted');
-            }
-            
-            // Update scores immediately
-            updateScores();
-            
-            // Give feedback with chance of 50%
-            if (gameMode === 'vs-knof' && Math.random() < 0.5) {
-              const praises = [
-                "Goed gedaan!", 
-                "Slim!", 
-                "Je bent snel!", 
-                "Super!", 
-                "Je hebt goede ogen!"
-              ];
-              typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
-            }
-            
-            // Check for win
-            if (scores.player >= MAX_SCORE) {
-              setTimeout(() => {
-                endGame();
-              }, 1000);
-              return;
-            }
-            
-            // Move to next round after animation
-            setTimeout(() => {
-              pancakeEl.classList.remove('correct');
-              nextRound();
-              toggleInteractionBlocking(false);
-            }, 1000);
-            
-          } else if (clickedBy === 'opponent') {
-            scores.opponent++;
-            showPointAnimation(pancakeEl, '+1');
-            pancakeEl.classList.add('correct');
-            
-            // Highlight the correct ingredient
-            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
-            if (ingredientEl) {
-              ingredientEl.classList.add('highlighted');
-            }
-            
-            // Update scores immediately
-            updateScores();
-            
-            // Give feedback with chance of 50%
-            if (gameMode === 'vs-knof' && Math.random() < 0.5) {
-              const knofComments = [
-                "Ha! Die zag ik meteen!", 
-                "Ik was sneller!", 
-                "Dat was makkelijk!", 
-                "Mijn beurt om te scoren!"
-              ];
-              typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
-            }
-            
-            // Check for win
-            if (scores.opponent >= MAX_SCORE) {
-              setTimeout(() => {
-                endGame();
-              }, 1000);
-              return;
-            }
-            
-            // Move to next round after animation
-            setTimeout(() => {
-              pancakeEl.classList.remove('correct');
-              nextRound();
-              toggleInteractionBlocking(false);
-            }, 1000);
-          }
+        const countdownInterval = setInterval(() => {
+          count--;
           
-        } else {
-          // Incorrect match
-          if (clickedBy === 'player') {
-            pancakeEl.classList.add('wrong');
-            
-            // Give feedback with chance of 30%
-            if (gameMode === 'vs-knof' && Math.random() < 0.3) {
-              const incorrectComments = [
-                "Oeps, dat is niet het juiste ingrediënt!", 
-                "Probeer nog eens!", 
-                "Kijk goed naar welk ingrediënt je moet zoeken!"
-              ];
-              typeSpeechMessage(incorrectComments[Math.floor(Math.random() * incorrectComments.length)]);
-            }
-            
-            setTimeout(() => {
-              pancakeEl.classList.remove('wrong');
-              toggleInteractionBlocking(false);
-            }, 500);
+          if (count > 0) {
+            countdownNumber.textContent = count;
+            // Trigger animation restart
+            countdownNumber.classList.remove('countdown-number');
+            void countdownNumber.offsetWidth; // Force reflow
+            countdownNumber.classList.add('countdown-number');
+          } else if (count === 0) {
+            countdownNumber.textContent = 'START!';
+            countdownNumber.className = 'start-text';
+          } else {
+            clearInterval(countdownInterval);
+            countdownOverlay.style.display = 'none';
+            countdownActive = false;
+            if (callback) callback();
           }
-        }
+        }, 1000);
       }
       
       // Setup next round
@@ -1245,7 +1421,6 @@
         // Clear Knof timeout if it exists
         if (knofMoveTimeout) {
           clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
         }
         
         // If we've reached the end of the rounds, check scores
@@ -1281,7 +1456,7 @@
       
       // Schedule Knof's move based on difficulty
       function scheduleKnofMove() {
-        if (countdownActive || gameOver || interactionBlocked || gamePaused) return;
+        if (countdownActive) return;
         
         const knofDelay = difficultySettings[difficulty].knofDelay;
         
@@ -1290,32 +1465,26 @@
         const finalDelay = Math.floor(knofDelay * randomFactor);
         
         knofMoveTimeout = setTimeout(() => {
-          if (!gameOver && !countdownActive && !interactionBlocked && !gamePaused) {
+          if (!gameOver && !countdownActive) {
             // Knof finds the target ingredient
             handleIngredientClick(targetIngredient, 'opponent');
           }
         }, finalDelay);
       }
       
-      // ===== TIMER FUNCTIONALITY =====
-      
+      // Timer functions
       function startTimer() {
         if (timerInterval) clearInterval(timerInterval);
         
         remainingTime = difficultySettings[difficulty].time;
         timerCount.textContent = remainingTime;
         
-        // Set CSS variable for timer duration
-        timerCircle.style.setProperty('--timer-duration', `${remainingTime}s`);
-        
         // Reset and restart animation
-        timerCircle.classList.remove('timer-animation');
+        timerCircle.style.animation = 'none';
         void timerCircle.offsetWidth; // Force reflow
-        timerCircle.classList.add('timer-animation');
+        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
         
         timerInterval = setInterval(() => {
-          if (gamePaused) return;
-          
           remainingTime--;
           timerCount.textContent = remainingTime;
           
@@ -1327,21 +1496,28 @@
       }
       
       function pauseTimer() {
-        gamePaused = true;
+        clearInterval(timerInterval);
         
         // Pause animation
         const computedStyle = window.getComputedStyle(timerCircle);
         const animationProgress = computedStyle.getPropertyValue('transform');
-        timerCircle.classList.remove('timer-animation');
+        timerCircle.style.animation = 'none';
         timerCircle.style.transform = animationProgress;
       }
       
       function resumeTimer() {
-        gamePaused = false;
+        // Resume from current time
+        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
         
-        // Resume animation
-        timerCircle.style.setProperty('--timer-duration', `${remainingTime}s`);
-        timerCircle.classList.add('timer-animation');
+        timerInterval = setInterval(() => {
+          remainingTime--;
+          timerCount.textContent = remainingTime;
+          
+          if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerTimeUp();
+          }
+        }, 1000);
       }
       
       function resetTimer() {
@@ -1353,10 +1529,7 @@
       }
       
       function timerTimeUp() {
-        if (countdownActive || interactionBlocked || gameOver) return;
-        
-        // Block interaction during animation
-        toggleInteractionBlocking(true);
+        if (countdownActive) return;
         
         // When time runs out, Knof gets a point if playing against Knof
         if (gameMode === 'vs-knof' && !gameOver) {
@@ -1373,18 +1546,13 @@
           ];
           typeSpeechMessage(timeUpComments[Math.floor(Math.random() * timeUpComments.length)]);
           
-          // Check for win
-          if (scores.opponent >= MAX_SCORE) {
-            setTimeout(() => {
-              endGame();
-            }, 2000);
-            return;
-          }
-          
           // After a short delay to show the highlighted ingredient, move to next round
           setTimeout(() => {
-            nextRound();
-            toggleInteractionBlocking(false);
+            if (scores.opponent >= MAX_SCORE) {
+              endGame();
+            } else {
+              nextRound();
+            }
           }, 2000);
         } else {
           // In 2-player mode, nobody gets a point, just go to next round
@@ -1393,7 +1561,6 @@
           
           setTimeout(() => {
             nextRound();
-            toggleInteractionBlocking(false);
           }, 2000);
         }
       }
@@ -1414,17 +1581,10 @@
         opponentScoreEl.textContent = scores.opponent;
       }
       
-      // ===== GAME FLOW CONTROL =====
-      
       // End the game
       function endGame() {
         gameOver = true;
         clearInterval(timerInterval);
-        
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
-        }
         
         if (scores.player > scores.opponent) {
           winMessage.textContent = gameMode === 'vs-knof' ? 'Jij wint!' : 'Speler 1 wint!';
@@ -1445,26 +1605,6 @@
             typeSpeechMessage("Speler 2 wint het spel! Gefeliciteerd!");
           }
         }
-        
-        toggleInteractionBlocking(false);
-      }
-      
-      // Start gameplay after countdown
-      function startGameplay() {
-        // Generate ingredients for first round
-        pancakeIngredients = generateIngredients();
-        
-        // Display the pancake and target
-        displayPancake();
-        displayTargetIngredient();
-        
-        // Start timer
-        startTimer();
-        
-        // If playing against Knof, schedule his move
-        if (gameMode === 'vs-knof') {
-          scheduleKnofMove();
-        }
       }
       
       // Initialize the game
@@ -1473,114 +1613,33 @@
         gameOver = false;
         currentRound = 1;
         updateRoundCounter();
-        winMessage.textContent = '';
         
         // Clear any ongoing timers
         clearInterval(timerInterval);
         if (knofMoveTimeout) {
           clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
         }
         
-        // Stop any confetti
-        stopConfetti();
-        
-        // Show countdown and then start the game
-        showCountdown(startGameplay);
-        
-        // Show tutorial on first load (delayed after countdown)
-        if (!localStorage.getItem('ingredientGameTutorialSeen')) {
-          setTimeout(() => {
-            tutorialOverlay.style.display = 'flex';
-            pauseTimer();
-            localStorage.setItem('ingredientGameTutorialSeen', 'true');
-          }, 5000); // Show tutorial after countdown + a short delay
+        // Als het de eerste keer is, toon dan tutorial en daarna de moeilijkheidsgraad keuze
+        if (isFirstPlay) {
+          tutorialOverlay.style.display = 'flex';
+        } else {
+          // Als het niet de eerste keer is, start dan direct het spel met aftellen
+          startNewGame();
         }
       }
       
-      // ===== EVENT LISTENERS =====
-      
-      backButton.addEventListener('click', function() {
-        window.location.href = '../games.html';
-      });
-      
-      resetScoresButton.addEventListener('click', function() {
-        if (interactionBlocked) return;
-        
-        scores.player = 0;
-        scores.opponent = 0;
-        updateScores();
-        winMessage.textContent = '';
-        stopConfetti();
-        
-        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
-        
-        initializeGame();
-      });
-      
-      restartButton.addEventListener('click', function() {
-        if (interactionBlocked) return;
-        
-        winMessage.textContent = '';
-        stopConfetti();
-        initializeGame();
-        
-        typeSpeechMessage("Nieuw spel! Succes!");
-      });
-      
-      helpButton.addEventListener('click', function() {
-        if (interactionBlocked) return;
-        
-        tutorialOverlay.style.display = 'flex';
-        pauseTimer();
-      });
-      
-      tutorialClose.addEventListener('click', function() {
-        tutorialOverlay.style.display = 'none';
-        resumeTimer();
-      });
-
-      // Difficulty selection
-      levelButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          if (interactionBlocked) return;
-          
-          levelButtons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          difficulty = this.dataset.level;
-          
-          // Update timer values
-          if (!gameOver && !countdownActive) {
-            // Alleen timer resetten als het spel bezig is
-            resetTimer();
-          }
-          
-          typeSpeechMessage(`Moeilijkheidsgraad aangepast naar ${getReadableDifficulty(difficulty)}!`);
-        });
-      });
-      
-      function getReadableDifficulty(diff) {
-        switch(diff) {
-          case 'easy': return 'makkelijk';
-          case 'medium': return 'normaal';
-          case 'hard': return 'moeilijk';
-          default: return diff;
-        }
-      }
-      
-      // Resize event
-      window.addEventListener('resize', function() {
-        resizeCanvas();
-        if (!gameOver && !countdownActive && !interactionBlocked) {
-          displayPancake();
-        }
-      });
-      
-      // ===== INITIALIZE THE GAME =====
-      initGameMode();
+      // Start the game
       initializeGame();
       updateScores();
       resizeCanvas();
+      
+      // Herpositioneer ingrediënten bij resize
+      window.addEventListener('resize', function() {
+        if (!gameOver && !countdownActive) {
+          displayPancake();
+        }
+      });
     });
   </script>
 </body>
