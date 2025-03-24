@@ -24,12 +24,44 @@
       align-items: center;
       gap: 20px;
       margin: 30px 0;
+      background-image: url('../images/patterns/confetti-light.png');
+      background-repeat: repeat;
+      padding: 20px;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-select-screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: -1;
     }
 
     .level-title {
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       color: #7A4127;
       margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .level-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #FF9A5A;
+      border-radius: 3px;
     }
 
     .knof-challenge {
@@ -37,92 +69,158 @@
       align-items: center;
       margin-bottom: 20px;
       background-color: #FFE4B5;
-      padding: 15px;
+      padding: 15px 20px;
       border-radius: 15px;
       filter: url(#rough-filter);
       border: 3px solid #FF9A5A;
       max-width: 500px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transform: rotate(-1deg);
+      transition: transform 0.3s;
+    }
+
+    .knof-challenge:hover {
+      transform: rotate(1deg) scale(1.02);
     }
 
     .knof-image {
       width: 80px;
       height: 80px;
       margin-right: 15px;
+      filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.2));
+      animation: knof-bounce 2s infinite alternate ease-in-out;
+    }
+
+    @keyframes knof-bounce {
+      0% { transform: translateY(0) rotate(-5deg); }
+      100% { transform: translateY(-5px) rotate(5deg); }
     }
 
     .knof-message {
       text-align: left;
       font-size: 1.2rem;
       color: #7A4127;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    .knof-message::before {
+      content: '"';
+      position: absolute;
+      top: -15px;
+      left: -10px;
+      font-size: 3rem;
+      color: rgba(255, 154, 90, 0.2);
+      font-family: Georgia, serif;
+    }
+
+    .knof-message::after {
+      content: '"';
+      position: absolute;
+      bottom: -30px;
+      right: -10px;
+      font-size: 3rem;
+      color: rgba(255, 154, 90, 0.2);
+      font-family: Georgia, serif;
+    }
+
+    .level-buttons-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+      max-width: 600px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .level-buttons-container::before {
+      content: 'Kies je niveau:';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.3rem;
+      color: #7A4127;
+      font-weight: bold;
+      background-color: rgba(255, 235, 205, 0.8);
+      padding: 5px 15px;
+      border-radius: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
 
     .level-buttons {
       display: flex;
-      gap: 15px;
+      gap: 20px;
       flex-wrap: wrap;
       justify-content: center;
+      width: 100%;
     }
 
     .level-button {
-      padding: 12px 25px;
-      background-color: #FFDDA1;
-      border: 3px solid #FFCC80;
+      flex: 1;
+      min-width: 160px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 25px;
       border-radius: 12px;
       font-size: 1.2rem;
       font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       filter: url(#rough-filter);
-      min-width: 140px;
-      position: relative;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
       overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      color: #5A3612;
     }
 
     .level-button:hover {
-      transform: translateY(-5px);
-      background-color: #FFD6A5;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 
     .level-button.easy {
       background-color: #A5E6A5;
-      border-color: #8BCC8B;
+      border: 3px solid #8BCC8B;
     }
 
-    .level-button.easy:before {
-      content: '🥄';
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+    .level-button.easy:hover {
+      background-color: #90D890;
     }
 
     .level-button.medium {
       background-color: #FFD6A5;
-      border-color: #FFBA76;
+      border: 3px solid #FFBA76;
     }
 
-    .level-button.medium:before {
-      content: '🍴';
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+    .level-button.medium:hover {
+      background-color: #FFCC90;
     }
 
     .level-button.hard {
       background-color: #FFA5A5;
-      border-color: #FF7676;
+      border: 3px solid #FF7676;
     }
 
-    .level-button.hard:before {
-      content: '🔥';
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+    .level-button.hard:hover {
+      background-color: #FF9090;
+    }
+
+    .level-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .level-description {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      opacity: 0.8;
+      font-weight: normal;
     }
 
     /* Countdown scherm */
@@ -139,6 +237,7 @@
       font-weight: bold;
       color: #FF9A5A;
       animation: pulse 1s infinite alternate;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     @keyframes pulse {
@@ -159,6 +258,11 @@
       font-size: 1.5rem;
       color: #7A4127;
       margin-bottom: 20px;
+      background-color: rgba(255, 235, 205, 0.8);
+      padding: 8px 20px;
+      border-radius: 25px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      filter: url(#rough-filter);
     }
 
     .ingredient-display {
@@ -200,51 +304,67 @@
     /* Game board */
     .game-board {
       display: none;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    .score-info {
+    .game-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 15px;
-    }
-
-    .score-display, .time-display {
-      background-color: #FFD6A5;
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-weight: bold;
-      filter: url(#rough-filter);
-      border: 2px solid #FF9A5A;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .scores-container {
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 15px;
+      align-items: center;
+      background-color: #FFE4B5;
+      padding: 8px 15px;
+      border-radius: 12px;
+      filter: url(#rough-filter);
+      border: 2px solid #FF9A5A;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .player-score, .knof-score {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #FFE4B5;
-      padding: 10px 20px;
-      border-radius: 10px;
-      filter: url(#rough-filter);
-      border: 2px solid #FF9A5A;
-      min-width: 100px;
+      padding: 5px 15px;
+      min-width: 60px;
     }
 
     .score-name {
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       color: #7A4127;
+      font-size: 0.9rem;
     }
 
     .score-value {
       font-size: 1.5rem;
       font-weight: bold;
+      color: #5A3612;
+    }
+
+    .vs-decoration {
+      font-size: 1.2rem;
+      margin: 0 10px;
+      color: #FF9A5A;
+      font-weight: bold;
+    }
+
+    .time-display {
+      background-color: #A5BBFF;
+      padding: 8px 15px;
+      border-radius: 12px;
+      font-weight: bold;
+      filter: url(#rough-filter);
+      border: 2px solid #7A97FF;
+      color: #3A4875;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .pancake-container {
@@ -260,27 +380,13 @@
       height: 90vmin;
       max-width: 500px;
       max-height: 500px;
-      background-color: #FFEEB3;
-      border-radius: 50%;
       position: relative;
-      padding: 20px;
-      filter: url(#rough-filter);
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      border: 4px solid #FFDDA1;
-      overflow: hidden;
-    }
-
-    .pancake::before {
-      content: '';
-      position: absolute;
-      width: 92%;
-      height: 92%;
-      top: 4%;
-      left: 4%;
-      background-color: #FFEF9E;
       border-radius: 50%;
-      z-index: 0;
-      filter: url(#squiggly-filter);
+      overflow: hidden;
+      background-image: url('../images/pannenkoek-vrijstaand-rond.png');
+      background-size: cover;
+      background-position: center;
     }
 
     .pancake.correct {
@@ -382,6 +488,7 @@
     .final-scores {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 30px;
       margin-bottom: 30px;
     }
@@ -396,6 +503,7 @@
       filter: url(#rough-filter);
       border: 3px solid #FF9A5A;
       min-width: 120px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
     .final-score-name {
@@ -419,6 +527,7 @@
       background-color: rgba(255, 255, 255, 0.7);
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      filter: url(#rough-filter);
     }
 
     .results-message {
@@ -426,6 +535,11 @@
       margin-bottom: 30px;
       text-align: center;
       max-width: 600px;
+      line-height: 1.4;
+      background-color: rgba(255, 235, 205, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      filter: url(#rough-filter);
     }
 
     /* Buttons */
@@ -471,14 +585,18 @@
       text-align: center;
       font-size: 1.8rem;
       font-weight: bold;
+      border: 3px solid transparent;
+      filter: url(#rough-filter);
     }
 
     .feedback-popup.correct {
       color: #4CAF50;
+      border-color: #4CAF50;
     }
 
     .feedback-popup.wrong {
       color: #F44336;
+      border-color: #F44336;
     }
 
     .feedback-popup.show {
@@ -520,13 +638,6 @@
       margin-bottom: 20px;
       font-size: 1.2rem;
       line-height: 1.5;
-    }
-
-    .vs-decoration {
-      font-size: 1.5rem;
-      margin: 0 10px;
-      color: #FF9A5A;
-      font-weight: bold;
     }
 
     /* Canvas voor confetti effect */
@@ -582,6 +693,14 @@
         min-width: 120px;
       }
 
+      .level-icon {
+        font-size: 1.8rem;
+      }
+
+      .level-description {
+        font-size: 0.8rem;
+      }
+
       .knof-image {
         width: 60px;
         height: 60px;
@@ -608,7 +727,27 @@
       }
     }
 
+    @media (max-width: 600px) {
+      .game-header {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .scores-container, .time-display {
+        width: 90%;
+      }
+    }
+
     @media (max-width: 480px) {
+      .level-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .level-button {
+        min-width: 100%;
+      }
+      
       .target-ingredient {
         font-size: 4rem;
         width: 80px;
@@ -624,16 +763,6 @@
       .pancake {
         width: 80vmin;
         height: 80vmin;
-      }
-
-      .level-button {
-        padding: 8px 16px;
-        font-size: 1rem;
-        min-width: 110px;
-      }
-
-      .level-button:before {
-        display: none;
       }
 
       .knof-challenge {
@@ -668,12 +797,6 @@
 
       .winner-banner {
         font-size: 1.7rem;
-      }
-
-      .scores-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
       }
     }
   </style>
@@ -713,11 +836,26 @@
           </div>
         </div>
         
-        <div class="level-buttons">
-          <div class="level-button easy" id="easy-level">Makkelijk</div>
-          <div class="level-button medium" id="medium-level">Normaal</div>
-          <div class="level-button hard" id="hard-level">Moeilijk</div>
+        <div class="level-buttons-container">
+          <div class="level-buttons">
+            <div class="level-button easy" id="easy-level">
+              <div class="level-icon">🥄</div>
+              Makkelijk
+              <div class="level-description">5 ingrediënten<br>30 seconden per ronde</div>
+            </div>
+            <div class="level-button medium" id="medium-level">
+              <div class="level-icon">🍴</div>
+              Normaal
+              <div class="level-description">7 ingrediënten<br>20 seconden per ronde</div>
+            </div>
+            <div class="level-button hard" id="hard-level">
+              <div class="level-icon">🔥</div>
+              Moeilijk
+              <div class="level-description">9 ingrediënten<br>10 seconden per ronde</div>
+            </div>
+          </div>
         </div>
+        
         <div class="button-container">
           <button class="game-button" id="back-button1">Terug</button>
         </div>
@@ -738,23 +876,26 @@
 
       <!-- Game board -->
       <div class="game-board" id="game-board">
-        <div class="scores-container">
-          <div class="player-score">
-            <div class="score-name">Jij</div>
-            <div class="score-value" id="player-score">0</div>
+        <div class="game-header">
+          <div class="scores-container">
+            <div class="player-score">
+              <div class="score-name">Jij</div>
+              <div class="score-value" id="player-score">0</div>
+            </div>
+            <div class="vs-decoration">VS</div>
+            <div class="knof-score">
+              <div class="score-name">Knof</div>
+              <div class="score-value" id="knof-score">0</div>
+            </div>
           </div>
-          <div class="vs-decoration">VS</div>
-          <div class="knof-score">
-            <div class="score-name">Knof</div>
-            <div class="score-value" id="knof-score">0</div>
+          
+          <div class="time-display">
+            Tijd: <span id="time-value">30</span>s
           </div>
         </div>
         
         <div class="pancake-container">
           <div class="round-display" id="round-display">Ronde 1/10</div>
-          <div class="time-display" style="position: absolute; top: 10px; right: 10px;">
-            Tijd: <span id="time-value">30</span>
-          </div>
           <div class="pancake" id="pancake">
             <!-- Ingrediënten worden hier dynamisch toegevoegd -->
           </div>
