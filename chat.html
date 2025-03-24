@@ -40,6 +40,8 @@
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
       height: calc(100% - 65px); /* Aangepast */
+      margin: 0 !important; /* Verwijder eventuele marges */
+      padding: 0 !important; /* Verwijder eventuele padding */
     }
     
     /* Style voor de chatbot container */
@@ -51,6 +53,7 @@
       background-color: transparent !important;
       display: flex;
       flex-direction: column;
+      border: none !important; /* Verwijder alle borders */
     }
     
     /* Bottom navigation fix */
@@ -107,6 +110,34 @@
       height: 100%;
       position: relative;
       display: block;
+      border: none !important; /* Verwijder alle borders */
+    }
+    
+    /* Overschrijf de chat-container stijlen uit style.css */
+    .chat-container {
+      border: none !important;
+      filter: none !important;
+      box-shadow: none !important;
+      background-color: transparent !important;
+    }
+    
+    /* Verwijder alle randen van Pickaxe elementen */
+    #pickaxe-inline-Knof_de_Pad_0BLW7 * {
+      border: none !important;
+      box-shadow: none !important;
+    }
+    
+    /* Verberg eventuele andere borders in geneste elementen */
+    .app-container * {
+      border: none !important;
+    }
+    
+    /* Gebruik negatieve CSS-reset voor borders in de chatbot */
+    [class*="chat"], [class*="message"], [class*="bubble"], 
+    [class*="container"], [class*="panel"], [class*="box"], 
+    [class*="input"], [class*="wrapper"] {
+      border: none !important;
+      box-shadow: none !important;
     }
   </style>
 </head>
@@ -212,15 +243,35 @@
         }
       }
       
+      // Verwijder alle randen van chatinterface elementen
+      function removeBorders() {
+        // Direct op pickaxe container
+        const pickaxeContainer = document.getElementById('pickaxe-inline-Knof_de_Pad_0BLW7');
+        if (pickaxeContainer) {
+          pickaxeContainer.style.border = 'none';
+          pickaxeContainer.style.boxShadow = 'none';
+          pickaxeContainer.style.borderRadius = '0';
+        }
+        
+        // Zoek alle elementen die mogelijk borders hebben
+        const borderElements = document.querySelectorAll('[class*="chat"], [class*="message"], [class*="bubble"], [class*="container"], [class*="panel"], [class*="box"], [class*="input"], [class*="wrapper"]');
+        borderElements.forEach(element => {
+          element.style.border = 'none';
+          element.style.boxShadow = 'none';
+        });
+      }
+      
       // Voer direct uit en blijf controleren
       forceHideTopNav();
       setInterval(forceHideTopNav, 1000);
+      
+      // Wacht tot Pickaxe is geladen en verwijder dan borders
+      setTimeout(removeBorders, 1000);
+      setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
     });
   </script>
   
   <!-- Pickaxe Chatbot Script -->
-  <script>
-    window.PICKAXE=window.PICKAXE||{pickaxes:[],style:"kHsjoCQGgI0GWASmgIdIAxiDA6wgM6CMbgC4UgDDAXYEAvDIBoGEBgG4CAWQIGYBgwCqApdoEjggjIaCcCoCA9gGzOBUToIQygtAyDw4IGoGgCkxAAC6AQCsAAD4BILgJ6AkV0ALDQAFA+YiAkjEDFLoEEywHkKgMCHAzVmBfPMBUIIAaXQC7ggIDFAilWBXGkAmVIFVJQAAigIDBAQvSAJLkAKIgHZAAGqAxiOAFRCArgmAQjSADFiACCIASoAACIBA+oAAeoBI8IAdGIAgEYAmCYAqaYAuIYA3M4A/O4BGJYAJTYBCFoAQfIAlcoCDKYBBaoA9boB3QYA7T4B8SYCFgYCJYYAAI4AwaoA5j4Alk4BQroBPS4BUVYCDn4BjX4CNZ4CzNYBFc4AJvYAqLoAYTIBIkoAUDIDVUIAAzYAA4oDgM4AuWE6AAWyAAuiAAxGAgYyAEH+ALAqAo8AAxYAWK4AcKoACgIBSkEARqCAAAxABdIgEIuwAAAYAhQsAmYOAEIWAOiAAILAAMggENAQAJl4AXBsAKQ6ACBJAKJxgEWCQA3GIB88UAchiAZNJAABigDw2QBQ0YBiiMARAaALUTANJugGRoQCncYAIJEATySAMS1AMIJgAKiQAbA4AOLEASa2AFKBAJ1TgE+QQDztoAUtMAryiADQTAGhogEigQAAsIA9nsAMKCAIuTAMZkgAUQQAABoA+Qn+gAIoAAHgEjAQC+SoAFMsAZa4AHEAAoSAGA1AAAkgAY/QAM2YAahUA/JuAYBTAKGrgDHNwCPyIBMZsAwDCAF6FAGoogABqQBRBIAsqcAM9qAFPRANT1gHc4wD4bIAzF0AaRSAJQ9AJvwgButwAMu4BLKsAiryATFDACgxgG7LwBeqoAFZsAOCqAEsbAEAwgBEEQAIZIBw/EAi8SAT43AHybgHlQwDMDYBnzUADn2AS97ACYWgASvQBMQgBYQBCxoAtpsA/hGAAo1AARBgELgQDz2oASVcAWNOALXigBFwoADAiADqvgCvwYATJiALg0gA+D4AEEuAIUhgByl4AsIKAJbGgBAdIApuGAAEUAAAQA==="},window.PICKAXE.pickaxes.push({id:"Knof_de_Pad_0BLW7",type:"inline"});const{id:_fid}=window.PICKAXE.pickaxes[0];fetch(`https://embed.pickaxeproject.com/axe/api/script/${_fid}`).then((e=>e.json())).then((({v:e})=>{const t=`https://cdn.jsdelivr.net/gh/pickaxeproject/cdn@${e}/dist`;if(!document.querySelector(`script[src="${t}/bundle.js"]`)){const e=document.createElement("script");e.src=t+"/bundle.js",e.defer=!0,document.head.appendChild(e)}}));
-  </script>
+  <script>window.PICKAXE=window.PICKAXE||{pickaxes:[],style:"kHsjoCQGgI0GWASmgIdIAxiDA6wgM6CMbgC4UgDDAXYEAvDIBoGEBgG4CAWQIGYBgwCqApdoEjggjIaCcCoCA9gGzOBUToIQygtAyDw4IGoGgCkxAAC6AQCsAAD4BILgJ6AkV0ALDQAFA+YiAkjEDFLoEEywHkKgMCHAzVmBfPMBUIIAaXQC7ggIDFAilWBXGkAmVIFVJQAAigIDBAQvSAJLkAKIgHZAAGqAxiOAFRCArgmAQjSADFiACCIASoAACIBA+oAAeoBI8IAdGIAgEYAmCYAqaYAuIYA3M4A/O4BGJYAJTYBCFoAQfIAlcoCDKYBBaoA9boB3QYA7T4B8SYCFgYCJYYAAI4AwaoA5j4Alk4BQroBPS4BUVYCDn4BjX4CNZ4CzNYBFc4AJvYAqLoAYTIBIkoAUDIDVUIAAzYAA4oDgM4AuWE6AAWyAAuiAAxGAgYyAEH+ALAqAo8AAxYAWK4AcKoACgIBSkEARqCAAAxABdIgEIuwAAAYAhQsAmYOAEIWAOiAAILAAMggENAQAJl4AXBsAKQ6ACBJAKJxgEWCQA3GIB88UAchiAZNJAABigDw2QBQ0YBiiMARAaALUTANJugGRoQCncYAIJEATySAMS1AMIJgAKiQAbA4AOLEASa2AFKBAJ1TgE+QQDztoAUtMAryiADQTAGhogEigQAAsIA9nsAMKCAIuTAMZkgAUQQAABoA+Qn+gAIoAAHgEjAQC+SoAFMsAZa4AHEAAoSAGA1AAAkgAY/QAM2YAahUA/JuAYBTAKGrgEJNwCCv4BNhMAYTGAQsBAFBegFRqQAIAYBTUUA9NKAaHPAOpTgEHUwDZHIAu+EAKMyAHmlAOCUgHurwB2boBVDMAeSyAIYrAGMxgBcoQBVu4BNXsAlBWADThAGBLgAhAQDIRIB4KEAicOAG4vADc+gCF8wAb5YAazEAA5+APRbAC0vgF4mQCEEoAATEAjWCATULACK2gBr+QCCCoBABEANQuAK/RAKZJgDEsYAhWuABCLgBeGIAJOmAGK/gDRMgAv4ALPiAIRBgBeFIACcqABrCgDSW4AhQGAFKbgAABEAA="},window.PICKAXE.pickaxes.push({id:"Knof_de_Pad_0BLW7",type:"inline"});const{id:_fid}=window.PICKAXE.pickaxes[0];fetch(`https://embed.pickaxeproject.com/axe/api/script/${_fid}`).then((e=>e.json())).then((({v:e})=>{const t=`https://cdn.jsdelivr.net/gh/pickaxeproject/cdn@${e}/dist`;if(!document.querySelector(`script[src="${t}/bundle.js"]`)){const e=document.createElement("script");e.src=t+"/bundle.js",e.defer=!0,document.head.appendChild(e)}}));</script>
 </body>
 </html>
