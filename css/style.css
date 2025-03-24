@@ -98,10 +98,6 @@ body {
   object-fit: contain;
 }
 
-.top-nav-knof:hover {
-  transform: scale(1.1);
-}
-
 /* Text container styling */
 .top-nav-text {
   flex-grow: 1;
@@ -163,10 +159,6 @@ body {
   height: 100%;
   fill: #4B0082;
   animation: slowRotate 20s linear infinite;
-}
-
-.top-nav-settings:hover {
-  filter: brightness(1.2);
 }
 
 /* Settings modal */
@@ -300,22 +292,6 @@ body {
 #nieuwsgierig-btn { --rotation: -2deg; }
 #verrassing-btn { --rotation: 3deg; }
 
-.button:hover {
-  transform: translateY(-3px) rotate(0deg);
-  box-shadow: 2px 6px 5px rgba(216, 191, 216, 0.7);
-}
-
-@keyframes wiggle {
-  0% { transform: rotate(var(--rotation)); }
-  25% { transform: rotate(calc(var(--rotation) - 0.5deg)); }
-  75% { transform: rotate(calc(var(--rotation) + 0.5deg)); }
-  100% { transform: rotate(var(--rotation)); }
-}
-
-.button:hover { 
-  animation: wiggle 0.5s ease-in-out; 
-}
-
 .button span {
   display: flex;
   flex-direction: column;
@@ -373,10 +349,6 @@ body {
   cursor: pointer;
   width: 100%;
   overflow: hidden;
-}
-
-.section:hover { 
-  transform: translateY(-5px); 
 }
 
 .section-bg-games {
@@ -559,10 +531,6 @@ body {
   cursor: pointer;
 }
 
-.nav-icon:hover, .nav-icon.active {
-  transform: scale(1.2);
-}
-
 .nav-icon.active {
   color: #FF4500;
 }
@@ -585,10 +553,6 @@ body {
   min-height: 200px;
   cursor: pointer;
   transition: transform 0.2s;
-}
-
-.game-item:hover {
-  transform: translateY(-5px);
 }
 
 .game-item-bg {
@@ -711,10 +675,6 @@ body {
   filter: url(#rough-filter);
 }
 
-.color-btn:hover {
-  transform: scale(1.2);
-}
-
 .drawing-tools {
   display: flex;
   align-items: center;
@@ -747,10 +707,6 @@ body {
   font-size: 16px;
   filter: url(#rough-filter);
   transition: transform 0.2s;
-}
-
-#clear-canvas:hover {
-  transform: translateY(-2px);
 }
 
 /* Placemat page */
@@ -817,10 +773,6 @@ body {
   font-size: 18px;
   filter: url(#rough-filter);
   transition: transform 0.2s;
-}
-
-.placemat-button:hover {
-  transform: translateY(-3px);
 }
 
 #placemat-instructions {
@@ -954,10 +906,6 @@ body {
   filter: url(#rough-filter);
 }
 
-.chat-form button:hover {
-  transform: translateY(-2px);
-}
-
 /* Popup stijlen */
 .popup {
   display: none;
@@ -969,23 +917,25 @@ body {
   height: 100%;
   overflow: auto;
   background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
 }
 
 .popup-content {
   background-color: #F8F6E9;
-  margin: 40% auto;
-  padding: 20px;
-  border: 2px solid #70543E;
-  width: 80%;
-  max-width: 400px;
+  padding: 25px;
+  border: 2px solid #B5338A;
+  width: 85%;
+  max-width: 450px;
   border-radius: 15px;
   text-align: center;
   position: relative;
   filter: url(#rough-filter);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   font-size: 1.2rem;
   font-family: 'Patrick Hand', 'Architects Daughter', cursive;
   animation: popIn 0.3s ease-out;
+  background-color: #FFB8FF;
 }
 
 @keyframes popIn {
@@ -996,20 +946,19 @@ body {
 .close-popup {
   color: #70543E;
   float: right;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.close-popup:hover {
-  transform: scale(1.2);
+  margin-top: -10px;
+  margin-right: -10px;
 }
 
 .popup-content p {
   margin-top: 10px;
   color: #4B0082;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
+  line-height: 1.4;
+  padding: 10px 0;
 }
 
 /* Media query voor kleine schermen */
@@ -1084,8 +1033,11 @@ body {
   }
   
   .popup-content {
-    margin: 50% auto;
-    padding: 15px;
+    padding: 20px;
     width: 90%;
+  }
+  
+  .popup-content p {
+    font-size: 1.6rem;
   }
 }
