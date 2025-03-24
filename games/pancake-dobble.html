@@ -11,7 +11,7 @@
   <style>
     /* Stijlen voor het Ingrediënten Zoeken spel */
     .game-container {
-      max-width: 100%;
+      max-width: 800px;
       margin: 0 auto;
       padding: 10px;
       display: flex;
@@ -52,7 +52,6 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       border: 3px solid #FF9A5A;
       margin-bottom: 10px;
-      z-index: 10;
     }
 
     .target-label {
@@ -97,8 +96,8 @@
 
     .round-counter {
       position: absolute;
-      right: 20px;
-      top: 20px;
+      right: 10px;
+      top: 10px;
       background-color: #FF9A5A;
       color: white;
       border-radius: 50%;
@@ -116,10 +115,8 @@
     }
 
     .pancake {
-      width: 90vmin;
-      height: 90vmin;
-      max-width: 600px;
-      max-height: 600px;
+      width: 300px;
+      height: 300px;
       background-color: #FFEEB3;
       border-radius: 50%;
       position: relative;
@@ -181,7 +178,7 @@
 
     .ingredient {
       position: absolute;
-      font-size: 3rem;
+      font-size: 2.2rem;
       z-index: 1;
       display: flex;
       justify-content: center;
@@ -189,8 +186,8 @@
       transform-origin: center;
       transition: transform 0.2s;
       cursor: pointer;
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
     }
 
     .ingredient:hover {
@@ -226,8 +223,8 @@
 
     .timer-container {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 10px;
+      left: 10px;
       width: 60px;
       height: 60px;
       background-color: rgba(255, 255, 255, 0.7);
@@ -419,8 +416,8 @@
     .tutorial-content {
       background-color: #F8F6E9;
       border-radius: 15px;
-      padding: 25px;
-      max-width: 85%;
+      padding: 20px;
+      max-width: 80%;
       text-align: center;
       position: relative;
       filter: url(#rough-filter);
@@ -430,65 +427,54 @@
     .tutorial-content h2 {
       color: #FF9A5A;
       margin-top: 0;
-      font-size: 1.8rem;
     }
 
     .tutorial-content p {
       margin-bottom: 20px;
-      font-size: 1.2rem;
-      line-height: 1.5;
     }
 
     .example-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 30px 0;
+      margin: 20px 0;
     }
 
     .example-target {
-      font-size: 3rem;
+      font-size: 2rem;
       background-color: #FFEF9E;
-      width: 70px;
-      height: 70px;
+      width: 50px;
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      margin-bottom: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border: 2px solid #FFDDA1;
+      margin-bottom: 10px;
     }
 
     .example-pancake {
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       background-color: #FFEEB3;
       border-radius: 50%;
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
       position: relative;
       padding: 10px;
-      border: 4px solid #FFDDA1;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
 
     .example-ingredient {
-      position: absolute;
-      font-size: 2.5rem;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-size: 1.5rem;
+      margin: 5px;
     }
 
     .highlight-arrow {
       position: absolute;
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: #FF6B6B;
-      top: -40px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
       animation: bounce 1s infinite alternate;
@@ -503,151 +489,18 @@
       }
     }
 
-    /* Kies moeilijkheidsgraad overlay */
-    .difficulty-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-
-    .difficulty-content {
-      background-color: #F8F6E9;
-      border-radius: 15px;
-      padding: 30px;
-      max-width: 600px;
-      width: 90%;
-      text-align: center;
-      position: relative;
-      filter: url(#rough-filter);
-      border: 4px solid #FFDDA1;
-    }
-
-    .difficulty-content h2 {
-      color: #FF9A5A;
-      margin-top: 0;
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-
-    .difficulty-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin: 30px 0;
-    }
-
-    .difficulty-button {
-      padding: 15px 30px;
-      background-color: #FFDDA1;
-      border: 3px solid #FFCC80;
-      border-radius: 15px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      filter: url(#rough-filter);
-      min-width: 140px;
-    }
-
-    .difficulty-button:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .difficulty-button.easy {
-      background-color: #A5E6A5;
-      border-color: #8BCC8B;
-    }
-
-    .difficulty-button.medium {
-      background-color: #FFD6A5;
-      border-color: #FFBA76;
-    }
-
-    .difficulty-button.hard {
-      background-color: #FFA5A5;
-      border-color: #FF7676;
-    }
-
-    /* Countdown stijlen */
-    .countdown-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1500;
-    }
-
-    .countdown-number {
-      font-size: 8rem;
-      color: white;
-      font-weight: bold;
-      animation: countdown-pop 0.9s ease-out;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-    }
-
-    .start-text {
-      font-size: 5rem;
-      color: #FF9A5A;
-      font-weight: bold;
-      animation: start-pop 0.5s ease-out;
-      text-shadow: 0 0 20px rgba(255, 154, 90, 0.8);
-    }
-
-    @keyframes countdown-pop {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes start-pop {
-      0% {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      80% {
-        transform: scale(1.2);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
     /* Aanpassingen voor mobiele schermen */
     @media (max-width: 768px) {
       .pancake {
-        width: 85vmin;
-        height: 85vmin;
+        width: 250px;
+        height: 250px;
+        padding: 15px;
       }
       
       .ingredient {
-        font-size: 2.5rem;
-        width: 50px;
-        height: 50px;
+        font-size: 1.8rem;
+        width: 35px;
+        height: 35px;
       }
       
       .target-ingredient {
@@ -659,44 +512,19 @@
       .target-label {
         font-size: 1rem;
       }
-      
-      .countdown-number {
-        font-size: 6rem;
-      }
-      
-      .start-text {
-        font-size: 4rem;
-      }
-      
-      .tutorial-content h2 {
-        font-size: 1.6rem;
-      }
-      
-      .tutorial-content p {
-        font-size: 1.1rem;
-      }
-      
-      .difficulty-content h2 {
-        font-size: 1.8rem;
-      }
-      
-      .difficulty-button {
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        min-width: 120px;
-      }
     }
 
     @media (max-width: 480px) {
       .pancake {
-        width: 80vmin;
-        height: 80vmin;
+        width: 220px;
+        height: 220px;
+        padding: 10px;
       }
       
       .ingredient {
-        font-size: 2rem;
-        width: 40px;
-        height: 40px;
+        font-size: 1.5rem;
+        width: 30px;
+        height: 30px;
       }
       
       .target-ingredient {
@@ -718,32 +546,6 @@
       .timer-circle {
         width: 36px;
         height: 36px;
-      }
-      
-      .countdown-number {
-        font-size: 5rem;
-      }
-      
-      .start-text {
-        font-size: 3rem;
-      }
-      
-      .tutorial-content h2 {
-        font-size: 1.4rem;
-      }
-      
-      .tutorial-content p {
-        font-size: 1rem;
-      }
-      
-      .difficulty-content h2 {
-        font-size: 1.5rem;
-      }
-      
-      .difficulty-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        min-width: 100px;
       }
     }
   </style>
@@ -771,45 +573,6 @@
 
   <!-- Canvas voor confetti effect -->
   <canvas id="confetti-canvas"></canvas>
-
-  <!-- Countdown overlay -->
-  <div class="countdown-overlay" id="countdown-overlay" style="display: none;">
-    <div class="countdown-number" id="countdown-number">3</div>
-  </div>
-
-  <!-- Tutorial overlay - verbeterde versie -->
-  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
-    <div class="tutorial-content">
-      <h2>Ingrediënten Zoeken</h2>
-      <p>Zoek zo snel mogelijk het juiste ingrediënt op de pannenkoek!</p>
-
-      <div class="example-container">
-        <div class="example-target">🍓</div>
-        <div class="highlight-arrow">↓</div>
-        <div class="example-pancake">
-          <div class="example-ingredient" style="top: 30%; left: 30%;">🍌</div>
-          <div class="example-ingredient" style="top: 70%; left: 40%;">🍫</div>
-          <div class="example-ingredient highlighted" style="top: 50%; left: 65%;">🍓</div>
-          <div class="example-ingredient" style="top: 25%; left: 70%;">🧀</div>
-        </div>
-      </div>
-
-      <p>Klik op het juiste ingrediënt voordat de tijd om is of Knof het vindt!<br>De eerste die 10 punten heeft, wint!</p>
-      <button class="game-button" id="tutorial-close">Begrepen!</button>
-    </div>
-  </div>
-  
-  <!-- Difficulty selection overlay -->
-  <div class="difficulty-overlay" id="difficulty-overlay" style="display: none;">
-    <div class="difficulty-content">
-      <h2>Kies een moeilijkheidsgraad</h2>
-      <div class="difficulty-buttons">
-        <button class="difficulty-button easy" data-level="easy">Makkelijk</button>
-        <button class="difficulty-button medium" data-level="medium">Normaal</button>
-        <button class="difficulty-button hard" data-level="hard">Moeilijk</button>
-      </div>
-    </div>
-  </div>
 
   <!-- Hoofdcontent - Ingrediënten Zoeken spel -->
   <div class="app-container">
@@ -872,6 +635,28 @@
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
 
+  <!-- Tutorial overlay -->
+  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
+    <div class="tutorial-content">
+      <h2>Hoe speel je Ingrediënten Zoeken?</h2>
+      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek!</p>
+
+      <div class="example-container">
+        <div class="example-target">🍓</div>
+        <div class="highlight-arrow">↓</div>
+        <div class="example-pancake">
+          <div class="example-ingredient">🍌</div>
+          <div class="example-ingredient">🍫</div>
+          <div class="example-ingredient">🍓</div>
+          <div class="example-ingredient">🧀</div>
+        </div>
+      </div>
+
+      <p>Klik op het juiste ingrediënt om een punt te scoren. Wie het eerst 10 punten heeft, wint!</p>
+      <button class="game-button" id="tutorial-close">Ik snap het!</button>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="../js/common.js"></script>
   <script>
@@ -880,18 +665,20 @@
       const ROUNDS_PER_GAME = 10;
       const MAX_SCORE = 10;
       const INGREDIENTS_PER_ROUND = {
-        easy: 5,
-        medium: 7,
-        hard: 9
+        easy: 12,
+        medium: 16,
+        hard: 20
       };
       
-      // Eetbare ingrediënten (emoji's)
+      // Alle mogelijke ingrediënten (emoji's)
       const INGREDIENTS = [
         '🍓', '🍌', '🍫', '🍯', '🧀', '🍎', '🍊', '🥞', 
         '🍒', '🍋', '🥥', '🍦', '🍪', '🍰', '🍧', '🍩', 
-        '🥜', '🍇', '🍬', '🍭', '🍈', '🍑', '🍍', 
-        '🍉', '🍐', '🧁', '🍨', '🥐', '🧈',
-        '🍏', '🍕', '🍔', '🍟', '🌭', '🍿'
+        '🥜', '🍇', '🍬', '🍭', '🍈', '🥭', '🍑', '🍍', 
+        '🍉', '🥝', '🍅', '🍐', '🧁', '🍨', '🍮', '🍯',
+        '🍏', '🥭', '🥯', '🥐', '🥨', '🥓', '🧈', '🥤',
+        '🥛', '🥄', '🍽️', '🧂', '🧁', '🦞', '🥂', '🍹',
+        '🧃', '🥗', '🍕', '🍔', '🍟', '🌭', '🍿'
       ];
       
       // Elementen in de DOM
@@ -906,16 +693,12 @@
       const helpButton = document.getElementById('help-button');
       const tutorialOverlay = document.getElementById('tutorial-overlay');
       const tutorialClose = document.getElementById('tutorial-close');
-      const difficultyOverlay = document.getElementById('difficulty-overlay');
-      const difficultyButtons = document.querySelectorAll('.difficulty-button');
       const confettiCanvas = document.getElementById('confetti-canvas');
       const roundCounter = document.getElementById('round-counter');
       const timerContainer = document.getElementById('timer-container');
       const timerCircle = document.getElementById('timer-circle');
       const timerCount = document.getElementById('timer-count');
       const levelButtons = document.querySelectorAll('.level-button');
-      const countdownOverlay = document.getElementById('countdown-overlay');
-      const countdownNumber = document.getElementById('countdown-number');
       
       // Game state variables
       let gameMode = '';
@@ -939,8 +722,6 @@
       let confetti = [];
       let confettiActive = false;
       let confettiAnimationId = null;
-      let countdownActive = false;
-      let isFirstPlay = !localStorage.getItem('ingredientGameTutorialSeen');
       
       // Resize canvas for confetti
       function resizeCanvas() {
@@ -1019,11 +800,17 @@
       if (gameMode === 'vs-knof') {
         document.getElementById('player1-name').textContent = 'Jij';
         document.getElementById('opponent-name').textContent = 'Knof';
-        // Welkom bericht voor Knof-modus wordt later getoond, na de tutorial
+        // Welkom bericht voor Knof-modus
+        setTimeout(() => {
+          typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Klik zo snel mogelijk op het juiste ingrediënt op de pannenkoek. Veel plezier!");
+        }, 500);
       } else {
         document.getElementById('player1-name').textContent = 'Speler 1';
         document.getElementById('opponent-name').textContent = 'Speler 2';
-        // Welkom bericht voor twee-speler-modus wordt later getoond, na de tutorial
+        // Welkom bericht voor twee-speler-modus
+        setTimeout(() => {
+          typeSpeechMessage("Ingrediënten Zoeken met z'n tweeën! Gebruik dezelfde knop om het juiste ingrediënt aan te wijzen. Wie het eerst ziet, klikt en wint!");
+        }, 500);
       }
       
       // Event listeners
@@ -1036,7 +823,6 @@
         scores.opponent = 0;
         updateScores();
         winMessage.textContent = '';
-        stopConfetti();
         
         typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
         
@@ -1045,7 +831,6 @@
       
       restartButton.addEventListener('click', function() {
         winMessage.textContent = '';
-        stopConfetti();
         initializeGame();
         
         typeSpeechMessage("Nieuw spel! Succes!");
@@ -1058,38 +843,10 @@
       
       tutorialClose.addEventListener('click', function() {
         tutorialOverlay.style.display = 'none';
-        
-        // Als dit de eerste keer is, dan gaan we door naar de moeilijkheidsgraad selectie
-        if (isFirstPlay) {
-          showDifficultySelection();
-          isFirstPlay = false;
-          localStorage.setItem('ingredientGameTutorialSeen', 'true');
-        } else {
-          resumeTimer();
-        }
+        resumeTimer();
       });
 
-      // Setup difficulty selection buttons
-      difficultyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          difficulty = this.dataset.level;
-          
-          // Update level buttons in main UI
-          levelButtons.forEach(btn => {
-            if (btn.dataset.level === difficulty) {
-              btn.classList.add('active');
-            } else {
-              btn.classList.remove('active');
-            }
-          });
-          
-          // Hide difficulty overlay and start the game
-          difficultyOverlay.style.display = 'none';
-          startNewGame();
-        });
-      });
-
-      // Difficulty selection in main UI
+      // Difficulty selection
       levelButtons.forEach(button => {
         button.addEventListener('click', function() {
           levelButtons.forEach(btn => btn.classList.remove('active'));
@@ -1118,38 +875,6 @@
           case 'hard': return 'moeilijk';
           default: return diff;
         }
-      }
-      
-      // Show difficulty selection screen
-      function showDifficultySelection() {
-        difficultyOverlay.style.display = 'flex';
-      }
-      
-      // Start a new game after difficulty selection
-      function startNewGame() {
-        showCountdown(() => {
-          // Generate ingredients for first round
-          pancakeIngredients = generateIngredients();
-          
-          // Display the pancake and target
-          displayPancake();
-          displayTargetIngredient();
-          
-          // Start timer
-          startTimer();
-          
-          // If playing against Knof, schedule his move
-          if (gameMode === 'vs-knof') {
-            scheduleKnofMove();
-          }
-          
-          // Show welcome message based on game mode
-          if (gameMode === 'vs-knof') {
-            typeSpeechMessage("Zoek de ingrediënten sneller dan ik! Veel plezier!");
-          } else {
-            typeSpeechMessage("Wie vindt de ingrediënten het snelst? Speel tegen elkaar en win!");
-          }
-        });
       }
       
       // Shuffle array using Fisher-Yates algorithm
@@ -1189,7 +914,7 @@
         const pancakeHeight = pancakeEl.offsetHeight;
         const centerX = pancakeWidth / 2;
         const centerY = pancakeHeight / 2;
-        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 40; // 40px marge
+        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 30; // 30px marge
         
         let x, y, distance;
         
@@ -1224,7 +949,7 @@
         pancakeEl.innerHTML = ''; // Clear pancake
         
         const positions = [];
-        const ingredientSize = 60; // Grootte van ingredient element
+        const ingredientSize = difficulty === 'hard' ? 30 : 40; // Grootte van ingredient element
         const minDistance = ingredientSize * 1.2; // Minimale afstand tussen ingrediënten
         
         // Plaats elk ingredient op een willekeurige niet-overlappende positie
@@ -1261,7 +986,7 @@
           
           // Add click handler for the ingredient
           ingredientEl.addEventListener('click', function() {
-            if (gameOver || countdownActive) return;
+            if (gameOver) return;
             
             const clickedIngredient = this.dataset.ingredient;
             handleIngredientClick(clickedIngredient, 'player');
@@ -1278,8 +1003,6 @@
       
       // Handle ingredient click
       function handleIngredientClick(ingredient, clickedBy) {
-        if (gameOver || countdownActive) return;
-        
         clearTimeout(knofMoveTimeout); // Cancel Knof's pending move if player clicks first
         
         if (ingredient === targetIngredient) {
@@ -1385,37 +1108,6 @@
         }, 1000);
       }
       
-      // Display and animate countdown
-      function showCountdown(callback) {
-        countdownActive = true;
-        countdownOverlay.style.display = 'flex';
-        countdownNumber.textContent = '3';
-        countdownNumber.className = 'countdown-number';
-        
-        // Start de countdown
-        let count = 3;
-        
-        const countdownInterval = setInterval(() => {
-          count--;
-          
-          if (count > 0) {
-            countdownNumber.textContent = count;
-            // Trigger animation restart
-            countdownNumber.classList.remove('countdown-number');
-            void countdownNumber.offsetWidth; // Force reflow
-            countdownNumber.classList.add('countdown-number');
-          } else if (count === 0) {
-            countdownNumber.textContent = 'START!';
-            countdownNumber.className = 'start-text';
-          } else {
-            clearInterval(countdownInterval);
-            countdownOverlay.style.display = 'none';
-            countdownActive = false;
-            if (callback) callback();
-          }
-        }, 1000);
-      }
-      
       // Setup next round
       function nextRound() {
         // Clear Knof timeout if it exists
@@ -1456,8 +1148,6 @@
       
       // Schedule Knof's move based on difficulty
       function scheduleKnofMove() {
-        if (countdownActive) return;
-        
         const knofDelay = difficultySettings[difficulty].knofDelay;
         
         // Random factor for more natural timing (±20%)
@@ -1465,7 +1155,7 @@
         const finalDelay = Math.floor(knofDelay * randomFactor);
         
         knofMoveTimeout = setTimeout(() => {
-          if (!gameOver && !countdownActive) {
+          if (!gameOver) {
             // Knof finds the target ingredient
             handleIngredientClick(targetIngredient, 'opponent');
           }
@@ -1529,8 +1219,6 @@
       }
       
       function timerTimeUp() {
-        if (countdownActive) return;
-        
         // When time runs out, Knof gets a point if playing against Knof
         if (gameMode === 'vs-knof' && !gameOver) {
           scores.opponent++;
@@ -1620,12 +1308,26 @@
           clearTimeout(knofMoveTimeout);
         }
         
-        // Als het de eerste keer is, toon dan tutorial en daarna de moeilijkheidsgraad keuze
-        if (isFirstPlay) {
+        // Generate ingredients for first round
+        pancakeIngredients = generateIngredients();
+        
+        // Display the pancake and target
+        displayPancake();
+        displayTargetIngredient();
+        
+        // Start timer
+        startTimer();
+        
+        // If playing against Knof, schedule his move
+        if (gameMode === 'vs-knof') {
+          scheduleKnofMove();
+        }
+        
+        // Show tutorial on first load
+        if (!localStorage.getItem('ingredientGameTutorialSeen')) {
           tutorialOverlay.style.display = 'flex';
-        } else {
-          // Als het niet de eerste keer is, start dan direct het spel met aftellen
-          startNewGame();
+          pauseTimer();
+          localStorage.setItem('ingredientGameTutorialSeen', 'true');
         }
       }
       
@@ -1636,9 +1338,15 @@
       
       // Herpositioneer ingrediënten bij resize
       window.addEventListener('resize', function() {
-        if (!gameOver && !countdownActive) {
+        if (!gameOver) {
           displayPancake();
         }
+      });
+      
+      // Event listener for tutorial close button
+      tutorialClose.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'none';
+        resumeTimer();
       });
     });
   </script>
