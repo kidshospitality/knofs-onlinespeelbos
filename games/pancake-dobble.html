@@ -11,7 +11,7 @@
   <style>
     /* Stijlen voor het Ingrediënten Zoeken spel */
     .game-container {
-      max-width: 800px;
+      max-width: 100%;
       margin: 0 auto;
       padding: 10px;
       display: flex;
@@ -52,6 +52,7 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       border: 3px solid #FF9A5A;
       margin-bottom: 10px;
+      z-index: 10;
     }
 
     .target-label {
@@ -96,8 +97,8 @@
 
     .round-counter {
       position: absolute;
-      right: 10px;
-      top: 10px;
+      right: 20px;
+      top: 20px;
       background-color: #FF9A5A;
       color: white;
       border-radius: 50%;
@@ -115,8 +116,10 @@
     }
 
     .pancake {
-      width: 400px;
-      height: 400px;
+      width: 90vmin;
+      height: 90vmin;
+      max-width: 600px;
+      max-height: 600px;
       background-color: #FFEEB3;
       border-radius: 50%;
       position: relative;
@@ -178,7 +181,7 @@
 
     .ingredient {
       position: absolute;
-      font-size: 2.2rem;
+      font-size: 3rem;
       z-index: 1;
       display: flex;
       justify-content: center;
@@ -186,8 +189,8 @@
       transform-origin: center;
       transition: transform 0.2s;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
     }
 
     .ingredient:hover {
@@ -223,8 +226,8 @@
 
     .timer-container {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 20px;
+      left: 20px;
       width: 60px;
       height: 60px;
       background-color: rgba(255, 255, 255, 0.7);
@@ -489,18 +492,77 @@
       }
     }
 
+    /* Countdown stijlen */
+    .countdown-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1500;
+    }
+
+    .countdown-number {
+      font-size: 8rem;
+      color: white;
+      font-weight: bold;
+      animation: countdown-pop 0.9s ease-out;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    .start-text {
+      font-size: 5rem;
+      color: #FF9A5A;
+      font-weight: bold;
+      animation: start-pop 0.5s ease-out;
+      text-shadow: 0 0 20px rgba(255, 154, 90, 0.8);
+    }
+
+    @keyframes countdown-pop {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes start-pop {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      80% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
     /* Aanpassingen voor mobiele schermen */
     @media (max-width: 768px) {
       .pancake {
-        width: 250px;
-        height: 250px;
-        padding: 15px;
+        width: 85vmin;
+        height: 85vmin;
       }
       
       .ingredient {
-        font-size: 1.8rem;
-        width: 35px;
-        height: 35px;
+        font-size: 2.5rem;
+        width: 50px;
+        height: 50px;
       }
       
       .target-ingredient {
@@ -512,19 +574,26 @@
       .target-label {
         font-size: 1rem;
       }
+      
+      .countdown-number {
+        font-size: 6rem;
+      }
+      
+      .start-text {
+        font-size: 4rem;
+      }
     }
 
     @media (max-width: 480px) {
       .pancake {
-        width: 220px;
-        height: 220px;
-        padding: 10px;
+        width: 80vmin;
+        height: 80vmin;
       }
       
       .ingredient {
-        font-size: 1.5rem;
-        width: 30px;
-        height: 30px;
+        font-size: 2rem;
+        width: 40px;
+        height: 40px;
       }
       
       .target-ingredient {
@@ -546,6 +615,14 @@
       .timer-circle {
         width: 36px;
         height: 36px;
+      }
+      
+      .countdown-number {
+        font-size: 5rem;
+      }
+      
+      .start-text {
+        font-size: 3rem;
       }
     }
   </style>
@@ -573,6 +650,11 @@
 
   <!-- Canvas voor confetti effect -->
   <canvas id="confetti-canvas"></canvas>
+
+  <!-- Countdown overlay -->
+  <div class="countdown-overlay" id="countdown-overlay" style="display: none;">
+    <div class="countdown-number" id="countdown-number">3</div>
+  </div>
 
   <!-- Hoofdcontent - Ingrediënten Zoeken spel -->
   <div class="app-container">
@@ -665,20 +747,18 @@
       const ROUNDS_PER_GAME = 10;
       const MAX_SCORE = 10;
       const INGREDIENTS_PER_ROUND = {
-        easy: 12,
-        medium: 16,
-        hard: 20
+        easy: 5,
+        medium: 7,
+        hard: 9
       };
       
-      // Alle mogelijke ingrediënten (emoji's)
+      // Eetbare ingrediënten (emoji's)
       const INGREDIENTS = [
         '🍓', '🍌', '🍫', '🍯', '🧀', '🍎', '🍊', '🥞', 
         '🍒', '🍋', '🥥', '🍦', '🍪', '🍰', '🍧', '🍩', 
-        '🥜', '🍇', '🍬', '🍭', '🍈', '🥭', '🍑', '🍍', 
-        '🍉', '🥝', '🍅', '🍐', '🧁', '🍨', '🍮', '🍯',
-        '🍏', '🥭', '🥯', '🥐', '🥨', '🥓', '🧈', '🥤',
-        '🥛', '🥄', '🍽️', '🧂', '🧁', '🦞', '🥂', '🍹',
-        '🧃', '🥗', '🍕', '🍔', '🍟', '🌭', '🍿'
+        '🥜', '🍇', '🍬', '🍭', '🍈', '🍑', '🍍', 
+        '🍉', '🍐', '🧁', '🍨', '🥐', '🧈',
+        '🍏', '🍕', '🍔', '🍟', '🌭', '🍿'
       ];
       
       // Elementen in de DOM
@@ -699,6 +779,8 @@
       const timerCircle = document.getElementById('timer-circle');
       const timerCount = document.getElementById('timer-count');
       const levelButtons = document.querySelectorAll('.level-button');
+      const countdownOverlay = document.getElementById('countdown-overlay');
+      const countdownNumber = document.getElementById('countdown-number');
       
       // Game state variables
       let gameMode = '';
@@ -722,6 +804,7 @@
       let confetti = [];
       let confettiActive = false;
       let confettiAnimationId = null;
+      let countdownActive = false;
       
       // Resize canvas for confetti
       function resizeCanvas() {
@@ -823,6 +906,7 @@
         scores.opponent = 0;
         updateScores();
         winMessage.textContent = '';
+        stopConfetti();
         
         typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
         
@@ -831,6 +915,7 @@
       
       restartButton.addEventListener('click', function() {
         winMessage.textContent = '';
+        stopConfetti();
         initializeGame();
         
         typeSpeechMessage("Nieuw spel! Succes!");
@@ -914,7 +999,7 @@
         const pancakeHeight = pancakeEl.offsetHeight;
         const centerX = pancakeWidth / 2;
         const centerY = pancakeHeight / 2;
-        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 30; // 30px marge
+        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 40; // 40px marge
         
         let x, y, distance;
         
@@ -949,7 +1034,7 @@
         pancakeEl.innerHTML = ''; // Clear pancake
         
         const positions = [];
-        const ingredientSize = difficulty === 'hard' ? 30 : 40; // Grootte van ingredient element
+        const ingredientSize = 60; // Grootte van ingredient element
         const minDistance = ingredientSize * 1.2; // Minimale afstand tussen ingrediënten
         
         // Plaats elk ingredient op een willekeurige niet-overlappende positie
@@ -986,7 +1071,7 @@
           
           // Add click handler for the ingredient
           ingredientEl.addEventListener('click', function() {
-            if (gameOver) return;
+            if (gameOver || countdownActive) return;
             
             const clickedIngredient = this.dataset.ingredient;
             handleIngredientClick(clickedIngredient, 'player');
@@ -1003,6 +1088,8 @@
       
       // Handle ingredient click
       function handleIngredientClick(ingredient, clickedBy) {
+        if (gameOver || countdownActive) return;
+        
         clearTimeout(knofMoveTimeout); // Cancel Knof's pending move if player clicks first
         
         if (ingredient === targetIngredient) {
@@ -1108,6 +1195,37 @@
         }, 1000);
       }
       
+      // Display and animate countdown
+      function showCountdown(callback) {
+        countdownActive = true;
+        countdownOverlay.style.display = 'flex';
+        countdownNumber.textContent = '3';
+        countdownNumber.className = 'countdown-number';
+        
+        // Start de countdown
+        let count = 3;
+        
+        const countdownInterval = setInterval(() => {
+          count--;
+          
+          if (count > 0) {
+            countdownNumber.textContent = count;
+            // Trigger animation restart
+            countdownNumber.classList.remove('countdown-number');
+            void countdownNumber.offsetWidth; // Force reflow
+            countdownNumber.classList.add('countdown-number');
+          } else if (count === 0) {
+            countdownNumber.textContent = 'START!';
+            countdownNumber.className = 'start-text';
+          } else {
+            clearInterval(countdownInterval);
+            countdownOverlay.style.display = 'none';
+            countdownActive = false;
+            if (callback) callback();
+          }
+        }, 1000);
+      }
+      
       // Setup next round
       function nextRound() {
         // Clear Knof timeout if it exists
@@ -1148,6 +1266,8 @@
       
       // Schedule Knof's move based on difficulty
       function scheduleKnofMove() {
+        if (countdownActive) return;
+        
         const knofDelay = difficultySettings[difficulty].knofDelay;
         
         // Random factor for more natural timing (±20%)
@@ -1155,7 +1275,7 @@
         const finalDelay = Math.floor(knofDelay * randomFactor);
         
         knofMoveTimeout = setTimeout(() => {
-          if (!gameOver) {
+          if (!gameOver && !countdownActive) {
             // Knof finds the target ingredient
             handleIngredientClick(targetIngredient, 'opponent');
           }
@@ -1219,6 +1339,8 @@
       }
       
       function timerTimeUp() {
+        if (countdownActive) return;
+        
         // When time runs out, Knof gets a point if playing against Knof
         if (gameMode === 'vs-knof' && !gameOver) {
           scores.opponent++;
@@ -1295,19 +1417,8 @@
         }
       }
       
-      // Initialize the game
-      function initializeGame() {
-        // Reset game state
-        gameOver = false;
-        currentRound = 1;
-        updateRoundCounter();
-        
-        // Clear any ongoing timers
-        clearInterval(timerInterval);
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-        }
-        
+      // Start gameplay after countdown
+      function startGameplay() {
         // Generate ingredients for first round
         pancakeIngredients = generateIngredients();
         
@@ -1322,12 +1433,31 @@
         if (gameMode === 'vs-knof') {
           scheduleKnofMove();
         }
+      }
+      
+      // Initialize the game
+      function initializeGame() {
+        // Reset game state
+        gameOver = false;
+        currentRound = 1;
+        updateRoundCounter();
+        
+        // Clear any ongoing timers
+        clearInterval(timerInterval);
+        if (knofMoveTimeout) {
+          clearTimeout(knofMoveTimeout);
+        }
+        
+        // Show countdown and then start the game
+        showCountdown(startGameplay);
         
         // Show tutorial on first load
         if (!localStorage.getItem('ingredientGameTutorialSeen')) {
-          tutorialOverlay.style.display = 'flex';
-          pauseTimer();
-          localStorage.setItem('ingredientGameTutorialSeen', 'true');
+          setTimeout(() => {
+            tutorialOverlay.style.display = 'flex';
+            pauseTimer();
+            localStorage.setItem('ingredientGameTutorialSeen', 'true');
+          }, 5000); // Show tutorial after countdown + a short delay
         }
       }
       
@@ -1338,7 +1468,7 @@
       
       // Herpositioneer ingrediënten bij resize
       window.addEventListener('resize', function() {
-        if (!gameOver) {
+        if (!gameOver && !countdownActive) {
           displayPancake();
         }
       });
