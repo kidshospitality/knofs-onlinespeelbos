@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dobble - Knof's Spelletjes</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#F8F6E9">
+  <link rel="apple-touch-icon" href="../images/icon-192.png">
+  <style>
+    /* Stijlen voor het Dobble spel */
+    .game-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .dobble-board {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 40px;
+      margin-bottom: 20px;
+    }
+
+    .center-card-container, .player-card-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .deck-counter {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #FF9A5A;
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      filter: url(#rough-filter);
+      border: 2px solid #F27D30;
+    }
+
+    .dobble-card {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background-color: #FFEEB3;
+      position: relative;
+      display: grid;
+      grid-template-areas:
+        "a b c"
+        "d e f"
+        "g h i";
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      padding: 20px;
+      filter: url(#rough-filter);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border: 4px solid #FFDDA1;
+      transform-origin: center;
+      transition: transform 0.3s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .dobble-card::before {
+      content: '';
+      position: absolute;
+      width: 92%;
+      height: 92%;
+      top: 4%;
+      left: 4%;
+      background-color: #FFEF9E;
+      border-radius: 50%;
+      z-index: 0;
+      filter: url(#squiggly-filter);
+    }
+
+    .dobble-card.highlight {
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      }
+      to {
+        box-shadow: 0 8px 30px rgba(255, 154, 90, 0.8);
+      }
+    }
+
+    .dobble-card.correct {
+      animation: correct-pulse 0.5s;
+    }
+
+    @keyframes correct-pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 8px 30px rgba(0, 255, 0, 0.6);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      }
+    }
+
+    .dobble-card.wrong {
+      animation: wrong-shake 0.5s;
+    }
+
+    @keyframes wrong-shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      20%, 60% {
+        transform: translateX(-10px);
+      }
+      40%, 80% {
+        transform: translateX(10px);
+      }
+    }
+
+    .ingredient {
+      font-size: 2.5rem;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+      transition: transform 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .ingredient:hover {
+      transform: scale(1.2);
+    }
+
+    .ingredient:active {
+      transform: scale(0.9);
+    }
+
+    /* Positionering van ingrediënten */
+    .pos-a { grid-area: a; }
+    .pos-b { grid-area: b; }
+    .pos-c { grid-area: c; }
+    .pos-d { grid-area: d; }
+    .pos-e { grid-area: e; }
+    .pos-f { grid-area: f; }
+    .pos-g { grid-area: g; }
+    .pos-h { grid-area: h; }
+    .pos-i { grid-area: i; }
+
+    .center-card {
+      margin-bottom: 0;
+    }
+
+    .player-cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .player-card {
+      transform: scale(0.8);
+      margin-top: -30px;
+    }
+
+    .game-info {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #FFD6A5;
+      border-radius: 10px;
+      filter: url(#rough-filter);
+      border: 2px solid #FF9A5A;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 15px;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .player-heading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .score-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100px;
+    }
+
+    .score-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .score-card p {
+      margin: 5px 0 0 0;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .player-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+      background-color: #F8F6E9;
+    }
+
+    .active-player {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(255,165,0,0.7);
+    }
+
+    .win-message {
+      font-size: 1.6rem;
+      color: #4B0082;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .game-button {
+      padding: 10px 15px;
+      background-color: #A5BBFF;
+      border: 2px solid #7A97FF;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      filter: url(#rough-filter);
+      min-width: 80px;
+    }
+
+    .game-button:hover {
+      transform: translateY(-3px);
+    }
+
+    .game-button:active {
+      transform: scale(0.98);
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .countdown {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 2rem;
+      color: #FF6B6B;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.7);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      filter: url(#rough-filter);
+    }
+
+    .tutorial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .tutorial-content {
+      background-color: #F8F6E9;
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 80%;
+      text-align: center;
+      position: relative;
+      filter: url(#rough-filter);
+      border: 4px solid #FFDDA1;
+    }
+
+    .tutorial-content h2 {
+      color: #FF9A5A;
+      margin-top: 0;
+    }
+
+    .tutorial-content p {
+      margin-bottom: 20px;
+    }
+
+    .example-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .example-card {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-color: #FFEEB3;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      filter: url(#rough-filter);
+      border: 2px solid #FFDDA1;
+    }
+
+    .highlight-match {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px dashed #FF6B6B;
+      animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Timer stijlen */
+    .timer-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #FF6B6B;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      filter: url(#rough-filter);
+    }
+
+    .timer-circle {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 3px solid #FF6B6B;
+      clip: rect(0px, 60px, 60px, 30px);
+      animation: countdown-animation 30s linear 1 forwards;
+      transform: rotate(-90deg);
+    }
+
+    @keyframes countdown-animation {
+      from {
+        transform: rotate(-90deg);
+      }
+      to {
+        transform: rotate(270deg);
+      }
+    }
+
+    /* Aanpassingen voor mobiele schermen */
+    @media (max-width: 768px) {
+      .dobble-card {
+        width: 220px;
+        height: 220px;
+        padding: 15px;
+      }
+      
+      .ingredient {
+        font-size: 2rem;
+      }
+      
+      .player-cards {
+        gap: 10px;
+      }
+      
+      .player-card {
+        transform: scale(0.7);
+        margin-top: -40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dobble-card {
+        width: 180px;
+        height: 180px;
+        padding: 10px;
+      }
+      
+      .ingredient {
+        font-size: 1.6rem;
+      }
+      
+      .player-card {
+        transform: scale(0.6);
+        margin-top: -50px;
+      }
+      
+      .deck-counter {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Animatie voor behaalde punten */
+    .point-animation {
+      position: absolute;
+      color: #4CAF50;
+      font-weight: bold;
+      font-size: 1.5rem;
+      animation: float-up 1s forwards;
+      z-index: 100;
+    }
+
+    @keyframes float-up {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+    }
+
+    /* Stijlen voor level selectie */
+    .level-select {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .level-button {
+      padding: 8px 15px;
+      background-color: #FFDDA1;
+      border: 2px solid #FFCC80;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      filter: url(#rough-filter);
+    }
+
+    .level-button.active {
+      background-color: #FF9A5A;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* Pulserende hint pijl */
+    .hint-arrow {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      z-index: 10;
+      display: none;
+      animation: pulse-arrow 1s infinite alternate;
+    }
+
+    .hint-arrow::before {
+      content: '👇';
+      font-size: 2.5rem;
+    }
+
+    @keyframes pulse-arrow {
+      from {
+        transform: translateY(0) scale(1);
+      }
+      to {
+        transform: translateY(10px) scale(1.1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG filters voor handgetekend effect -->
+  <svg class="svg-filters">
+    <defs>
+      <filter id="rough-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="squiggly-filter">
+        <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="3" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Container voor top navigatie -->
+  <div id="top-nav-container"></div>
+
+  <!-- Settings modal container -->
+  <div id="settings-modal-container"></div>
+
+  <!-- Canvas voor confetti effect -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Hoofdcontent - Dobble spel -->
+  <div class="app-container">
+    <div class="game-container">
+      <div class="game-info">
+        <div class="score-board">
+          <div class="score-card" id="player-score-card">
+            <div class="player-heading">
+              <h3 id="player1-name">Jij</h3>
+              <div class="player-icon" id="player1-indicator"></div>
+            </div>
+            <p id="player-score">0</p>
+          </div>
+          <div class="score-card" id="opponent-score-card">
+            <div class="player-heading">
+              <h3 id="opponent-name">Knof</h3>
+              <div class="player-icon" id="player2-indicator"></div>
+            </div>
+            <p id="opponent-score">0</p>
+          </div>
+        </div>
+
+        <div class="level-select">
+          <div class="level-button active" data-level="easy">Makkelijk</div>
+          <div class="level-button" data-level="medium">Normaal</div>
+          <div class="level-button" data-level="hard">Moeilijk</div>
+        </div>
+
+        <div class="win-message" id="win-message"></div>
+        <div class="buttons-container">
+          <button class="game-button" id="restart-button">Nieuw spel</button>
+          <button class="game-button" id="reset-scores">Reset</button>
+          <button class="game-button" id="back-button">Terug</button>
+          <button class="game-button" id="help-button">Help</button>
+        </div>
+      </div>
+
+      <div class="dobble-board" id="dobble-board">
+        <div class="center-card-container">
+          <div class="dobble-card center-card" id="center-card">
+            <!-- Ingrediënten worden hier dynamisch toegevoegd -->
+          </div>
+          <div class="deck-counter" id="deck-counter">24</div>
+          <div class="timer-container" id="timer-container">
+            <div class="timer-circle" id="timer-circle"></div>
+            <span id="timer-count">30</span>
+          </div>
+        </div>
+
+        <div class="player-cards" id="player-cards">
+          <div class="dobble-card player-card" id="player-card">
+            <!-- Ingrediënten worden hier dynamisch toegevoegd -->
+          </div>
+        </div>
+
+        <div class="hint-arrow" id="hint-arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container voor bottom navigatie -->
+  <div id="bottom-nav-container"></div>
+
+  <!-- Tutorial overlay -->
+  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
+    <div class="tutorial-content">
+      <h2>Hoe speel je Dobble?</h2>
+      <p>Zoek zo snel mogelijk het ingrediënt dat op beide pannenkoeken voorkomt!</p>
+
+      <div class="example-cards">
+        <div class="example-card">
+          🍓 <span class="highlight-match"></span>
+        </div>
+        <div class="example-card">
+          🍓 <span class="highlight-match"></span>
+        </div>
+      </div>
+
+      <p>Klik op het overeenkomende ingrediënt om een punt te scoren. Wie het eerst 10 punten heeft, wint!</p>
+      <button class="game-button" id="tutorial-close">Ik snap het!</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/common.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Dobble game constants and variables
+      const TOTAL_CARDS = 31; // Totaal aantal kaarten (voor een volledige dobble set met 8 symbolen per kaart)
+      const SYMBOLS_PER_CARD = 8; // Aantal symbolen per kaart
+      
+      // Alle mogelijke ingrediënten (emoji's)
+      const INGREDIENTS = [
+        '🍓', '🍌', '🍫', '🍯', '🧀', '🍎', '🍊', '🥞', 
+        '🍒', '🍋', '🥥', '🍦', '🍪', '🍰', '🍧', '🍩', 
+        '🥜', '🍇', '🍬', '🍭', '🍈', '🥭', '🍑', '🍍', 
+        '🍉', '🥝', '🍅', '🍐', '🧁', '🍨', '🍮', '🍯',
+        '🍏', '🥞', '🥯', '🥐', '🥨', '🥓', '🧈', '🥤',
+        '🥛', '🥄', '🍽️', '🧂', '🧁', '🦞', '🥂', '🍹',
+        '🧃', '🥗', '🍕', '🍔', '🍟', '🌭', '🍿'
+      ];
+      
+      // Elementen in de DOM
+      const centerCard = document.getElementById('center-card');
+      const playerCard = document.getElementById('player-card');
+      const playerScoreEl = document.getElementById('player-score');
+      const opponentScoreEl = document.getElementById('opponent-score');
+      const winMessage = document.getElementById('win-message');
+      const restartButton = document.getElementById('restart-button');
+      const resetScoresButton = document.getElementById('reset-scores');
+      const backButton = document.getElementById('back-button');
+      const helpButton = document.getElementById('help-button');
+      const tutorialOverlay = document.getElementById('tutorial-overlay');
+      const tutorialClose = document.getElementById('tutorial-close');
+      const confettiCanvas = document.getElementById('confetti-canvas');
+      const deckCounter = document.getElementById('deck-counter');
+      const timerContainer = document.getElementById('timer-container');
+      const timerCircle = document.getElementById('timer-circle');
+      const timerCount = document.getElementById('timer-count');
+      const hintArrow = document.getElementById('hint-arrow');
+      const levelButtons = document.querySelectorAll('.level-button');
+      
+      // Game state variables
+      let gameMode = '';
+      let scores = {
+        player: 0,
+        opponent: 0
+      };
+      let gameOver = false;
+      let allCards = [];
+      let deckSize = 0;
+      let currentCenterCard = null;
+      let currentPlayerCard = null;
+      let commonSymbol = null;
+      let timerInterval = null;
+      let remainingTime = 30;
+      let difficulty = 'easy'; // default moeilijkheidsgraad
+      let difficultySettings = {
+        easy: { time: 30, knofDelay: 5000 },
+        medium: { time: 20, knofDelay: 3000 },
+        hard: { time: 15, knofDelay: 1500 }
+      };
+      let knofMoveTimeout = null;
+      let showingHint = false;
+      let hintTimeout = null;
+      let confetti = [];
+      let confettiActive = false;
+      let confettiAnimationId = null;
+      
+      // Resize canvas for confetti
+      function resizeCanvas() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+      }
+      
+      // Handle confetti effect
+      function startConfetti() {
+        stopConfetti(); // Stop any existing confetti first
+        confettiActive = true;
+        confetti = [];
+        resizeCanvas();
+        
+        // Create confetti particles
+        for (let i = 0; i < 100; i++) {
+          confetti.push({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * -confettiCanvas.height,
+            size: Math.random() * 10 + 5,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 2 - 1,
+            speed: Math.random() * 5 + 2
+          });
+        }
+        
+        animateConfetti();
+      }
+      
+      function stopConfetti() {
+        confettiActive = false;
+        if (confettiAnimationId) {
+          cancelAnimationFrame(confettiAnimationId);
+          confettiAnimationId = null;
+        }
+        const context = confettiCanvas.getContext('2d');
+        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+      
+      function animateConfetti() {
+        if (!confettiActive) return;
+        
+        const context = confettiCanvas.getContext('2d');
+        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        
+        for (let i = 0; i < confetti.length; i++) {
+          const p = confetti[i];
+          
+          context.save();
+          context.translate(p.x, p.y);
+          context.rotate(p.rotation * Math.PI / 180);
+          context.fillStyle = p.color;
+          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          context.restore();
+          
+          p.y += p.speed;
+          p.rotation += p.rotationSpeed;
+          
+          if (p.y > confettiCanvas.height) {
+            p.y = -10;
+            p.x = Math.random() * confettiCanvas.width;
+          }
+        }
+        
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
+      }
+      
+      window.addEventListener('resize', resizeCanvas);
+      
+      // URL parameters for game mode
+      const urlParams = new URLSearchParams(window.location.search);
+      gameMode = urlParams.get('mode') || 'vs-knof';
+      
+      // Adjust UI for different game modes
+      if (gameMode === 'vs-knof') {
+        document.getElementById('player1-name').textContent = 'Jij';
+        document.getElementById('opponent-name').textContent = 'Knof';
+        // Welkom bericht voor Knof-modus
+        setTimeout(() => {
+          typeSpeechMessage("Welkom bij Dobble! Zoek zo snel mogelijk het ingrediënt dat op beide pannenkoeken voorkomt. Veel plezier!");
+        }, 500);
+      } else {
+        document.getElementById('player1-name').textContent = 'Speler 1';
+        document.getElementById('opponent-name').textContent = 'Speler 2';
+        // Welkom bericht voor twee-speler-modus
+        setTimeout(() => {
+          typeSpeechMessage("Dobble met z'n tweeën! Gebruik dezelfde knop om het gemeenschappelijke ingrediënt aan te wijzen. Wie het eerst ziet, klikt en wint!");
+        }, 500);
+      }
+      
+      // Event listeners
+      backButton.addEventListener('click', function() {
+        window.location.href = '../games.html';
+      });
+      
+      resetScoresButton.addEventListener('click', function() {
+        scores.player = 0;
+        scores.opponent = 0;
+        updateScores();
+        winMessage.textContent = '';
+        
+        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
+        
+        initializeGame();
+      });
+      
+      restartButton.addEventListener('click', function() {
+        winMessage.textContent = '';
+        initializeGame();
+        
+        typeSpeechMessage("Nieuw spel! Succes!");
+      });
+      
+      helpButton.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'flex';
+        pauseTimer();
+      });
+      
+      tutorialClose.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'none';
+        resumeTimer();
+      });
+
+      // Difficulty selection
+      levelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          levelButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          difficulty = this.dataset.level;
+          
+          // Update timer values based on difficulty
+          remainingTime = difficultySettings[difficulty].time;
+          timerCount.textContent = remainingTime;
+          
+          // Reset timer animation
+          if (timerCircle.style.animation) {
+            timerCircle.style.animation = 'none';
+            void timerCircle.offsetWidth; // Force reflow
+            timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
+          }
+          
+          typeSpeechMessage(`Moeilijkheidsgraad aangepast naar ${getReadableDifficulty(difficulty)}!`);
+        });
+      });
+      
+      function getReadableDifficulty(diff) {
+        switch(diff) {
+          case 'easy': return 'makkelijk';
+          case 'medium': return 'normaal';
+          case 'hard': return 'moeilijk';
+          default: return diff;
+        }
+      }
+      
+      // Generate Dobble cards using mathematical principles
+      function generateDobbleCards() {
+        const cards = [];
+        const primeNumber = SYMBOLS_PER_CARD - 1; // n-1 where n is symbols per card
+        
+        // First card (special card with 0, 1, 2, ..., n-1)
+        const firstCard = [];
+        for (let i = 0; i < primeNumber + 1; i++) {
+          firstCard.push(i);
+        }
+        cards.push(firstCard);
+        
+        // Generate remaining cards using finite projective plane principle
+        for (let i = 0; i < primeNumber; i++) {
+          for (let j = 0; j < primeNumber; j++) {
+            const card = [0]; // First symbol is always 0
+            for (let k = 0; k < primeNumber; k++) {
+              const val = (primeNumber * i + (j + i * k) % primeNumber + k + 1);
+              card.push(val);
+            }
+            cards.push(card);
+          }
+        }
+        
+        return cards.slice(0, TOTAL_CARDS);
+      }
+      
+      // Shuffle array using Fisher-Yates algorithm
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+      
+      // Initialize the Dobble deck
+      function initializeDeck() {
+        // Generate mathematical pattern
+        const cardPatterns = generateDobbleCards();
+        
+        // Shuffle ingredients
+        const shuffledIngredients = shuffleArray([...INGREDIENTS]);
+        
+        // Create actual cards by mapping patterns to ingredients
+        allCards = cardPatterns.map(pattern => {
+          return pattern.map(index => shuffledIngredients[index % shuffledIngredients.length]);
+        });
+        
+        // Shuffle the deck
+        allCards = shuffleArray(allCards);
+        deckSize = allCards.length;
+        updateDeckCounter();
+      }
+      
+      // Update deck counter display
+      function updateDeckCounter() {
+        deckCounter.textContent = deckSize;
+      }
+      
+      // Draw a card from the deck
+      function drawCard() {
+        if (allCards.length === 0) {
+          return null;
+        }
+        deckSize--;
+        updateDeckCounter();
+        return allCards.pop();
+      }
+      
+      // Find the common symbol between two cards
+      function findCommonSymbol(card1, card2) {
+        for (const symbol of card1) {
+          if (card2.includes(symbol)) {
+            return symbol;
+          }
+        }
+        return null;
+      }
+      
+      // Display a card on the screen
+      function displayCard(card, containerElement) {
+        containerElement.innerHTML = ''; // Clear container
+        
+        // Create positions array
+        const positions = ['pos-a', 'pos-b', 'pos-c', 'pos-d', 'pos-e', 'pos-f', 'pos-g', 'pos-h', 'pos-i'];
+        
+        // If there are more symbols than positions, we'll need to use some positions multiple times
+        // For simplicity, we'll just use the first positions
+        const usedSymbols = card.slice(0, Math.min(card.length, positions.length));
+        
+        // Shuffle positions for random placement
+        const shuffledPositions = shuffleArray([...positions]);
+        
+        // Create and place each ingredient
+        usedSymbols.forEach((symbol, index) => {
+          const ingredient = document.createElement('div');
+          ingredient.className = `ingredient ${shuffledPositions[index]}`;
+          ingredient.textContent = symbol;
+          ingredient.dataset.symbol = symbol;
+          
+          // Random rotation and scale for more fun appearance
+          const rotation = Math.random() * 60 - 30; // -30 to 30 degrees
+          const scale = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
+          ingredient.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+          
+          // Add click handler for the ingredient
+          ingredient.addEventListener('click', function() {
+            if (gameOver) return;
+            
+            const clickedSymbol = this.dataset.symbol;
+            handleSymbolClick(clickedSymbol, 'player');
+          });
+          
+          containerElement.appendChild(ingredient);
+        });
+      }
+      
+      // Handle symbol click
+      function handleSymbolClick(symbol, clickedBy) {
+        clearTimeout(knofMoveTimeout); // Cancel Knof's pending move if player clicks first
+        
+        if (symbol === commonSymbol) {
+          // Correct match!
+          if (clickedBy === 'player') {
+            scores.player++;
+            showPointAnimation(playerCard, '+1');
+            playerCard.classList.add('correct');
+            setTimeout(() => {
+              playerCard.classList.remove('correct');
+            }, 500);
+          } else {
+            scores.opponent++;
+            showPointAnimation(centerCard, '+1');
+            centerCard.classList.add('correct');
+            setTimeout(() => {
+              centerCard.classList.remove('correct');
+            }, 500);
+          }
+          
+          updateScores();
+          nextRound();
+          
+          if (scores.player >= 10 || scores.opponent >= 10) {
+            endGame();
+          }
+          
+          // Give feedback
+          if (clickedBy === 'player') {
+            if (gameMode === 'vs-knof') {
+              const praises = [
+                "Goed gedaan!", 
+                "Slim!", 
+                "Je bent snel!", 
+                "Super!", 
+                "Je hebt goede ogen!"
+              ];
+              typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+            }
+          } else if (clickedBy === 'opponent' && gameMode === 'vs-knof') {
+            const knofComments = [
+              "Ha! Die zag ik meteen!", 
+              "Ik was sneller!", 
+              "Dat was makkelijk!", 
+              "Mijn beurt om te scoren!"
+            ];
+            typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
+          }
+        } else {
+          // Incorrect match
+          if (clickedBy === 'player') {
+            playerCard.classList.add('wrong');
+            setTimeout(() => {
+              playerCard.classList.remove('wrong');
+            }, 500);
+            
+            if (gameMode === 'vs-knof') {
+              const incorrectComments = [
+                "Oeps, dat is niet hetzelfde ingrediënt!", 
+                "Probeer nog eens!", 
+                "Kijk goed naar beide pannenkoeken!"
+              ];
+              typeSpeechMessage(incorrectComments[Math.floor(Math.random() * incorrectComments.length)]);
+            }
+          }
+        }
+      }
+      
+      // Show +1 point animation
+      function showPointAnimation(element, text) {
+        const pointEl = document.createElement('div');
+        pointEl.className = 'point-animation';
+        pointEl.textContent = text;
+        
+        // Position near the element
+        const rect = element.getBoundingClientRect();
+        const boardRect = document.getElementById('dobble-board').getBoundingClientRect();
+        
+        pointEl.style.left = (rect.left + rect.width / 2 - boardRect.left) + 'px';
+        pointEl.style.top = (rect.top - boardRect.top) + 'px';
+        
+        document.getElementById('dobble-board').appendChild(pointEl);
+        
+        // Remove after animation completes
+        setTimeout(() => {
+          pointEl.remove();
+        }, 1000);
+      }
+      
+      // Setup next round
+      function nextRound() {
+        // Clear hint if it's showing
+        hideHint();
+        
+        // Clear Knof timeout if it exists
+        if (knofMoveTimeout) {
+          clearTimeout(knofMoveTimeout);
+        }
+        
+        // If there are no more cards, end the game or reset
+        if (allCards.length < 2) {
+          if (scores.player !== scores.opponent) {
+            endGame();
+          } else {
+            // If tied, initialize new deck
+            initializeDeck();
+          }
+        }
+        
+        // Draw new cards
+        currentCenterCard = drawCard();
+        currentPlayerCard = drawCard();
+        
+        if (currentCenterCard && currentPlayerCard) {
+          // Display the cards
+          displayCard(currentCenterCard, centerCard);
+          displayCard(currentPlayerCard, playerCard);
+          
+          // Find the common symbol
+          commonSymbol = findCommonSymbol(currentCenterCard, currentPlayerCard);
+          
+          // Reset and start timer
+          resetTimer();
+          
+          // If playing against Knof, schedule his move
+          if (gameMode === 'vs-knof' && !gameOver) {
+            scheduleKnofMove();
+          }
+          
+          // Schedule hint if in easy mode
+          if (difficulty === 'easy') {
+            scheduleHint();
+          }
+        }
+      }
+      
+      // Schedule hint to appear
+      function scheduleHint() {
+        clearTimeout(hintTimeout);
+        hintTimeout = setTimeout(() => {
+          showHint();
+        }, 8000); // Show hint after 8 seconds
+      }
+      
+      // Show hint arrow pointing to the common symbol
+      function showHint() {
+        if (gameOver || !commonSymbol) return;
+        
+        showingHint = true;
+        
+        // Find the element with the common symbol on player card
+        const playerSymbolEl = playerCard.querySelector(`.ingredient[data-symbol="${commonSymbol}"]`);
+        
+        if (playerSymbolEl) {
+          const rect = playerSymbolEl.getBoundingClientRect();
+          const boardRect = document.getElementById('dobble-board').getBoundingClientRect();
+          
+          hintArrow.style.display = 'block';
+          hintArrow.style.left = (rect.left + rect.width / 2 - boardRect.left - 30) + 'px';
+          hintArrow.style.top = (rect.top - boardRect.top - 70) + 'px';
+          
+          // Hide hint after 3 seconds
+          setTimeout(hideHint, 3000);
+        }
+      }
+      
+      // Hide hint arrow
+      function hideHint() {
+        showingHint = false;
+        hintArrow.style.display = 'none';
+        clearTimeout(hintTimeout);
+      }
+      
+      // Schedule Knof's move based on difficulty
+      function scheduleKnofMove() {
+        const knofDelay = difficultySettings[difficulty].knofDelay;
+        
+        // Random factor for more natural timing (±20%)
+        const randomFactor = 1 + (Math.random() * 0.4 - 0.2);
+        const finalDelay = Math.floor(knofDelay * randomFactor);
+        
+        knofMoveTimeout = setTimeout(() => {
+          if (!gameOver) {
+            // Knof finds the common symbol
+            handleSymbolClick(commonSymbol, 'opponent');
+          }
+        }, finalDelay);
+      }
+      
+      // Timer functions
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        
+        remainingTime = difficultySettings[difficulty].time;
+        timerCount.textContent = remainingTime;
+        
+        // Reset and restart animation
+        timerCircle.style.animation = 'none';
+        void timerCircle.offsetWidth; // Force reflow
+        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
+        
+        timerInterval = setInterval(() => {
+          remainingTime--;
+          timerCount.textContent = remainingTime;
+          
+          if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerTimeUp();
+          }
+        }, 1000);
+      }
+      
+      function pauseTimer() {
+        clearInterval(timerInterval);
+        
+        // Pause animation
+        const computedStyle = window.getComputedStyle(timerCircle);
+        const animationProgress = computedStyle.getPropertyValue('transform');
+        timerCircle.style.animation = 'none';
+        timerCircle.style.transform = animationProgress;
+      }
+      
+      function resumeTimer() {
+        // Resume from current time
+        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
+        
+        timerInterval = setInterval(() => {
+          remainingTime--;
+          timerCount.textContent = remainingTime;
+          
+          if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerTimeUp();
+          }
+        }, 1000);
+      }
+      
+      function resetTimer() {
+        clearInterval(timerInterval);
+        remainingTime = difficultySettings[difficulty].time;
+        timerCount.textContent = remainingTime;
+        
+        startTimer();
+      }
+      
+      function timerTimeUp() {
+        // When time runs out, Knof gets a point if playing against Knof
+        if (gameMode === 'vs-knof' && !gameOver) {
+          scores.opponent++;
+          updateScores();
+          
+          // Highlight the common element that was missed
+          highlightCommonElement();
+          
+          const timeUpComments = [
+            "Tijd is om! Ik win deze ronde.",
+            "Te langzaam! Ik krijg een punt.",
+            "De tijd is voorbij! Kijk, dit was hetzelfde ingrediënt."
+          ];
+          typeSpeechMessage(timeUpComments[Math.floor(Math.random() * timeUpComments.length)]);
+          
+          // After a short delay to show the common element, move to next round
+          setTimeout(() => {
+            nextRound();
+            
+            if (scores.opponent >= 10) {
+              endGame();
+            }
+          }, 2000);
+        } else {
+          // In 2-player mode, nobody gets a point, just go to next round
+          highlightCommonElement();
+          
+          setTimeout(() => {
+            nextRound();
+          }, 2000);
+        }
+      }
+      
+      // Highlight the common element when time runs out
+      function highlightCommonElement() {
+        // Highlight on both cards
+        const centerSymbolEl = centerCard.querySelector(`.ingredient[data-symbol="${commonSymbol}"]`);
+        const playerSymbolEl = playerCard.querySelector(`.ingredient[data-symbol="${commonSymbol}"]`);
+        
+        if (centerSymbolEl) {
+          centerSymbolEl.style.transform = 'scale(1.3)';
+          centerSymbolEl.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.8)';
+          centerSymbolEl.style.borderRadius = '50%';
+          centerSymbolEl.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
+        }
+        
+        if (playerSymbolEl) {
+          playerSymbolEl.style.transform = 'scale(1.3)';
+          playerSymbolEl.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.8)';
+          playerSymbolEl.style.borderRadius = '50%';
+          playerSymbolEl.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
+        }
+      }
+      
+      // Update scores
+      function updateScores() {
+        playerScoreEl.textContent = scores.player;
+        opponentScoreEl.textContent = scores.opponent;
+      }
+      
+      // End the game
+      function endGame() {
+        gameOver = true;
+        clearInterval(timerInterval);
+        
+        if (scores.player > scores.opponent) {
+          winMessage.textContent = gameMode === 'vs-knof' ? 'Jij wint!' : 'Speler 1 wint!';
+          startConfetti();
+          
+          if (gameMode === 'vs-knof') {
+            typeSpeechMessage("Gefeliciteerd! Je hebt gewonnen! Je bent een echte ingrediënten-expert!");
+          } else {
+            typeSpeechMessage("Speler 1 wint het spel! Goed gedaan!");
+          }
+        } else {
+          winMessage.textContent = gameMode === 'vs-knof' ? 'Knof wint!' : 'Speler 2 wint!';
+          startConfetti();
+          
+          if (gameMode === 'vs-knof') {
+            typeSpeechMessage("Ik heb gewonnen! Maar jij deed het ook heel goed. Wil je nog een keer spelen?");
+          } else {
+            typeSpeechMessage("Speler 2 wint het spel! Gefeliciteerd!");
+          }
+        }
+      }
+      
+      // Initialize the game
+      function initializeGame() {
+        // Reset game state
+        gameOver = false;
+        hideHint();
+        
+        // Clear any ongoing timers
+        clearInterval(timerInterval);
+        if (knofMoveTimeout) {
+          clearTimeout(knofMoveTimeout);
+        }
+        
+        // Initialize deck
+        initializeDeck();
+        
+        // Start first round
+        nextRound();
+        
+        // Show tutorial on first load
+        if (!localStorage.getItem('dobbleTutorialSeen')) {
+          tutorialOverlay.style.display = 'flex';
+          pauseTimer();
+          localStorage.setItem('dobbleTutorialSeen', 'true');
+        }
+      }
+      
+      // Start the game
+      initializeGame();
+      updateScores();
+      resizeCanvas();
+      
+      // Event listener for tutorial close button
+      tutorialClose.addEventListener('click', function() {
+        tutorialOverlay.style.display = 'none';
+        resumeTimer();
+      });
+    });
+  </script>
+</body>
+</html>
