@@ -377,13 +377,38 @@
       max-width: 500px;
       max-height: 500px;
       position: relative;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       border-radius: 50%;
       overflow: hidden;
+      /* Verwijder de directe background-image */
+    }
+
+    /* Nieuwe manier om de pancake afbeelding te tonen zonder witte rand */
+    .pancake::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      background-color: #FFEEB3; /* Fallback kleur */
+      z-index: -2;
+    }
+
+    .pancake::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%);
       background-image: url('../images/pannenkoek-vrijstaand-rond.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      z-index: -1;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
 
     .pancake.correct {
@@ -393,15 +418,12 @@
     @keyframes correct-pulse {
       0% {
         transform: scale(1);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       }
       50% {
         transform: scale(1.05);
-        box-shadow: 0 8px 30px rgba(0, 255, 0, 0.6);
       }
       100% {
         transform: scale(1);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       }
     }
 
