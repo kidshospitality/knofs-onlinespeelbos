@@ -9,122 +9,148 @@
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="../images/icon-192.png">
   <style>
-    /* Stijlen voor het Ingrediënten Zoeken spel */
+    /* Basisstijlen */
     .game-container {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .game-board {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      gap: 20px;
-      margin-bottom: 20px;
-      order: 1;
-    }
-
-    .game-info {
-      order: 2;
       text-align: center;
-      margin-bottom: 20px;
-      padding: 15px;
+    }
+
+    /* Niveau keuze scherm */
+    .level-select {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .level-title {
+      font-size: 1.8rem;
+      color: #7A4127;
+      margin-bottom: 10px;
+    }
+
+    .level-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .level-button {
+      padding: 12px 25px;
+      background-color: #FFDDA1;
+      border: 3px solid #FFCC80;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      filter: url(#rough-filter);
+    }
+
+    .level-button:hover {
+      transform: translateY(-5px);
       background-color: #FFD6A5;
-      border-radius: 10px;
+    }
+
+    /* Countdown scherm */
+    .countdown-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+    }
+
+    .countdown-number {
+      font-size: 8rem;
+      font-weight: bold;
+      color: #FF9A5A;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.2); }
+    }
+
+    /* Target ingredient display */
+    .target-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+    }
+
+    .target-label {
+      font-size: 1.5rem;
+      color: #7A4127;
+      margin-bottom: 20px;
+    }
+
+    .ingredient-display {
+      position: relative;
+      width: 350px;
+      height: 350px;
+    }
+
+    .target-ingredient {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6rem;
+      z-index: 2;
+    }
+
+    .non-target-ingredient {
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.3;
+      z-index: 1;
+    }
+
+    /* Game board */
+    .game-board {
+      display: none;
+    }
+
+    .score-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .score-display, .time-display {
+      background-color: #FFD6A5;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-weight: bold;
       filter: url(#rough-filter);
       border: 2px solid #FF9A5A;
     }
 
-    .target-ingredient-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      padding: 15px;
-      background-color: #FFD6A5;
-      border-radius: 15px;
-      filter: url(#rough-filter);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      border: 3px solid #FF9A5A;
-      margin-bottom: 10px;
-    }
-
-    .target-label {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #7A4127;
-      margin-right: 15px;
-    }
-
-    .target-ingredient {
-      font-size: 3rem;
-      background-color: #FFEF9E;
-      width: 70px;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      filter: url(#rough-filter);
-      border: 2px solid #FFDDA1;
-      animation: pulse 1.5s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from {
-        transform: scale(1);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      }
-      to {
-        transform: scale(1.1);
-        box-shadow: 0 4px 15px rgba(255, 154, 90, 0.7);
-      }
-    }
-
     .pancake-container {
+      position: relative;
       width: 100%;
       display: flex;
       justify-content: center;
-      position: relative;
-    }
-
-    .round-counter {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      background-color: #FF9A5A;
-      color: white;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      filter: url(#rough-filter);
-      border: 2px solid #F27D30;
-      z-index: 2;
     }
 
     .pancake {
-      width: 300px;
-      height: 300px;
+      width: 350px;
+      height: 350px;
       background-color: #FFEEB3;
       border-radius: 50%;
       position: relative;
-      padding: 20px;
       filter: url(#rough-filter);
       box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       border: 4px solid #FFDDA1;
-      transform-origin: center;
       overflow: hidden;
     }
 
@@ -141,191 +167,59 @@
       filter: url(#squiggly-filter);
     }
 
-    .pancake.correct {
-      animation: correct-pulse 0.5s;
-    }
-
-    @keyframes correct-pulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 8px 30px rgba(0, 255, 0, 0.6);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      }
-    }
-
-    .pancake.wrong {
-      animation: wrong-shake 0.5s;
-    }
-
-    @keyframes wrong-shake {
-      0%, 100% {
-        transform: translateX(0);
-      }
-      20%, 60% {
-        transform: translateX(-10px);
-      }
-      40%, 80% {
-        transform: translateX(10px);
-      }
-    }
-
-    .ingredient {
+    .game-ingredient {
       position: absolute;
-      font-size: 2.2rem;
+      font-size: 3.5rem;
       z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transform-origin: center;
-      transition: transform 0.2s;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      transition: transform 0.2s;
     }
 
-    .ingredient:hover {
+    .game-ingredient:hover {
       transform: scale(1.2);
     }
 
-    .ingredient:active {
+    .game-ingredient:active {
       transform: scale(0.9);
     }
 
-    .ingredient.highlighted {
-      animation: highlight-pop 0.5s forwards;
-    }
-
-    @keyframes highlight-pop {
-      0% {
-        transform: scale(1);
-        background-color: transparent;
-      }
-      50% {
-        transform: scale(1.3);
-        background-color: rgba(255, 215, 0, 0.4);
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-        border-radius: 50%;
-      }
-      100% {
-        transform: scale(1.2);
-        background-color: rgba(255, 215, 0, 0.3);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-        border-radius: 50%;
-      }
-    }
-
-    .timer-container {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 60px;
-      height: 60px;
-      background-color: rgba(255, 255, 255, 0.7);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #FF6B6B;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      filter: url(#rough-filter);
-      z-index: 2;
-    }
-
-    .timer-circle {
-      position: absolute;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 3px solid #FF6B6B;
-      clip: rect(0px, 60px, 60px, 30px);
-      animation: countdown-animation 30s linear 1 forwards;
-      transform: rotate(-90deg);
-    }
-
-    @keyframes countdown-animation {
-      from {
-        transform: rotate(-90deg);
-      }
-      to {
-        transform: rotate(270deg);
-      }
-    }
-
-    .score-board {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 15px;
-      background-color: rgba(255, 255, 255, 0.6);
-      border-radius: 8px;
-      padding: 10px;
-    }
-
-    .player-heading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .score-card {
-      text-align: center;
-      display: flex;
+    /* Results screen */
+    .results-screen {
+      display: none;
       flex-direction: column;
       align-items: center;
-      min-width: 100px;
+      margin-top: 30px;
     }
 
-    .score-card h3 {
-      margin: 0;
-      font-size: 1.1rem;
+    .results-title {
+      font-size: 2rem;
+      color: #7A4127;
+      margin-bottom: 20px;
     }
 
-    .score-card p {
-      margin: 5px 0 0 0;
-      font-size: 1.4rem;
+    .results-score {
+      font-size: 3rem;
       font-weight: bold;
+      color: #FF9A5A;
+      margin-bottom: 30px;
     }
 
-    .player-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: inline-block;
-      position: relative;
-      background-color: #F8F6E9;
+    .results-message {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      text-align: center;
     }
 
-    .active-player {
-      transform: scale(1.2);
-      box-shadow: 0 0 10px rgba(255,165,0,0.7);
-    }
-
-    .win-message {
-      font-size: 1.6rem;
-      color: #4B0082;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .buttons-container {
+    /* Buttons */
+    .button-container {
       display: flex;
-      flex-wrap: wrap;
+      gap: 15px;
       justify-content: center;
-      gap: 10px;
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
     .game-button {
-      padding: 10px 15px;
+      padding: 10px 20px;
       background-color: #A5BBFF;
       border: 2px solid #7A97FF;
       border-radius: 10px;
@@ -333,226 +227,68 @@
       cursor: pointer;
       transition: transform 0.2s;
       filter: url(#rough-filter);
-      min-width: 80px;
     }
 
     .game-button:hover {
       transform: translateY(-3px);
     }
 
-    .game-button:active {
-      transform: scale(0.98);
-    }
-
-    #confetti-canvas {
+    /* Popup bericht */
+    .feedback-popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000;
-    }
-
-    /* Stijlen voor level selectie */
-    .level-select {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
-
-    .level-button {
-      padding: 8px 15px;
-      background-color: #FFDDA1;
-      border: 2px solid #FFCC80;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      filter: url(#rough-filter);
-    }
-
-    .level-button.active {
-      background-color: #FF9A5A;
-      color: white;
-      transform: scale(1.1);
-    }
-
-    /* Animatie voor behaalde punten */
-    .point-animation {
-      position: absolute;
-      color: #4CAF50;
-      font-weight: bold;
-      font-size: 1.5rem;
-      animation: float-up 1s forwards;
-      z-index: 100;
-    }
-
-    @keyframes float-up {
-      from {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-    }
-
-    .tutorial-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-
-    .tutorial-content {
-      background-color: #F8F6E9;
-      border-radius: 15px;
-      padding: 20px;
-      max-width: 80%;
-      text-align: center;
-      position: relative;
-      filter: url(#rough-filter);
-      border: 4px solid #FFDDA1;
-    }
-
-    .tutorial-content h2 {
-      color: #FF9A5A;
-      margin-top: 0;
-    }
-
-    .tutorial-content p {
-      margin-bottom: 20px;
-    }
-
-    .example-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 20px 0;
-    }
-
-    .example-target {
-      font-size: 2rem;
-      background-color: #FFEF9E;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-
-    .example-pancake {
-      width: 150px;
-      height: 150px;
-      background-color: #FFEEB3;
-      border-radius: 50%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      padding: 10px;
-    }
-
-    .example-ingredient {
-      font-size: 1.5rem;
-      margin: 5px;
-    }
-
-    .highlight-arrow {
-      position: absolute;
-      font-size: 2rem;
-      color: #FF6B6B;
-      top: -30px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      animation: bounce 1s infinite alternate;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
     }
 
-    @keyframes bounce {
-      from {
-        transform: translateX(-50%) translateY(0);
-      }
-      to {
-        transform: translateX(-50%) translateY(-10px);
-      }
+    .feedback-popup.correct {
+      color: #4CAF50;
     }
 
-    /* Aanpassingen voor mobiele schermen */
-    @media (max-width: 768px) {
-      .pancake {
-        width: 250px;
-        height: 250px;
-        padding: 15px;
-      }
-      
-      .ingredient {
-        font-size: 1.8rem;
-        width: 35px;
-        height: 35px;
-      }
-      
-      .target-ingredient {
-        font-size: 2.5rem;
-        width: 60px;
-        height: 60px;
-      }
-
-      .target-label {
-        font-size: 1rem;
-      }
+    .feedback-popup.wrong {
+      color: #F44336;
     }
 
+    .feedback-popup.show {
+      opacity: 1;
+    }
+
+    /* Media queries voor responsiveness */
     @media (max-width: 480px) {
       .pancake {
-        width: 220px;
-        height: 220px;
-        padding: 10px;
+        width: 300px;
+        height: 300px;
       }
-      
-      .ingredient {
-        font-size: 1.5rem;
-        width: 30px;
-        height: 30px;
+
+      .game-ingredient {
+        font-size: 3rem;
       }
-      
+
+      .ingredient-display {
+        width: 300px;
+        height: 300px;
+      }
+
       .target-ingredient {
-        font-size: 2.2rem;
-        width: 50px;
-        height: 50px;
-      }
-
-      .target-label {
-        font-size: 0.9rem;
-      }
-      
-      .timer-container, .round-counter {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-      }
-
-      .timer-circle {
-        width: 36px;
-        height: 36px;
+        font-size: 5rem;
       }
     }
   </style>
 </head>
 <body>
   <!-- SVG filters voor handgetekend effect -->
-  <svg class="svg-filters">
+  <svg class="svg-filters" style="display: none;">
     <defs>
       <filter id="rough-filter">
         <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" />
@@ -568,786 +304,344 @@
   <!-- Container voor top navigatie -->
   <div id="top-nav-container"></div>
 
-  <!-- Settings modal container -->
-  <div id="settings-modal-container"></div>
-
-  <!-- Canvas voor confetti effect -->
-  <canvas id="confetti-canvas"></canvas>
-
   <!-- Hoofdcontent - Ingrediënten Zoeken spel -->
   <div class="app-container">
     <div class="game-container">
-      <!-- Spelbord bovenaan -->
-      <div class="game-board" id="game-board">
-        <div class="target-ingredient-container">
-          <div class="target-label">Zoek dit ingrediënt:</div>
-          <div class="target-ingredient" id="target-ingredient">🍓</div>
+      <!-- Niveau selectie scherm -->
+      <div class="level-select" id="level-select">
+        <div class="level-title">Kies een niveau</div>
+        <div class="level-buttons">
+          <div class="level-button" id="easy-level">Makkelijk</div>
+          <div class="level-button" id="medium-level">Normaal</div>
+          <div class="level-button" id="hard-level">Moeilijk</div>
         </div>
+        <div class="button-container">
+          <button class="game-button" id="back-button">Terug</button>
+        </div>
+      </div>
 
+      <!-- Aftellen scherm -->
+      <div class="countdown-screen" id="countdown-screen">
+        <div class="countdown-number" id="countdown-number">3</div>
+      </div>
+
+      <!-- Target ingredient scherm -->
+      <div class="target-screen" id="target-screen">
+        <div class="target-label">Zoek dit ingrediënt!</div>
+        <div class="ingredient-display" id="ingredient-display">
+          <div class="target-ingredient" id="target-ingredient">🍓</div>
+          <!-- Andere vage ingrediënten worden hier toegevoegd -->
+        </div>
+      </div>
+
+      <!-- Game board -->
+      <div class="game-board" id="game-board">
+        <div class="score-info">
+          <div class="score-display">Score: <span id="score-value">0</span></div>
+          <div class="time-display">Tijd: <span id="time-value">0</span></div>
+        </div>
         <div class="pancake-container">
           <div class="pancake" id="pancake">
             <!-- Ingrediënten worden hier dynamisch toegevoegd -->
           </div>
-          <div class="round-counter" id="round-counter">1/10</div>
-          <div class="timer-container" id="timer-container">
-            <div class="timer-circle" id="timer-circle"></div>
-            <span id="timer-count">30</span>
-          </div>
         </div>
       </div>
 
-      <!-- Game informatie onder het spelbord -->
-      <div class="game-info">
-        <div class="score-board">
-          <div class="score-card" id="player-score-card">
-            <div class="player-heading">
-              <h3 id="player1-name">Jij</h3>
-              <div class="player-icon" id="player1-indicator"></div>
-            </div>
-            <p id="player-score">0</p>
-          </div>
-          <div class="score-card" id="opponent-score-card">
-            <div class="player-heading">
-              <h3 id="opponent-name">Knof</h3>
-              <div class="player-icon" id="player2-indicator"></div>
-            </div>
-            <p id="opponent-score">0</p>
-          </div>
-        </div>
-
-        <div class="level-select">
-          <div class="level-button active" data-level="easy">Makkelijk</div>
-          <div class="level-button" data-level="medium">Normaal</div>
-          <div class="level-button" data-level="hard">Moeilijk</div>
-        </div>
-
-        <div class="win-message" id="win-message"></div>
-        <div class="buttons-container">
-          <button class="game-button" id="restart-button">Nieuw spel</button>
-          <button class="game-button" id="reset-scores">Reset</button>
-          <button class="game-button" id="back-button">Terug</button>
-          <button class="game-button" id="help-button">Help</button>
+      <!-- Resultaten scherm -->
+      <div class="results-screen" id="results-screen">
+        <div class="results-title">Resultaat</div>
+        <div class="results-score" id="final-score">0 punten</div>
+        <div class="results-message" id="results-message">Goed gedaan!</div>
+        <div class="button-container">
+          <button class="game-button" id="play-again-button">Speel opnieuw</button>
+          <button class="game-button" id="menu-button">Menu</button>
         </div>
       </div>
+
+      <!-- Feedback popup -->
+      <div class="feedback-popup" id="feedback-popup"></div>
     </div>
   </div>
 
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
 
-  <!-- Tutorial overlay -->
-  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
-    <div class="tutorial-content">
-      <h2>Hoe speel je Ingrediënten Zoeken?</h2>
-      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek!</p>
-
-      <div class="example-container">
-        <div class="example-target">🍓</div>
-        <div class="highlight-arrow">↓</div>
-        <div class="example-pancake">
-          <div class="example-ingredient">🍌</div>
-          <div class="example-ingredient">🍫</div>
-          <div class="example-ingredient">🍓</div>
-          <div class="example-ingredient">🧀</div>
-        </div>
-      </div>
-
-      <p>Klik op het juiste ingrediënt om een punt te scoren. Wie het eerst 10 punten heeft, wint!</p>
-      <button class="game-button" id="tutorial-close">Ik snap het!</button>
-    </div>
-  </div>
-
   <!-- Scripts -->
   <script src="../js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Game constants and variables
-      const ROUNDS_PER_GAME = 10;
-      const MAX_SCORE = 10;
-      const INGREDIENTS_PER_ROUND = {
-        easy: 12,
-        medium: 16,
-        hard: 20
-      };
+      // Game elementen
+      const levelSelectScreen = document.getElementById('level-select');
+      const countdownScreen = document.getElementById('countdown-screen');
+      const targetScreen = document.getElementById('target-screen');
+      const gameBoard = document.getElementById('game-board');
+      const resultsScreen = document.getElementById('results-screen');
+      const feedbackPopup = document.getElementById('feedback-popup');
       
-      // Alle mogelijke ingrediënten (emoji's)
+      const countdownNumber = document.getElementById('countdown-number');
+      const targetIngredient = document.getElementById('target-ingredient');
+      const ingredientDisplay = document.getElementById('ingredient-display');
+      const pancake = document.getElementById('pancake');
+      const scoreValue = document.getElementById('score-value');
+      const timeValue = document.getElementById('time-value');
+      const finalScore = document.getElementById('final-score');
+      const resultsMessage = document.getElementById('results-message');
+      
+      const easyLevelButton = document.getElementById('easy-level');
+      const mediumLevelButton = document.getElementById('medium-level');
+      const hardLevelButton = document.getElementById('hard-level');
+      const backButton = document.getElementById('back-button');
+      const playAgainButton = document.getElementById('play-again-button');
+      const menuButton = document.getElementById('menu-button');
+      
+      // Game variabelen
       const INGREDIENTS = [
         '🍓', '🍌', '🍫', '🍯', '🧀', '🍎', '🍊', '🥞', 
         '🍒', '🍋', '🥥', '🍦', '🍪', '🍰', '🍧', '🍩', 
         '🥜', '🍇', '🍬', '🍭', '🍈', '🥭', '🍑', '🍍', 
-        '🍉', '🥝', '🍅', '🍐', '🧁', '🍨', '🍮', '🍯',
-        '🍏', '🥭', '🥯', '🥐', '🥨', '🥓', '🧈', '🥤',
-        '🥛', '🥄', '🍽️', '🧂', '🧁', '🦞', '🥂', '🍹',
-        '🧃', '🥗', '🍕', '🍔', '🍟', '🌭', '🍿'
+        '🍉', '🥝', '🍅', '🍐', '🧁', '🍨', '🍮'
       ];
       
-      // Elementen in de DOM
-      const pancakeEl = document.getElementById('pancake');
-      const targetIngredientEl = document.getElementById('target-ingredient');
-      const playerScoreEl = document.getElementById('player-score');
-      const opponentScoreEl = document.getElementById('opponent-score');
-      const winMessage = document.getElementById('win-message');
-      const restartButton = document.getElementById('restart-button');
-      const resetScoresButton = document.getElementById('reset-scores');
-      const backButton = document.getElementById('back-button');
-      const helpButton = document.getElementById('help-button');
-      const tutorialOverlay = document.getElementById('tutorial-overlay');
-      const tutorialClose = document.getElementById('tutorial-close');
-      const confettiCanvas = document.getElementById('confetti-canvas');
-      const roundCounter = document.getElementById('round-counter');
-      const timerContainer = document.getElementById('timer-container');
-      const timerCircle = document.getElementById('timer-circle');
-      const timerCount = document.getElementById('timer-count');
-      const levelButtons = document.querySelectorAll('.level-button');
-      
-      // Game state variables
-      let gameMode = '';
-      let scores = {
-        player: 0,
-        opponent: 0
+      const LEVELS = {
+        easy: { count: 5, rounds: 5, time: 20 },
+        medium: { count: 7, rounds: 7, time: 15 },
+        hard: { count: 9, rounds: 9, time: 10 }
       };
-      let gameOver = false;
-      let currentRound = 1;
-      let targetIngredient = null;
-      let pancakeIngredients = [];
+      
+      let currentLevel = null;
+      let currentRound = 0;
+      let totalRounds = 0;
+      let score = 0;
+      let timeLeft = 0;
       let timerInterval = null;
-      let remainingTime = 30;
-      let difficulty = 'easy'; // default moeilijkheidsgraad
-      let difficultySettings = {
-        easy: { time: 30, knofDelay: 5000 },
-        medium: { time: 20, knofDelay: 3000 },
-        hard: { time: 10, knofDelay: 1500 }
-      };
-      let knofMoveTimeout = null;
-      let confetti = [];
-      let confettiActive = false;
-      let confettiAnimationId = null;
-      
-      // Resize canvas for confetti
-      function resizeCanvas() {
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-      }
-      
-      // Handle confetti effect
-      function startConfetti() {
-        stopConfetti(); // Stop any existing confetti first
-        confettiActive = true;
-        confetti = [];
-        resizeCanvas();
-        
-        // Create confetti particles
-        for (let i = 0; i < 100; i++) {
-          confetti.push({
-            x: Math.random() * confettiCanvas.width,
-            y: Math.random() * -confettiCanvas.height,
-            size: Math.random() * 10 + 5,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            rotation: Math.random() * 360,
-            rotationSpeed: Math.random() * 2 - 1,
-            speed: Math.random() * 5 + 2
-          });
-        }
-        
-        animateConfetti();
-      }
-      
-      function stopConfetti() {
-        confettiActive = false;
-        if (confettiAnimationId) {
-          cancelAnimationFrame(confettiAnimationId);
-          confettiAnimationId = null;
-        }
-        const context = confettiCanvas.getContext('2d');
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-      
-      function animateConfetti() {
-        if (!confettiActive) return;
-        
-        const context = confettiCanvas.getContext('2d');
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        
-        for (let i = 0; i < confetti.length; i++) {
-          const p = confetti[i];
-          
-          context.save();
-          context.translate(p.x, p.y);
-          context.rotate(p.rotation * Math.PI / 180);
-          context.fillStyle = p.color;
-          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          context.restore();
-          
-          p.y += p.speed;
-          p.rotation += p.rotationSpeed;
-          
-          if (p.y > confettiCanvas.height) {
-            p.y = -10;
-            p.x = Math.random() * confettiCanvas.width;
-          }
-        }
-        
-        confettiAnimationId = requestAnimationFrame(animateConfetti);
-      }
-      
-      window.addEventListener('resize', resizeCanvas);
-      
-      // URL parameters for game mode
-      const urlParams = new URLSearchParams(window.location.search);
-      gameMode = urlParams.get('mode') || 'vs-knof';
-      
-      // Adjust UI for different game modes
-      if (gameMode === 'vs-knof') {
-        document.getElementById('player1-name').textContent = 'Jij';
-        document.getElementById('opponent-name').textContent = 'Knof';
-        // Welkom bericht voor Knof-modus
-        setTimeout(() => {
-          typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Klik zo snel mogelijk op het juiste ingrediënt op de pannenkoek. Veel plezier!");
-        }, 500);
-      } else {
-        document.getElementById('player1-name').textContent = 'Speler 1';
-        document.getElementById('opponent-name').textContent = 'Speler 2';
-        // Welkom bericht voor twee-speler-modus
-        setTimeout(() => {
-          typeSpeechMessage("Ingrediënten Zoeken met z'n tweeën! Gebruik dezelfde knop om het juiste ingrediënt aan te wijzen. Wie het eerst ziet, klikt en wint!");
-        }, 500);
-      }
+      let currentTarget = null;
       
       // Event listeners
-      backButton.addEventListener('click', function() {
-        window.location.href = '../games.html';
-      });
+      easyLevelButton.addEventListener('click', () => startGame('easy'));
+      mediumLevelButton.addEventListener('click', () => startGame('medium'));
+      hardLevelButton.addEventListener('click', () => startGame('hard'));
+      backButton.addEventListener('click', () => window.location.href = '../games.html');
+      playAgainButton.addEventListener('click', resetGame);
+      menuButton.addEventListener('click', showLevelSelect);
       
-      resetScoresButton.addEventListener('click', function() {
-        scores.player = 0;
-        scores.opponent = 0;
-        updateScores();
-        winMessage.textContent = '';
+      function startGame(level) {
+        currentLevel = level;
+        totalRounds = LEVELS[level].rounds;
+        currentRound = 0;
+        score = 0;
+        scoreValue.textContent = score;
         
-        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
+        levelSelectScreen.style.display = 'none';
+        startCountdown();
+      }
+      
+      function startCountdown() {
+        countdownScreen.style.display = 'flex';
+        let count = 3;
+        countdownNumber.textContent = count;
         
-        initializeGame();
-      });
-      
-      restartButton.addEventListener('click', function() {
-        winMessage.textContent = '';
-        initializeGame();
-        
-        typeSpeechMessage("Nieuw spel! Succes!");
-      });
-      
-      helpButton.addEventListener('click', function() {
-        tutorialOverlay.style.display = 'flex';
-        pauseTimer();
-      });
-      
-      tutorialClose.addEventListener('click', function() {
-        tutorialOverlay.style.display = 'none';
-        resumeTimer();
-      });
-
-      // Difficulty selection
-      levelButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          levelButtons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          difficulty = this.dataset.level;
+        const countInterval = setInterval(() => {
+          count--;
+          countdownNumber.textContent = count;
           
-          // Update timer values based on difficulty
-          remainingTime = difficultySettings[difficulty].time;
-          timerCount.textContent = remainingTime;
-          
-          // Reset timer animation
-          if (timerCircle.style.animation) {
-            timerCircle.style.animation = 'none';
-            void timerCircle.offsetWidth; // Force reflow
-            timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
+          if (count <= 0) {
+            clearInterval(countInterval);
+            countdownScreen.style.display = 'none';
+            prepareNextRound();
           }
-          
-          typeSpeechMessage(`Moeilijkheidsgraad aangepast naar ${getReadableDifficulty(difficulty)}!`);
+        }, 1000);
+      }
+      
+      function prepareNextRound() {
+        currentRound++;
+        
+        if (currentRound > totalRounds) {
+          showResults();
+          return;
+        }
+        
+        // Selecteer ingrediënten voor deze ronde
+        const shuffled = [...INGREDIENTS].sort(() => 0.5 - Math.random());
+        const roundIngredients = shuffled.slice(0, LEVELS[currentLevel].count);
+        currentTarget = roundIngredients[Math.floor(Math.random() * roundIngredients.length)];
+        
+        // Toon doelwit ingrediënt met vage ingrediënten eromheen
+        showTargetIngredient(currentTarget, roundIngredients);
+        
+        // Na 2 seconden, toon de pannenkoek met ingrediënten
+        setTimeout(() => {
+          targetScreen.style.display = 'none';
+          showGameBoard(roundIngredients);
+          startTimer();
+        }, 2000);
+      }
+      
+      function showTargetIngredient(target, allIngredients) {
+        targetScreen.style.display = 'flex';
+        ingredientDisplay.innerHTML = '';
+        
+        // Toon het doelwit in het midden
+        const targetElement = document.createElement('div');
+        targetElement.className = 'target-ingredient';
+        targetElement.textContent = target;
+        ingredientDisplay.appendChild(targetElement);
+        
+        // Toon de andere ingrediënten vaag eromheen
+        allIngredients.forEach(ingredient => {
+          if (ingredient !== target) {
+            const nonTargetElement = document.createElement('div');
+            nonTargetElement.className = 'non-target-ingredient';
+            nonTargetElement.textContent = ingredient;
+            
+            // Willekeurige positie rondom het centrum
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 70 + Math.random() * 70; // 70px tot 140px van het centrum
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+            
+            nonTargetElement.style.left = `calc(50% + ${x}px)`;
+            nonTargetElement.style.top = `calc(50% + ${y}px)`;
+            
+            ingredientDisplay.appendChild(nonTargetElement);
+          }
         });
-      });
-      
-      function getReadableDifficulty(diff) {
-        switch(diff) {
-          case 'easy': return 'makkelijk';
-          case 'medium': return 'normaal';
-          case 'hard': return 'moeilijk';
-          default: return diff;
-        }
       }
       
-      // Shuffle array using Fisher-Yates algorithm
-      function shuffleArray(array) {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-        }
-        return newArray;
-      }
-      
-      // Generate ingredients for the current round
-      function generateIngredients() {
-        const count = INGREDIENTS_PER_ROUND[difficulty];
+      function showGameBoard(ingredients) {
+        gameBoard.style.display = 'block';
+        pancake.innerHTML = '';
         
-        // Shuffle ingredients and select a subset
-        const shuffledIngredients = shuffleArray(INGREDIENTS);
-        const selectedIngredients = shuffledIngredients.slice(0, count);
-        
-        // Choose one ingredient as the target
-        const targetIndex = Math.floor(Math.random() * selectedIngredients.length);
-        targetIngredient = selectedIngredients[targetIndex];
-        
-        // Return the selected ingredients for the pancake
-        return selectedIngredients;
-      }
-      
-      // Update the round counter display
-      function updateRoundCounter() {
-        roundCounter.textContent = `${currentRound}/${ROUNDS_PER_GAME}`;
-      }
-
-      // Bepaal een willekeurige positie op de pannenkoek die binnen de cirkel ligt
-      function getRandomPositionInCircle() {
-        const pancakeWidth = pancakeEl.offsetWidth;
-        const pancakeHeight = pancakeEl.offsetHeight;
-        const centerX = pancakeWidth / 2;
-        const centerY = pancakeHeight / 2;
-        const maxRadius = (Math.min(pancakeWidth, pancakeHeight) / 2) - 30; // 30px marge
-        
-        let x, y, distance;
-        
-        // Loop totdat we een positie vinden die binnen de cirkel valt
-        do {
-          // Genereer willekeurige positie binnen een vierkant
-          x = Math.random() * pancakeWidth - centerX;
-          y = Math.random() * pancakeHeight - centerY;
+        // Plaats ingrediënten op willekeurige posities binnen de pannenkoek
+        ingredients.forEach(ingredient => {
+          const element = document.createElement('div');
+          element.className = 'game-ingredient';
+          element.textContent = ingredient;
           
-          // Bereken afstand tot het centrum (Pythagoras)
-          distance = Math.sqrt(x * x + y * y);
+          // Bereken de pannenkoek radius (iets kleiner dan werkelijke grootte)
+          const pancakeSize = pancake.offsetWidth;
+          const pancakeRadius = (pancakeSize / 2) - 40; // 40px marge
           
-        } while (distance > maxRadius);
-        
-        // Converteer terug naar absolute posities
-        return {
-          x: centerX + x,
-          y: centerY + y
-        };
-      }
-      
-      // Check of twee ingrediënten elkaar overlappen
-      function checkOverlap(pos1, pos2, minDistance) {
-        const dx = pos1.x - pos2.x;
-        const dy = pos1.y - pos2.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        return distance < minDistance;
-      }
-      
-      // Display ingredients on the pancake
-      function displayPancake() {
-        pancakeEl.innerHTML = ''; // Clear pancake
-        
-        const positions = [];
-        const ingredientSize = difficulty === 'hard' ? 30 : 40; // Grootte van ingredient element
-        const minDistance = ingredientSize * 1.2; // Minimale afstand tussen ingrediënten
-        
-        // Plaats elk ingredient op een willekeurige niet-overlappende positie
-        pancakeIngredients.forEach((ingredient, index) => {
-          let position;
-          let attempts = 0;
-          const maxAttempts = 50; // Maximum aantal pogingen om een niet-overlappende positie te vinden
+          // Willekeurige positie binnen cirkel
+          const angle = Math.random() * Math.PI * 2;
+          const distance = Math.random() * pancakeRadius;
+          const x = 50 + Math.cos(angle) * distance;
+          const y = 50 + Math.sin(angle) * distance;
           
-          // Zoek een positie die niet overlapt met bestaande ingrediënten
-          do {
-            position = getRandomPositionInCircle();
-            attempts++;
-            
-            // Als we te veel pogingen hebben gedaan, accepteer dan de overlap
-            if (attempts > maxAttempts) break;
-            
-          } while (positions.some(pos => checkOverlap(pos, position, minDistance)));
+          element.style.left = `${x}%`;
+          element.style.top = `${y}%`;
           
-          positions.push(position);
+          // Willekeurige rotatie voor speelsheid
+          const rotation = Math.random() * 30 - 15; // -15 tot 15 graden
+          element.style.transform = `rotate(${rotation}deg)`;
           
-          // Maak het ingredient element
-          const ingredientEl = document.createElement('div');
-          ingredientEl.className = 'ingredient';
-          ingredientEl.textContent = ingredient;
-          ingredientEl.dataset.ingredient = ingredient;
-          
-          // Positioneer het ingredient
-          ingredientEl.style.left = `${position.x - (ingredientSize / 2)}px`;
-          ingredientEl.style.top = `${position.y - (ingredientSize / 2)}px`;
-          
-          // Random rotation voor meer speelsheid
-          const rotation = Math.random() * 30 - 15; // -15 to 15 degrees
-          ingredientEl.style.transform = `rotate(${rotation}deg)`;
-          
-          // Add click handler for the ingredient
-          ingredientEl.addEventListener('click', function() {
-            if (gameOver) return;
-            
-            const clickedIngredient = this.dataset.ingredient;
-            handleIngredientClick(clickedIngredient, 'player');
+          // Click handler
+          element.addEventListener('click', () => {
+            handleIngredientClick(ingredient);
           });
           
-          pancakeEl.appendChild(ingredientEl);
+          pancake.appendChild(element);
         });
       }
       
-      // Display the target ingredient
-      function displayTargetIngredient() {
-        targetIngredientEl.textContent = targetIngredient;
-      }
-      
-      // Handle ingredient click
-      function handleIngredientClick(ingredient, clickedBy) {
-        clearTimeout(knofMoveTimeout); // Cancel Knof's pending move if player clicks first
-        
-        if (ingredient === targetIngredient) {
-          // Correct match!
-          if (clickedBy === 'player') {
-            scores.player++;
-            showPointAnimation(pancakeEl, '+1');
-            pancakeEl.classList.add('correct');
-            
-            // Highlight the correct ingredient
-            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
-            if (ingredientEl) {
-              ingredientEl.classList.add('highlighted');
-            }
-            
-            setTimeout(() => {
-              pancakeEl.classList.remove('correct');
-              nextRound();
-            }, 1000);
-          } else {
-            scores.opponent++;
-            showPointAnimation(pancakeEl, '+1');
-            pancakeEl.classList.add('correct');
-            
-            // Highlight the correct ingredient
-            const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${ingredient}"]`);
-            if (ingredientEl) {
-              ingredientEl.classList.add('highlighted');
-            }
-            
-            setTimeout(() => {
-              pancakeEl.classList.remove('correct');
-              nextRound();
-            }, 1000);
-          }
-          
-          updateScores();
-          
-          if (scores.player >= MAX_SCORE || scores.opponent >= MAX_SCORE) {
-            endGame();
-            return;
-          }
-          
-          // Give feedback
-          if (clickedBy === 'player') {
-            if (gameMode === 'vs-knof') {
-              const praises = [
-                "Goed gedaan!", 
-                "Slim!", 
-                "Je bent snel!", 
-                "Super!", 
-                "Je hebt goede ogen!"
-              ];
-              typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
-            }
-          } else if (clickedBy === 'opponent' && gameMode === 'vs-knof') {
-            const knofComments = [
-              "Ha! Die zag ik meteen!", 
-              "Ik was sneller!", 
-              "Dat was makkelijk!", 
-              "Mijn beurt om te scoren!"
-            ];
-            typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
-          }
-        } else {
-          // Incorrect match
-          if (clickedBy === 'player') {
-            pancakeEl.classList.add('wrong');
-            setTimeout(() => {
-              pancakeEl.classList.remove('wrong');
-            }, 500);
-            
-            if (gameMode === 'vs-knof') {
-              const incorrectComments = [
-                "Oeps, dat is niet het juiste ingrediënt!", 
-                "Probeer nog eens!", 
-                "Kijk goed naar welk ingrediënt je moet zoeken!"
-              ];
-              typeSpeechMessage(incorrectComments[Math.floor(Math.random() * incorrectComments.length)]);
-            }
-          }
-        }
-      }
-      
-      // Show +1 point animation
-      function showPointAnimation(element, text) {
-        const pointEl = document.createElement('div');
-        pointEl.className = 'point-animation';
-        pointEl.textContent = text;
-        
-        // Position near the element
-        const rect = element.getBoundingClientRect();
-        const boardRect = document.getElementById('game-board').getBoundingClientRect();
-        
-        pointEl.style.left = (rect.left + rect.width / 2 - boardRect.left) + 'px';
-        pointEl.style.top = (rect.top - boardRect.top) + 'px';
-        
-        document.getElementById('game-board').appendChild(pointEl);
-        
-        // Remove after animation completes
-        setTimeout(() => {
-          pointEl.remove();
-        }, 1000);
-      }
-      
-      // Setup next round
-      function nextRound() {
-        // Clear Knof timeout if it exists
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-        }
-        
-        // If we've reached the end of the rounds, check scores
-        if (currentRound >= ROUNDS_PER_GAME) {
-          if (scores.player !== scores.opponent) {
-            endGame();
-            return;
-          } else {
-            // If tied, go to tie-break round
-            typeSpeechMessage("Gelijkspel! We spelen nog een extra ronde.");
-          }
-        } else {
-          currentRound++;
-        }
-        
-        updateRoundCounter();
-        
-        // Generate new ingredients
-        pancakeIngredients = generateIngredients();
-        
-        // Display the new pancake and target
-        displayPancake();
-        displayTargetIngredient();
-        
-        // Reset and start timer
-        resetTimer();
-        
-        // If playing against Knof, schedule his move
-        if (gameMode === 'vs-knof' && !gameOver) {
-          scheduleKnofMove();
-        }
-      }
-      
-      // Schedule Knof's move based on difficulty
-      function scheduleKnofMove() {
-        const knofDelay = difficultySettings[difficulty].knofDelay;
-        
-        // Random factor for more natural timing (±20%)
-        const randomFactor = 1 + (Math.random() * 0.4 - 0.2);
-        const finalDelay = Math.floor(knofDelay * randomFactor);
-        
-        knofMoveTimeout = setTimeout(() => {
-          if (!gameOver) {
-            // Knof finds the target ingredient
-            handleIngredientClick(targetIngredient, 'opponent');
-          }
-        }, finalDelay);
-      }
-      
-      // Timer functions
       function startTimer() {
-        if (timerInterval) clearInterval(timerInterval);
+        timeLeft = LEVELS[currentLevel].time;
+        timeValue.textContent = timeLeft;
         
-        remainingTime = difficultySettings[difficulty].time;
-        timerCount.textContent = remainingTime;
-        
-        // Reset and restart animation
-        timerCircle.style.animation = 'none';
-        void timerCircle.offsetWidth; // Force reflow
-        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
-        
+        clearInterval(timerInterval);
         timerInterval = setInterval(() => {
-          remainingTime--;
-          timerCount.textContent = remainingTime;
+          timeLeft--;
+          timeValue.textContent = timeLeft;
           
-          if (remainingTime <= 0) {
+          if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            timerTimeUp();
+            showFeedback(false);
+            
+            setTimeout(() => {
+              prepareNextRound();
+            }, 1500);
           }
         }, 1000);
       }
       
-      function pauseTimer() {
+      function handleIngredientClick(clickedIngredient) {
         clearInterval(timerInterval);
         
-        // Pause animation
-        const computedStyle = window.getComputedStyle(timerCircle);
-        const animationProgress = computedStyle.getPropertyValue('transform');
-        timerCircle.style.animation = 'none';
-        timerCircle.style.transform = animationProgress;
-      }
-      
-      function resumeTimer() {
-        // Resume from current time
-        timerCircle.style.animation = `countdown-animation ${remainingTime}s linear 1 forwards`;
-        
-        timerInterval = setInterval(() => {
-          remainingTime--;
-          timerCount.textContent = remainingTime;
-          
-          if (remainingTime <= 0) {
-            clearInterval(timerInterval);
-            timerTimeUp();
-          }
-        }, 1000);
-      }
-      
-      function resetTimer() {
-        clearInterval(timerInterval);
-        remainingTime = difficultySettings[difficulty].time;
-        timerCount.textContent = remainingTime;
-        
-        startTimer();
-      }
-      
-      function timerTimeUp() {
-        // When time runs out, Knof gets a point if playing against Knof
-        if (gameMode === 'vs-knof' && !gameOver) {
-          scores.opponent++;
-          updateScores();
-          
-          // Highlight the target ingredient that was missed
-          highlightTargetIngredient();
-          
-          const timeUpComments = [
-            "Tijd is om! Ik win deze ronde.",
-            "Te langzaam! Ik krijg een punt.",
-            "De tijd is voorbij! Kijk, hier was het ingrediënt."
-          ];
-          typeSpeechMessage(timeUpComments[Math.floor(Math.random() * timeUpComments.length)]);
-          
-          // After a short delay to show the highlighted ingredient, move to next round
-          setTimeout(() => {
-            if (scores.opponent >= MAX_SCORE) {
-              endGame();
-            } else {
-              nextRound();
-            }
-          }, 2000);
+        if (clickedIngredient === currentTarget) {
+          // Correct
+          score++;
+          scoreValue.textContent = score;
+          showFeedback(true);
         } else {
-          // In 2-player mode, nobody gets a point, just go to next round
-          highlightTargetIngredient();
-          typeSpeechMessage("Tijd is op! Niemand krijgt een punt deze ronde.");
-          
-          setTimeout(() => {
-            nextRound();
-          }, 2000);
+          // Incorrect
+          showFeedback(false);
         }
-      }
-      
-      // Highlight the target ingredient when time runs out
-      function highlightTargetIngredient() {
-        // Find and highlight the ingredient on the pancake
-        const ingredientEl = pancakeEl.querySelector(`.ingredient[data-ingredient="${targetIngredient}"]`);
         
-        if (ingredientEl) {
-          ingredientEl.classList.add('highlighted');
-        }
+        setTimeout(() => {
+          prepareNextRound();
+        }, 1500);
       }
       
-      // Update scores
-      function updateScores() {
-        playerScoreEl.textContent = scores.player;
-        opponentScoreEl.textContent = scores.opponent;
-      }
-      
-      // End the game
-      function endGame() {
-        gameOver = true;
-        clearInterval(timerInterval);
+      function showFeedback(correct) {
+        feedbackPopup.textContent = correct ? 'Juist!' : 'Helaas!';
+        feedbackPopup.className = 'feedback-popup ' + (correct ? 'correct' : 'wrong');
+        feedbackPopup.classList.add('show');
         
-        if (scores.player > scores.opponent) {
-          winMessage.textContent = gameMode === 'vs-knof' ? 'Jij wint!' : 'Speler 1 wint!';
-          startConfetti();
-          
-          if (gameMode === 'vs-knof') {
-            typeSpeechMessage("Gefeliciteerd! Je hebt gewonnen! Je bent een echte ingrediënten-expert!");
+        setTimeout(() => {
+          feedbackPopup.classList.remove('show');
+        }, 1500);
+        
+        // Knof feedback via spraak (indien aanwezig)
+        if (typeof typeSpeechMessage === 'function') {
+          if (correct) {
+            const praises = ["Goed gedaan!", "Heel goed!", "Prima!", "Goed zo!"];
+            typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
           } else {
-            typeSpeechMessage("Speler 1 wint het spel! Goed gedaan!");
+            const consolations = ["Jammer!", "Volgende keer beter!", "Helaas!"];
+            typeSpeechMessage(consolations[Math.floor(Math.random() * consolations.length)]);
           }
+        }
+      }
+      
+      function showResults() {
+        gameBoard.style.display = 'none';
+        resultsScreen.style.display = 'flex';
+        
+        finalScore.textContent = `${score} van de ${totalRounds} punten`;
+        
+        // Bepaal bericht op basis van score
+        const percentage = (score / totalRounds) * 100;
+        let message;
+        
+        if (percentage >= 80) {
+          message = "Fantastisch gedaan! Je bent een echte ingrediënten-expert!";
+        } else if (percentage >= 60) {
+          message = "Goed gedaan! Je kent je pannenkoekingrediënten goed!";
+        } else if (percentage >= 40) {
+          message = "Niet slecht! Met wat oefening word je nog beter!";
         } else {
-          winMessage.textContent = gameMode === 'vs-knof' ? 'Knof wint!' : 'Speler 2 wint!';
-          startConfetti();
-          
-          if (gameMode === 'vs-knof') {
-            typeSpeechMessage("Ik heb gewonnen! Maar jij deed het ook heel goed. Wil je nog een keer spelen?");
-          } else {
-            typeSpeechMessage("Speler 2 wint het spel! Gefeliciteerd!");
-          }
+          message = "Blijf oefenen, volgende keer gaat het beter!";
+        }
+        
+        resultsMessage.textContent = message;
+        
+        // Spraakbericht van Knof
+        if (typeof typeSpeechMessage === 'function') {
+          typeSpeechMessage(message);
         }
       }
       
-      // Initialize the game
-      function initializeGame() {
-        // Reset game state
-        gameOver = false;
-        currentRound = 1;
-        updateRoundCounter();
-        
-        // Clear any ongoing timers
-        clearInterval(timerInterval);
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-        }
-        
-        // Generate ingredients for first round
-        pancakeIngredients = generateIngredients();
-        
-        // Display the pancake and target
-        displayPancake();
-        displayTargetIngredient();
-        
-        // Start timer
-        startTimer();
-        
-        // If playing against Knof, schedule his move
-        if (gameMode === 'vs-knof') {
-          scheduleKnofMove();
-        }
-        
-        // Show tutorial on first load
-        if (!localStorage.getItem('ingredientGameTutorialSeen')) {
-          tutorialOverlay.style.display = 'flex';
-          pauseTimer();
-          localStorage.setItem('ingredientGameTutorialSeen', 'true');
-        }
+      function resetGame() {
+        resultsScreen.style.display = 'none';
+        startGame(currentLevel);
       }
       
-      // Start the game
-      initializeGame();
-      updateScores();
-      resizeCanvas();
+      function showLevelSelect() {
+        resultsScreen.style.display = 'none';
+        levelSelectScreen.style.display = 'flex';
+      }
       
-      // Herpositioneer ingrediënten bij resize
-      window.addEventListener('resize', function() {
-        if (!gameOver) {
-          displayPancake();
-        }
-      });
-      
-      // Event listener for tutorial close button
-      tutorialClose.addEventListener('click', function() {
-        tutorialOverlay.style.display = 'none';
-        resumeTimer();
-      });
+      // Begin met niveau selectie
+      showLevelSelect();
     });
   </script>
 </body>
