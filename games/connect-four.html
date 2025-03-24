@@ -119,39 +119,39 @@
       padding: 10px;
     }
 
+    .player-heading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
     .score-card {
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 100px;
     }
 
     .score-card h3 {
-      margin: 0 0 5px 0;
+      margin: 0;
       font-size: 1.1rem;
     }
 
     .score-card p {
-      margin: 0;
+      margin: 5px 0 0 0;
       font-size: 1.4rem;
       font-weight: bold;
     }
 
-    .turn-indicator {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .player-indicator {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
-
     .player-icon {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: inline-block;
       position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .player-icon.player1-piece::after, 
@@ -186,6 +186,14 @@
       box-shadow: 0 0 10px rgba(255,165,0,0.7);
     }
 
+    .turn-indicator {
+      display: none;
+    }
+
+    .player-indicator {
+      display: none;
+    }
+
     .win-message {
       font-size: 1.6rem;
       color: #4B0082;
@@ -202,14 +210,15 @@
     }
 
     .game-button {
-      padding: 12px 20px;
+      padding: 10px 15px;
       background-color: #A5BBFF;
       border: 2px solid #7A97FF;
       border-radius: 10px;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: transform 0.2s;
       filter: url(#rough-filter);
+      min-width: 80px;
     }
 
     .game-button:hover {
@@ -273,24 +282,25 @@
       <div class="game-info">
         <div class="score-board">
           <div class="score-card" id="player-score-card">
-            <h3 id="player1-name">Speler 1</h3>
+            <div class="player-heading">
+              <h3 id="player1-name">Jij</h3>
+              <div class="player-icon player1-piece" id="player1-indicator"></div>
+            </div>
             <p id="player-score">0</p>
           </div>
           <div class="score-card" id="opponent-score-card">
-            <h3 id="opponent-name">Knof</h3>
+            <div class="player-heading">
+              <h3 id="opponent-name">Knof</h3>
+              <div class="player-icon knof-piece" id="player2-indicator"></div>
+            </div>
             <p id="opponent-score">0</p>
           </div>
-        </div>
-        <div class="turn-indicator">Nu aan de beurt:</div>
-        <div class="player-indicator">
-          <div class="player-icon player1-piece active-player" id="player1-indicator"></div>
-          <div class="player-icon knof-piece" id="player2-indicator"></div>
         </div>
         <div class="win-message" id="win-message"></div>
         <div class="buttons-container">
           <button class="game-button" id="restart-button">Nieuw spel</button>
-          <button class="game-button" id="reset-scores">Reset scores</button>
-          <button class="game-button" id="back-button">Terug naar opties</button>
+          <button class="game-button" id="reset-scores">Reset</button>
+          <button class="game-button" id="back-button">Opties</button>
         </div>
       </div>
     </div>
