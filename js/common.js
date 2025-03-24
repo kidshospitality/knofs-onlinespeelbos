@@ -189,8 +189,20 @@ function initBottomNav() {
   
   const placematIcon = document.getElementById('placemat-icon');
   if (placematIcon) {
-    placematIcon.addEventListener('click', () => {
-      window.location.href = '/placemat.html';
+    placematIcon.addEventListener('click', (e) => {
+      e.preventDefault(); // Voorkom de standaard navigatie
+      
+      // Toon de popup in plaats van naar een andere pagina te navigeren
+      const popup = document.getElementById('popup-message');
+      if (popup) {
+        popup.style.display = 'flex';
+        
+        // Toon ook een leuk bericht van Knof
+        typeSpeechMessage("Oeps! De placemat-functie ligt nog in de oven!");
+      } else {
+        // Fallback in geval de popup niet bestaat op deze pagina
+        alert("Deze functie wordt nog gebakken, kom snel terug! 🧁");
+      }
     });
   }
   
