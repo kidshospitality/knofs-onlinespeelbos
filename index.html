@@ -101,6 +101,14 @@
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
 
+  <!-- Popup melding -->
+  <div id="popup-message" class="popup">
+    <div class="popup-content">
+      <span class="close-popup">&times;</span>
+      <p>Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/common.js"></script>
   <script>
@@ -140,11 +148,27 @@
       });
       
       document.getElementById('placemat-section').addEventListener('click', () => {
-        window.location.href = 'placemat.html';
+        // Toon de popup in plaats van naar een andere pagina te navigeren
+        document.getElementById('popup-message').style.display = 'block';
+        
+        // Toon ook een leuk bericht van Knof
+        typeSpeechMessage("Oeps! De placemat ligt nog in de oven. Kom snel weer terug!");
       });
       
       document.getElementById('chat-section').addEventListener('click', () => {
         window.location.href = 'chat.html';
+      });
+      
+      // Popup sluiten wanneer op het X icoontje wordt geklikt
+      document.querySelector('.close-popup').addEventListener('click', function() {
+        document.getElementById('popup-message').style.display = 'none';
+      });
+      
+      // Popup sluiten wanneer ergens anders wordt geklikt
+      window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('popup-message')) {
+          document.getElementById('popup-message').style.display = 'none';
+        }
       });
     });
   </script>
