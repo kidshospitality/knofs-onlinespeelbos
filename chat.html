@@ -8,158 +8,6 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
-  <style>
-    /* Reset - iOS Safari Fix */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      position: fixed;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: none;
-      background-color: transparent !important;
-    }
-    
-    /* Custom viewport height variable voor betere iOS ondersteuning */
-    :root {
-      --vh: 1vh;
-    }
-    
-    /* App container - Volledig scherm */
-    .app-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 65px; /* Verhoogd voor betere spacing */
-      display: flex;
-      flex-direction: column;
-      background-color: transparent !important;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-      height: calc(100% - 65px); /* Aangepast */
-      margin: 0 !important; /* Verwijder eventuele marges */
-      padding: 0 !important; /* Verwijder eventuele padding */
-    }
-    
-    /* Style voor de chatbot container */
-    .chatbot-wrapper {
-      flex: 1;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-      background-color: transparent !important;
-      display: flex;
-      flex-direction: column;
-      border: none !important; /* Verwijder alle borders */
-    }
-    
-    /* Bottom navigation fix */
-    #bottom-nav-container {
-      flex-shrink: 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 999; /* Hogere z-index */
-      height: 50px;
-      display: flex !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-    }
-    
-    /* Top navigation volledig verbergen */
-    #top-nav-container {
-      display: none !important;
-      height: 0 !important;
-      position: absolute !important;
-      visibility: hidden !important;
-      z-index: -999 !important;
-      pointer-events: none !important;
-    }
-    
-    /* SVG filters niet laten storen */
-    .svg-filters {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-    
-    /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
-    .bottom-buffer-zone {
-      position: fixed;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-      height: 20px; /* Verhoogd van 15px naar 20px */
-      background-color: transparent;
-      z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
-      pointer-events: none; /* Zodat het niet interactief is */
-    }
-    
-    /* Pickaxe chatbot stijl */
-    #pickaxe-inline-Knof_de_Pad_0BLW7 {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: block;
-      border: none !important; /* Verwijder alle borders */
-    }
-    
-    /* Overschrijf de chat-container stijlen uit style.css */
-    .chat-container {
-      border: none !important;
-      filter: none !important;
-      box-shadow: none !important;
-      background-color: transparent !important;
-    }
-    
-    /* Verwijder alle randen van Pickaxe elementen */
-    #pickaxe-inline-Knof_de_Pad_0BLW7 * {
-      border: none !important;
-      box-shadow: none !important;
-    }
-    
-    /* Verberg eventuele andere borders in geneste elementen */
-    .app-container * {
-      border: none !important;
-    }
-    
-    /* Gebruik negatieve CSS-reset voor borders in de chatbot */
-    [class*="chat"], [class*="message"], [class*="bubble"], 
-    [class*="container"], [class*="panel"], [class*="box"], 
-    [class*="input"], [class*="wrapper"] {
-      border: none !important;
-      box-shadow: none !important;
-    }
-    
-    /* Verhoog de positie van het inputveld */
-    [class*="pickaxe-input-container"],
-    [class*="input-container"],
-    [class*="message-input-container"],
-    [class*="textarea-container"],
-    [id*="input-container"] {
-      margin-bottom: 30px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
-      position: relative !important;
-      bottom: 40px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
-      padding-bottom: 20px !important;
-    }
-    
-    /* Zorg ervoor dat de verstuurknop ook mee omhoog gaat */
-    [class*="send-button"],
-    [class*="submit-button"],
-    button[type="submit"] {
-      position: relative !important;
-      bottom: 20px !important; /* Zelfde waarde als hierboven */
-    }
-  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -176,122 +24,22 @@
     </defs>
   </svg>
 
-  <!-- Container voor top navigatie (nu verborgen) -->
+  <!-- Container voor top navigatie -->
   <div id="top-nav-container"></div>
 
   <!-- Settings modal container -->
   <div id="settings-modal-container"></div>
 
-  <!-- Hoofdcontent - Chat met Pickaxe chatbot -->
+  <!-- Hoofdcontent -->
   <div class="app-container">
-    <div id="chatbot-wrapper" class="chatbot-wrapper">
-      <!-- Pickaxe chatbot -->
-      <div id="pickaxe-inline-Knof_de_Pad_0BLW7"></div>
-    </div>
+    <div id="pickaxe-inline-Knof_de_Pad_0BLW7"></div>
   </div>
 
-  <!-- Extra buffer zone boven de bottom nav -->
-  <div class="bottom-buffer-zone"></div>
-
-  <!-- Container voor bottom navigatie - hoge z-index -->
+  <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
 
   <!-- Scripts -->
   <script src="js/common.js"></script>
-  
-  <!-- Extra script om top-nav te verbergen en maximale ruimte voor chat -->
-  <script>
-    // Zorg ervoor dat de top-nav echt verborgen blijft, zelfs als common.js deze probeert te laden
-    document.addEventListener('DOMContentLoaded', function() {
-      // iOS viewpoorthoogte fix
-      function setViewportHeight() {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-      }
-      
-      // Pas viewport hoogte aan bij laden en resize
-      setViewportHeight();
-      window.addEventListener('resize', setViewportHeight);
-      window.addEventListener('orientationchange', function() {
-        setTimeout(setViewportHeight, 300);
-      });
-      
-      // Verberg top-nav met dwingende stijlen
-      function forceHideTopNav() {
-        const topNav = document.getElementById('top-nav-container');
-        if (topNav) {
-          topNav.style.cssText = `
-            display: none !important;
-            height: 0 !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            position: absolute !important;
-            z-index: -999 !important;
-            pointer-events: none !important;
-            width: 0 !important;
-            overflow: hidden !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          `;
-          
-          // Verwijder eventuele inhoud
-          topNav.innerHTML = '';
-        }
-        
-        // Forceer app-container om vanaf bovenkant te beginnen
-        const appContainer = document.querySelector('.app-container');
-        if (appContainer) {
-          appContainer.style.top = '0';
-          appContainer.style.paddingTop = '0';
-          appContainer.style.marginTop = '0';
-        }
-        
-        // Forceer bottom nav zichtbaarheid
-        const bottomNav = document.getElementById('bottom-nav-container');
-        if (bottomNav) {
-          bottomNav.style.cssText = `
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 999 !important;
-            height: 50px !important;
-          `;
-        }
-      }
-      
-      // Verwijder alle randen van chatinterface elementen
-      function removeBorders() {
-        // Direct op pickaxe container
-        const pickaxeContainer = document.getElementById('pickaxe-inline-Knof_de_Pad_0BLW7');
-        if (pickaxeContainer) {
-          pickaxeContainer.style.border = 'none';
-          pickaxeContainer.style.boxShadow = 'none';
-          pickaxeContainer.style.borderRadius = '0';
-        }
-        
-        // Zoek alle elementen die mogelijk borders hebben
-        const borderElements = document.querySelectorAll('[class*="chat"], [class*="message"], [class*="bubble"], [class*="container"], [class*="panel"], [class*="box"], [class*="input"], [class*="wrapper"]');
-        borderElements.forEach(element => {
-          element.style.border = 'none';
-          element.style.boxShadow = 'none';
-        });
-      }
-      
-      // Voer direct uit en blijf controleren
-      forceHideTopNav();
-      setInterval(forceHideTopNav, 1000);
-      
-      // Wacht tot Pickaxe is geladen en verwijder dan borders
-      setTimeout(removeBorders, 1000);
-      setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
-    });
-  </script>
-  
-  <!-- Pickaxe Chatbot Script -->
   <script>window.PICKAXE=window.PICKAXE||{pickaxes:[],style:"kHsjoCQGgI0GWASmgIdIAxiDA6wgM6CMbgC4UgDDAXYEAvDIBoGEBgG4CAWQIGYBgwCqApdoEjggjIaCcCoCA9gGzOBUToIQygtAyDw4IGoGgCkxAAC6AQCsAAD4BILgJ6AkV0ALDQAFA+YiAkjEDFLoEEywHkKgMCHAzVmBfPMBUIIAaXQC7ggIDFAilWBXGkAmVIFVJQAAigIDBAQvSAJLkAKIgHZAAGqAxiOAFRCArgmAQjSADFiACCIASoAACIBA+oAAeoBI8IAdGIAgEYAmCYAqaYAuIYA3M4A/O4BGJYAJTYBCFoAQfIAlcoCDKYBBaoA9boB3QYA7T4B8SYCFgYCJYYAAI4AwaoA5j4Alk4BQroBPS4BUVYCDn4BjX4CNZ4CzNYBFc4AJvYAqLoAYTIBIkoAUDIDVUIAAzYAA4oDgM4AuWE6AAWyAAuiAAxGAgYyAEH+ALAqAo8AAxYAWK4AcKoACgIBSkEARqCAAAxABdIgEIuwAAAYAhQsAmYOAEIWAOiAAILAAMggENAQAJl4AXBsAKQ6ACBJAKJxgEWCQA3GIB88UAchiAZNJAABigDw2QBQ0YBiiMARAaALUTANJugGRoQCncYAIJEATySAMS1AMIJgAKiQAbA4AOLEASa2AFKBAJ1TgE+QQDztoAUtMAryiADQTAGhogEigQAAsIA9nsAMKCAIuTAMZkgAUQQAABoA+Qn+gAIoAAHgEjAQC+SoAFMsAZa4AHEAAoSAGA1AAAkgAY/QAM2YAahUA/JuAYBTAKGrgEJNwCCv4BNhMAYTGAQsBAFBegFRqQAIAYBTUUA9NKAaHPAOpTgEHUwDZHIAu+EAKMyAHmlAOCUgHurwB2boBVDMAeSyAIYrAGMxgBcoQBVu4BNXsAlBWADThAGBLgAhAQDIRIB4KEAicOAG4vADc+gCF8wAb5YAazEAA5+APRbAC0vgF4mQCEEoAATEAjWCATULACK2gBr+QCCCoBABEANQuAK/RAKZJgDEsYAhWuABCLgBeGIAJOmAGK/gDRMgAv4ALPiAIRBgBeFIACcqABrCgDSW4AhQGAFKbgAABEAA="},window.PICKAXE.pickaxes.push({id:"Knof_de_Pad_0BLW7",type:"inline"});const{id:_fid}=window.PICKAXE.pickaxes[0];fetch(`https://embed.pickaxeproject.com/axe/api/script/${_fid}`).then((e=>e.json())).then((({v:e})=>{const t=`https://cdn.jsdelivr.net/gh/pickaxeproject/cdn@${e}/dist`;if(!document.querySelector(`script[src="${t}/bundle.js"]`)){const e=document.createElement("script");e.src=t+"/bundle.js",e.defer=!0,document.head.appendChild(e)}}));</script>
 </body>
 </html>
