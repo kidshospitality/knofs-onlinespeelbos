@@ -179,12 +179,12 @@
   <svg class="svg-filters">
     <defs>
       <filter id="rough-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
       <filter id="squiggly-filter">
-        <feTurbulence type="turbulence" baseFrequency="0.01" numOctaves="3" result="turbulence" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="3" />
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
       </filter>
     </defs>
   </svg>
