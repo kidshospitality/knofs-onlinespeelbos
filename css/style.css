@@ -958,6 +958,60 @@ body {
   transform: translateY(-2px);
 }
 
+/* Popup stijlen */
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+  background-color: #F8F6E9;
+  margin: 40% auto;
+  padding: 20px;
+  border: 2px solid #70543E;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 15px;
+  text-align: center;
+  position: relative;
+  filter: url(#rough-filter);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 1.2rem;
+  font-family: 'Patrick Hand', 'Architects Daughter', cursive;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.close-popup {
+  color: #70543E;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.close-popup:hover {
+  transform: scale(1.2);
+}
+
+.popup-content p {
+  margin-top: 10px;
+  color: #4B0082;
+  font-size: 1.4rem;
+}
+
 /* Media query voor kleine schermen */
 @media (max-width: 480px) {
   .top-nav-bar {
@@ -1027,5 +1081,11 @@ body {
   
   .message-content {
     max-width: 85%;
+  }
+  
+  .popup-content {
+    margin: 50% auto;
+    padding: 15px;
+    width: 90%;
   }
 }
