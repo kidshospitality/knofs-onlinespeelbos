@@ -32,6 +32,31 @@
       margin-bottom: 10px;
     }
 
+    .knof-challenge {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      background-color: #FFE4B5;
+      padding: 15px;
+      border-radius: 15px;
+      filter: url(#rough-filter);
+      border: 3px solid #FF9A5A;
+      max-width: 500px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .knof-image {
+      width: 80px;
+      height: 80px;
+      margin-right: 15px;
+    }
+
+    .knof-message {
+      text-align: left;
+      font-size: 1.2rem;
+      color: #7A4127;
+    }
+
     .level-buttons {
       display: flex;
       gap: 15px;
@@ -50,11 +75,15 @@
       transition: all 0.3s;
       filter: url(#rough-filter);
       min-width: 140px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .level-button:hover {
       transform: translateY(-5px);
       background-color: #FFD6A5;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
 
     .level-button.easy {
@@ -62,14 +91,38 @@
       border-color: #8BCC8B;
     }
 
+    .level-button.easy:before {
+      content: '🥄';
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
     .level-button.medium {
       background-color: #FFD6A5;
       border-color: #FFBA76;
     }
 
+    .level-button.medium:before {
+      content: '🍴';
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
     .level-button.hard {
       background-color: #FFA5A5;
       border-color: #FF7676;
+    }
+
+    .level-button.hard:before {
+      content: '🔥';
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     /* Countdown scherm */
@@ -164,6 +217,36 @@
       border: 2px solid #FF9A5A;
     }
 
+    .scores-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .player-score, .knof-score {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #FFE4B5;
+      padding: 10px 20px;
+      border-radius: 10px;
+      filter: url(#rough-filter);
+      border: 2px solid #FF9A5A;
+      min-width: 100px;
+    }
+
+    .score-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #7A4127;
+    }
+
+    .score-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
     .pancake-container {
       position: relative;
       width: 100%;
@@ -251,6 +334,7 @@
 
     .game-ingredient:hover {
       transform: scale(1.2);
+      z-index: 5;
     }
 
     .game-ingredient:active {
@@ -259,6 +343,7 @@
 
     .game-ingredient.highlighted {
       animation: highlight-pop 0.5s forwards;
+      z-index: 10;
     }
 
     @keyframes highlight-pop {
@@ -294,17 +379,53 @@
       margin-bottom: 20px;
     }
 
-    .results-score {
-      font-size: 3rem;
+    .final-scores {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .final-player-score, .final-knof-score {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #FFE4B5;
+      padding: 15px 25px;
+      border-radius: 15px;
+      filter: url(#rough-filter);
+      border: 3px solid #FF9A5A;
+      min-width: 120px;
+    }
+
+    .final-score-name {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #7A4127;
+    }
+
+    .final-score-value {
+      font-size: 2rem;
       font-weight: bold;
       color: #FF9A5A;
-      margin-bottom: 30px;
+    }
+
+    .winner-banner {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .results-message {
       font-size: 1.3rem;
       margin-bottom: 30px;
       text-align: center;
+      max-width: 600px;
     }
 
     /* Buttons */
@@ -323,12 +444,14 @@
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.3s;
       filter: url(#rough-filter);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
 
     .game-button:hover {
       transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.15);
     }
 
     /* Feedback popup */
@@ -399,6 +522,13 @@
       line-height: 1.5;
     }
 
+    .vs-decoration {
+      font-size: 1.5rem;
+      margin: 0 10px;
+      color: #FF9A5A;
+      font-weight: bold;
+    }
+
     /* Canvas voor confetti effect */
     #confetti-canvas {
       position: fixed;
@@ -408,6 +538,23 @@
       height: 100%;
       pointer-events: none;
       z-index: 1000;
+    }
+
+    /* Round counter */
+    .round-display {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #FF9A5A;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      filter: url(#rough-filter);
+      border: 2px solid #F27D30;
+      z-index: 5;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
 
     /* Media queries voor responsiveness */
@@ -432,6 +579,16 @@
       .level-button {
         padding: 10px 20px;
         font-size: 1.1rem;
+        min-width: 120px;
+      }
+
+      .knof-image {
+        width: 60px;
+        height: 60px;
+      }
+
+      .knof-message {
+        font-size: 1.1rem;
       }
       
       .tutorial-content h2 {
@@ -440,6 +597,14 @@
       
       .tutorial-content p {
         font-size: 1.1rem;
+      }
+
+      .final-scores {
+        gap: 20px;
+      }
+
+      .winner-banner {
+        font-size: 2rem;
       }
     }
 
@@ -466,6 +631,27 @@
         font-size: 1rem;
         min-width: 110px;
       }
+
+      .level-button:before {
+        display: none;
+      }
+
+      .knof-challenge {
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      .knof-image {
+        width: 50px;
+        height: 50px;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      .knof-message {
+        text-align: center;
+        font-size: 1rem;
+      }
       
       .tutorial-content h2 {
         font-size: 1.4rem;
@@ -473,6 +659,21 @@
       
       .tutorial-content p {
         font-size: 1rem;
+      }
+
+      .final-scores {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .winner-banner {
+        font-size: 1.7rem;
+      }
+
+      .scores-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
       }
     }
   </style>
@@ -503,7 +704,15 @@
     <div class="game-container">
       <!-- Niveau selectie scherm -->
       <div class="level-select-screen" id="level-select-screen">
-        <div class="level-title">Kies een niveau</div>
+        <div class="level-title">Ingrediënten Zoeken</div>
+        
+        <div class="knof-challenge">
+          <img src="../images/knof.png" alt="Knof" class="knof-image">
+          <div class="knof-message">
+            "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Kies maar hoe moeilijk je het wilt maken!"
+          </div>
+        </div>
+        
         <div class="level-buttons">
           <div class="level-button easy" id="easy-level">Makkelijk</div>
           <div class="level-button medium" id="medium-level">Normaal</div>
@@ -529,11 +738,23 @@
 
       <!-- Game board -->
       <div class="game-board" id="game-board">
-        <div class="score-info">
-          <div class="score-display">Score: <span id="score-value">0</span></div>
-          <div class="time-display">Tijd: <span id="time-value">30</span></div>
+        <div class="scores-container">
+          <div class="player-score">
+            <div class="score-name">Jij</div>
+            <div class="score-value" id="player-score">0</div>
+          </div>
+          <div class="vs-decoration">VS</div>
+          <div class="knof-score">
+            <div class="score-name">Knof</div>
+            <div class="score-value" id="knof-score">0</div>
+          </div>
         </div>
+        
         <div class="pancake-container">
+          <div class="round-display" id="round-display">Ronde 1/10</div>
+          <div class="time-display" style="position: absolute; top: 10px; right: 10px;">
+            Tijd: <span id="time-value">30</span>
+          </div>
           <div class="pancake" id="pancake">
             <!-- Ingrediënten worden hier dynamisch toegevoegd -->
           </div>
@@ -542,8 +763,21 @@
 
       <!-- Resultaten scherm -->
       <div class="results-screen" id="results-screen">
-        <div class="results-title">Resultaat</div>
-        <div class="results-score" id="final-score">0 punten</div>
+        <div class="results-title">Eindstand</div>
+        <div class="winner-banner" id="winner-banner">Jij wint!</div>
+        
+        <div class="final-scores">
+          <div class="final-player-score">
+            <div class="final-score-name">Jij</div>
+            <div class="final-score-value" id="final-player-score">0</div>
+          </div>
+          <div class="vs-decoration">VS</div>
+          <div class="final-knof-score">
+            <div class="final-score-name">Knof</div>
+            <div class="final-score-value" id="final-knof-score">0</div>
+          </div>
+        </div>
+        
         <div class="results-message" id="results-message">Goed gedaan!</div>
         <div class="button-container">
           <button class="game-button" id="play-again-button">Speel opnieuw</button>
@@ -560,10 +794,10 @@
   <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
     <div class="tutorial-content">
       <h2>Hoe speel je Ingrediënten Zoeken?</h2>
-      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek!</p>
+      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek voordat Knof het vindt!</p>
       <div style="margin: 20px 0;">
         <img src="../images/ingredient-example.png" alt="Voorbeeld" style="max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px;">
-        <p>Klik op het juiste ingrediënt voordat de tijd om is of Knof het vindt!<br>De snelste speler wint!</p>
+        <p>Wie het eerst 10 punten heeft is de winnaar. Elke ronde moet je zoeken naar een ander ingrediënt!</p>
       </div>
       <button class="game-button" id="tutorial-close">Begrepen!</button>
     </div>
@@ -590,9 +824,13 @@
       const displayTarget = document.getElementById('display-target');
       const ingredientDisplay = document.getElementById('ingredient-display');
       const pancake = document.getElementById('pancake');
-      const scoreValue = document.getElementById('score-value');
+      const playerScoreEl = document.getElementById('player-score');
+      const knofScoreEl = document.getElementById('knof-score');
       const timeValue = document.getElementById('time-value');
-      const finalScore = document.getElementById('final-score');
+      const roundDisplay = document.getElementById('round-display');
+      const finalPlayerScore = document.getElementById('final-player-score');
+      const finalKnofScore = document.getElementById('final-knof-score');
+      const winnerBanner = document.getElementById('winner-banner');
       const resultsMessage = document.getElementById('results-message');
       
       const easyLevelButton = document.getElementById('easy-level');
@@ -605,11 +843,15 @@
       
       // Game variabelen
       const INGREDIENTS = [
-        '🍓', '🍌', '🍫', '🍯', '🧀', '🍎', '🍊', '🥞', 
-        '🍒', '🍋', '🥥', '🍦', '🍪', '🍰', '🍧', '🍩', 
-        '🥜', '🍇', '🍬', '🍭', '🍈', '🥭', '🍑', '🍍', 
-        '🍉', '🍐', '🧁', '🍨', '🥐', '🧈'
+        '🍓', '🍌', '🍫', '🍯', '🧀', // Aardbeien, banaan, chocolade, honing, kaas
+        '🍎', '🍊', '🍒', '🍋', '🥥', // Appel, sinaasappel, kersen, citroen, kokos
+        '🍦', '🍪', '🍰', '🥞', '🧈', // IJs, koekjes, taart, pannenkoeken, boter
+        '🍨', '🥐', '🍯', '🍊', '🍒', // Roomijs, croissant, honing, sinaasappel, kersen
+        '🫐', '🍑', '🧁', '🍫', '🍯', // Bosbessen, perzik, cupcake, chocolade, honing
+        '🥜', '🍇', '🍬', '🍭', '🌰'  // Pinda's, druiven, snoep, lolly, kastanje
       ];
+      
+      const MAX_SCORE = 10; // Wie als eerste 10 punten heeft, wint
       
       const LEVELS = {
         easy: { count: 5, rounds: 10, time: 30, knofDelay: 5000 },
@@ -620,11 +862,11 @@
       let currentLevel = 'easy';
       let currentRound = 0;
       let totalRounds = 10;
-      let score = 0;
+      let playerScore = 0;
+      let knofScore = 0;
       let timeLeft = 0;
       let timerInterval = null;
       let currentTarget = null;
-      let gameMode = '';
       let knofMoveTimeout = null;
       let gameActive = false;
       let interactionBlocked = false;
@@ -632,10 +874,6 @@
       let confettiActive = false;
       let confettiAnimationId = null;
       let isFirstPlay = !localStorage.getItem('ingredientGameTutorialSeen');
-      
-      // URL parameters for game mode
-      const urlParams = new URLSearchParams(window.location.search);
-      gameMode = urlParams.get('mode') || 'vs-knof';
       
       // Event listeners
       easyLevelButton.addEventListener('click', () => startGame('easy'));
@@ -724,8 +962,10 @@
         currentLevel = level;
         totalRounds = LEVELS[level].rounds;
         currentRound = 0;
-        score = 0;
-        scoreValue.textContent = score;
+        playerScore = 0;
+        knofScore = 0;
+        playerScoreEl.textContent = playerScore;
+        knofScoreEl.textContent = knofScore;
         gameActive = true;
         
         // Verberg niveau selectie
@@ -756,10 +996,13 @@
       function prepareNextRound() {
         currentRound++;
         
-        if (currentRound > totalRounds) {
+        if (currentRound > totalRounds || playerScore >= MAX_SCORE || knofScore >= MAX_SCORE) {
           showResults();
           return;
         }
+        
+        // Update rondeteller
+        roundDisplay.textContent = `Ronde ${currentRound}/${totalRounds}`;
         
         // Selecteer ingrediënten voor deze ronde
         const shuffled = shuffleArray(INGREDIENTS);
@@ -874,10 +1117,8 @@
           }
         }, 1000);
         
-        // Schedule Knof's move if playing against Knof
-        if (gameMode === 'vs-knof') {
-          scheduleKnofMove();
-        }
+        // Schedule Knof's move
+        scheduleKnofMove();
       }
       
       function scheduleKnofMove() {
@@ -908,9 +1149,9 @@
         clearInterval(timerInterval);
         
         if (clickedIngredient === currentTarget) {
-          // Correct
-          score++;
-          scoreValue.textContent = score;
+          // Correct - speler krijgt een punt
+          playerScore++;
+          playerScoreEl.textContent = playerScore;
           showFeedback(true);
           
           // Highlight correct ingredient
@@ -928,9 +1169,19 @@
               "Goed gedaan!", 
               "Heel goed!", 
               "Prima!", 
-              "Goed zo!"
+              "Goed zo!",
+              "Je bent snel!",
+              "Dat had ik bijna gevonden!"
             ];
             typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+          }
+          
+          // Controleer of de speler heeft gewonnen
+          if (playerScore >= MAX_SCORE) {
+            setTimeout(() => {
+              showResults();
+            }, 1500);
+            return;
           }
         } else {
           // Incorrect
@@ -947,7 +1198,8 @@
             const consolations = [
               "Jammer!", 
               "Helaas, dat is niet het juiste ingrediënt!", 
-              "Probeer het nog eens!"
+              "Probeer het nog eens!",
+              "Niet het juiste ingrediënt, kijk goed!"
             ];
             typeSpeechMessage(consolations[Math.floor(Math.random() * consolations.length)]);
           }
@@ -965,11 +1217,21 @@
         
         clearInterval(timerInterval);
         
-        // Knof finds the target
+        // Knof vindt het doelwit en krijgt een punt
+        knofScore++;
+        knofScoreEl.textContent = knofScore;
+        
+        // Highlight correct ingredient
         highlightIngredient(currentTarget);
         
         // Show Knof feedback
         showFeedback("Knof was sneller!");
+        
+        // Animate pancake
+        pancake.classList.add('correct');
+        setTimeout(() => {
+          pancake.classList.remove('correct');
+        }, 500);
         
         // Knof feedback via spraak
         if (typeof typeSpeechMessage === 'function') {
@@ -977,16 +1239,20 @@
             "Ha! Die zag ik meteen!", 
             "Ik was sneller!", 
             "Gevonden!",
-            "Daar is het ingrediënt!"
+            "Daar is het ingrediënt!",
+            "Ik heb een punt!",
+            "Dat was snel van mij!"
           ];
           typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
         }
         
-        // Animate pancake
-        pancake.classList.add('correct');
-        setTimeout(() => {
-          pancake.classList.remove('correct');
-        }, 500);
+        // Controleer of Knof heeft gewonnen
+        if (knofScore >= MAX_SCORE) {
+          setTimeout(() => {
+            showResults();
+          }, 1500);
+          return;
+        }
         
         setTimeout(() => {
           interactionBlocked = false;
@@ -998,6 +1264,10 @@
         if (interactionBlocked) return;
         interactionBlocked = true;
         
+        // Als de tijd om is, krijgt Knof een punt
+        knofScore++;
+        knofScoreEl.textContent = knofScore;
+        
         // Highlight the target ingredient
         highlightIngredient(currentTarget);
         
@@ -1005,7 +1275,21 @@
         showFeedback("Tijd is op!");
         
         if (typeof typeSpeechMessage === 'function') {
-          typeSpeechMessage("Tijd is op! Het ingrediënt was " + currentTarget);
+          const timeupComments = [
+            "Tijd is op! Ik krijg een punt!",
+            "Te langzaam! Dat is een punt voor mij!",
+            "Tijd is om! Het ingrediënt was " + currentTarget,
+            "Je bent niet snel genoeg! Ik win deze ronde!"
+          ];
+          typeSpeechMessage(timeupComments[Math.floor(Math.random() * timeupComments.length)]);
+        }
+        
+        // Controleer of Knof heeft gewonnen
+        if (knofScore >= MAX_SCORE) {
+          setTimeout(() => {
+            showResults();
+          }, 1500);
+          return;
         }
         
         setTimeout(() => {
@@ -1042,22 +1326,32 @@
         resultsScreen.style.display = 'flex';
         gameActive = false;
         
-        finalScore.textContent = `${score} van de ${totalRounds} punten`;
+        // Stop any active timers
+        clearInterval(timerInterval);
+        if (knofMoveTimeout) {
+          clearTimeout(knofMoveTimeout);
+          knofMoveTimeout = null;
+        }
         
-        // Bepaal bericht op basis van score
-        const percentage = (score / totalRounds) * 100;
+        // Update scores on results screen
+        finalPlayerScore.textContent = playerScore;
+        finalKnofScore.textContent = knofScore;
+        
+        // Determine and display winner
         let message;
-        
-        if (percentage >= 80) {
-          message = "Fantastisch gedaan! Je bent een echte ingrediënten-expert!";
+        if (playerScore > knofScore) {
+          winnerBanner.textContent = "Jij wint! 🎉";
+          winnerBanner.style.color = "#4CAF50";
+          message = "Gefeliciteerd! Je bent een echte ingrediënten-expert! Je hebt Knof verslagen!";
           startConfetti();
-        } else if (percentage >= 60) {
-          message = "Goed gedaan! Je kent je pannenkoekingrediënten goed!";
-          startConfetti();
-        } else if (percentage >= 40) {
-          message = "Niet slecht! Met wat oefening word je nog beter!";
+        } else if (knofScore > playerScore) {
+          winnerBanner.textContent = "Knof wint! 🏆";
+          winnerBanner.style.color = "#FF9A5A";
+          message = "Helaas, Knof was deze keer sneller. Probeer het nog eens!";
         } else {
-          message = "Blijf oefenen, volgende keer gaat het beter!";
+          winnerBanner.textContent = "Gelijkspel! 🤝";
+          winnerBanner.style.color = "#7A97FF";
+          message = "Jullie zijn aan elkaar gewaagd! Het is een gelijkspel geworden.";
         }
         
         resultsMessage.textContent = message;
@@ -1081,6 +1375,14 @@
         countdownScreen.style.display = 'none';
         levelSelectScreen.style.display = 'flex';
         stopConfetti();
+        
+        // Reset game state
+        gameActive = false;
+        clearInterval(timerInterval);
+        if (knofMoveTimeout) {
+          clearTimeout(knofMoveTimeout);
+          knofMoveTimeout = null;
+        }
       }
       
       // Utility functions
@@ -1104,7 +1406,7 @@
       // Welkom bericht
       if (typeof typeSpeechMessage === 'function') {
         setTimeout(() => {
-          typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Kies een niveau om te beginnen.");
+          typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Ik daag je uit om tegen mij te spelen. Kies een niveau om te beginnen.");
         }, 500);
       }
       
