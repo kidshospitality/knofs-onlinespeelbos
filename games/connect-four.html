@@ -300,7 +300,7 @@
         <div class="buttons-container">
           <button class="game-button" id="restart-button">Nieuw spel</button>
           <button class="game-button" id="reset-scores">Reset</button>
-          <button class="game-button" id="back-button">Opties</button>
+          <button class="game-button" id="back-button">Terug</button>
         </div>
       </div>
     </div>
@@ -457,6 +457,10 @@
         scores.opponent = 0;
         lastWinner = 0; // Reset ook de laatste winnaar
         updateScores();
+        
+        // Opnieuw initialiseren van het spel met een willekeurige starter
+        initializeGame(true); // Voeg een parameter toe om een willekeurige starter aan te geven
+        
         typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
       });
       
@@ -471,7 +475,7 @@
       });
       
       // Initialiseer het spelbord
-      function initializeGame() {
+      function initializeGame(randomizeStarter = false) {
         // Reset game state
         gameBoard = [];
         for (let i = 0; i < ROWS; i++) {
@@ -484,8 +488,11 @@
         
         gameOver = false;
         
-        // Bepaal de startende speler op basis van de laatste winnaar
-        if (lastWinner === 1) {
+        // Bepaal de startende speler
+        if (randomizeStarter) {
+          // Bij reset-scores een willekeurige starter kiezen
+          currentPlayer = Math.random() < 0.5 ? 1 : 2;
+        } else if (lastWinner === 1) {
           currentPlayer = 2; // Als speler 1 de laatste keer won, begint speler 2
         } else if (lastWinner === 2) {
           currentPlayer = 1; // Als speler 2 de laatste keer won, begint speler 1
