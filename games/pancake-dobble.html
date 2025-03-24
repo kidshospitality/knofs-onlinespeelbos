@@ -310,11 +310,11 @@
 
     .game-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       margin-bottom: 15px;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
     }
 
     .scores-container {
@@ -385,8 +385,9 @@
       border-radius: 50%;
       overflow: hidden;
       background-image: url('../images/pannenkoek-vrijstaand-rond.png');
-      background-size: cover;
+      background-size: contain; /* Changed from cover to contain */
       background-position: center;
+      background-repeat: no-repeat;
     }
 
     .pancake.correct {
@@ -548,6 +549,7 @@
       gap: 15px;
       justify-content: center;
       margin-top: 20px;
+      flex-wrap: wrap;
     }
 
     .game-button {
@@ -790,11 +792,6 @@
         font-size: 1rem;
       }
 
-      .final-scores {
-        flex-direction: column;
-        gap: 15px;
-      }
-
       .winner-banner {
         font-size: 1.7rem;
       }
@@ -900,6 +897,10 @@
             <!-- Ingrediënten worden hier dynamisch toegevoegd -->
           </div>
         </div>
+
+        <div class="button-container" style="margin-top: 20px;">
+          <button class="game-button" id="back-button2">Terug naar menu</button>
+        </div>
       </div>
 
       <!-- Resultaten scherm -->
@@ -977,7 +978,8 @@
       const easyLevelButton = document.getElementById('easy-level');
       const mediumLevelButton = document.getElementById('medium-level');
       const hardLevelButton = document.getElementById('hard-level');
-      const backButton = document.getElementById('back-button1');
+      const backButton1 = document.getElementById('back-button1');
+      const backButton2 = document.getElementById('back-button2');
       const playAgainButton = document.getElementById('play-again-button');
       const menuButton = document.getElementById('menu-button');
       const tutorialClose = document.getElementById('tutorial-close');
@@ -1020,7 +1022,8 @@
       easyLevelButton.addEventListener('click', () => startGame('easy'));
       mediumLevelButton.addEventListener('click', () => startGame('medium'));
       hardLevelButton.addEventListener('click', () => startGame('hard'));
-      backButton.addEventListener('click', () => window.location.href = '../games.html');
+      backButton1.addEventListener('click', () => window.location.href = '../games.html');
+      backButton2.addEventListener('click', showLevelSelect);
       playAgainButton.addEventListener('click', resetGame);
       menuButton.addEventListener('click', showLevelSelect);
       tutorialClose.addEventListener('click', () => {
