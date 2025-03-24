@@ -112,13 +112,13 @@
       position: relative;
       width: 350px;
       height: 350px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .target-ingredient {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
       font-size: 6rem;
       z-index: 2;
       background-color: #FFEF9E;
@@ -130,13 +130,18 @@
       border-radius: 50%;
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
       border: 3px solid #FFDDA1;
+      animation: target-pulse 1.5s infinite alternate;
     }
 
-    .non-target-ingredient {
-      position: absolute;
-      font-size: 3rem;
-      opacity: 0.3;
-      z-index: 1;
+    @keyframes target-pulse {
+      from {
+        transform: scale(1);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      }
+      to {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 154, 90, 0.5);
+      }
     }
 
     /* Game board */
@@ -519,7 +524,6 @@
         <div class="target-label">Zoek dit ingrediënt!</div>
         <div class="ingredient-display" id="ingredient-display">
           <div class="target-ingredient" id="display-target">🍓</div>
-          <!-- Andere vage ingrediënten worden hier toegevoegd -->
         </div>
       </div>
 
@@ -762,8 +766,11 @@
         const roundIngredients = shuffled.slice(0, LEVELS[currentLevel].count);
         currentTarget = roundIngredients[Math.floor(Math.random() * roundIngredients.length)];
         
-        // Toon doelwit ingrediënt met vage ingrediënten eromheen
-        showTargetIngredient(currentTarget, roundIngredients);
+        // Verberg het game board
+        gameBoard.style.display = 'none';
+        
+        // Toon het doelwit ingrediënt
+        showTargetIngredient(currentTarget);
         
         // Na 2 seconden, toon de pannenkoek met ingrediënten
         setTimeout(() => {
@@ -773,58 +780,46 @@
         }, 2000);
       }
       
-      function showTargetIngredient(target, allIngredients) {
+      function showTargetIngredient(target) {
         targetScreen.style.display = 'flex';
-        ingredientDisplay.innerHTML = '';
-        
-        // Toon het doelwit in het midden
         displayTarget.textContent = target;
-        ingredientDisplay.appendChild(displayTarget);
-        
-        // Toon de andere ingrediënten vaag eromheen
-        allIngredients.forEach(ingredient => {
-          if (ingredient !== target) {
-            const nonTargetElement = document.createElement('div');
-            nonTargetElement.className = 'non-target-ingredient';
-            nonTargetElement.textContent = ingredient;
-            
-            // Willekeurige positie rondom het centrum
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 70 + Math.random() * 70; // 70px tot 140px van het centrum
-            const x = Math.cos(angle) * distance;
-            const y = Math.sin(angle) * distance;
-            
-            nonTargetElement.style.left = `calc(50% + ${x}px)`;
-            nonTargetElement.style.top = `calc(50% + ${y}px)`;
-            
-            ingredientDisplay.appendChild(nonTargetElement);
-          }
-        });
       }
       
       function showGameBoard(ingredients) {
         gameBoard.style.display = 'block';
         pancake.innerHTML = '';
         
-        // Plaats ingrediënten op willekeurige posities binnen de pannenkoek
+        // Minimum afstand tussen ingrediënten (in percentage van de pancake grootte)
+        const minDistancePercent = 25;
+        const positions = [];
+        
+        // Voor elke ingredient, plaats het op een niet-overlappende positie
         ingredients.forEach(ingredient => {
           const element = document.createElement('div');
           element.className = 'game-ingredient';
           element.textContent = ingredient;
           element.dataset.ingredient = ingredient;
           
-          // Bereken de pannenkoek radius (iets kleiner dan werkelijke grootte)
-          const pancakeSize = pancake.offsetWidth;
-          const pancakeRadius = (pancakeSize / 2) - 40; // 40px marge
+          // Probeer een niet-overlappende positie te vinden
+          let position;
+          let attempts = 0;
+          const maxAttempts = 100;
           
-          // Willekeurige positie binnen cirkel met polaire coördinaten
-          const angle = Math.random() * Math.PI * 2;
-          const distance = Math.sqrt(Math.random()) * pancakeRadius; // sqrt geeft betere verdeling
-          const x = 50 + (Math.cos(angle) * distance * 100 / pancakeSize);
-          const y = 50 + (Math.sin(angle) * distance * 100 / pancakeSize);
+          do {
+            position = getRandomPancakePosition();
+            attempts++;
+            
+            if (attempts > maxAttempts) {
+              // Als we te veel pogingen doen, accepteer dan een overlappende positie
+              break;
+            }
+          } while (positionOverlapsExisting(position, positions, minDistancePercent));
           
-          element.style.left = `${x}%`;
-          element.style.top = `${y}%`;
+          positions.push(position);
+          
+          // Plaats het ingredient op de gevonden positie
+          element.style.left = `${position.x}%`;
+          element.style.top = `${position.y}%`;
           
           // Willekeurige rotatie voor speelsheid
           const rotation = Math.random() * 30 - 15; // -15 tot 15 graden
@@ -837,6 +832,30 @@
           });
           
           pancake.appendChild(element);
+        });
+      }
+      
+      // Genereert een willekeurige positie binnen de pannenkoek
+      function getRandomPancakePosition() {
+        // Genereer een random hoek en afstand van het centrum (in polaire coördinaten)
+        const angle = Math.random() * Math.PI * 2; // 0 to 2π (volle cirkel)
+        const radius = Math.sqrt(Math.random()) * 40; // Wortel zorgt voor betere spreiding, max 40% van de straal
+        
+        // Converteer polar naar cartesiaanse coördinaten (als percentage van pancake grootte)
+        // 50% is het midden, dus we voegen 50% toe om naar het juiste coördinatenstelsel te gaan
+        const x = 50 + Math.cos(angle) * radius;
+        const y = 50 + Math.sin(angle) * radius;
+        
+        return { x, y };
+      }
+      
+      // Controleert of een positie overlapt met bestaande posities
+      function positionOverlapsExisting(newPos, existingPositions, minDistance) {
+        return existingPositions.some(pos => {
+          const dx = newPos.x - pos.x;
+          const dy = newPos.y - pos.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          return distance < minDistance;
         });
       }
       
@@ -902,6 +921,17 @@
           setTimeout(() => {
             pancake.classList.remove('correct');
           }, 500);
+          
+          // Spraakbericht van Knof
+          if (typeof typeSpeechMessage === 'function') {
+            const praises = [
+              "Goed gedaan!", 
+              "Heel goed!", 
+              "Prima!", 
+              "Goed zo!"
+            ];
+            typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+          }
         } else {
           // Incorrect
           showFeedback(false);
@@ -911,6 +941,16 @@
           setTimeout(() => {
             pancake.classList.remove('wrong');
           }, 500);
+          
+          // Spraakbericht van Knof
+          if (typeof typeSpeechMessage === 'function') {
+            const consolations = [
+              "Jammer!", 
+              "Helaas, dat is niet het juiste ingrediënt!", 
+              "Probeer het nog eens!"
+            ];
+            typeSpeechMessage(consolations[Math.floor(Math.random() * consolations.length)]);
+          }
         }
         
         setTimeout(() => {
@@ -929,15 +969,16 @@
         highlightIngredient(currentTarget);
         
         // Show Knof feedback
-        const knofComments = [
-          "Ha! Die zag ik meteen!", 
-          "Ik was sneller!", 
-          "Gevonden!",
-          "Daar is het ingrediënt!"
-        ];
         showFeedback("Knof was sneller!");
         
+        // Knof feedback via spraak
         if (typeof typeSpeechMessage === 'function') {
+          const knofComments = [
+            "Ha! Die zag ik meteen!", 
+            "Ik was sneller!", 
+            "Gevonden!",
+            "Daar is het ingrediënt!"
+          ];
           typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
         }
         
