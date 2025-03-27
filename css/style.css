@@ -961,6 +961,97 @@ body {
   padding: 10px 0;
 }
 
+/* Weer-popup stijl */
+.weather-popup {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(248, 246, 233, 0.85);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.weather-popup-content {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  border: 3px solid #FFD700; /* Gouden rand voor zonneschijn */
+  padding: 35px 30px;
+  width: 85%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.3); /* Gouden schaduw */
+  filter: url(#rough-filter);
+  transform: rotate(-1deg);
+  animation: weatherPopIn 0.5s ease-out forwards;
+}
+
+.weather-popup h2 {
+  margin: 0 0 15px;
+  font-size: 2.2rem;
+  color: #FF9A5A; /* Oranje/gele kleur voor de zon */
+  transform: rotate(1deg);
+  text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.weather-popup p {
+  margin-bottom: 25px;
+  color: #4B0082;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  transform: rotate(-0.5deg);
+}
+
+.weather-button {
+  background-color: #F4F1E4;
+  border: 2px solid #FF9A5A;
+  border-radius: 15px;
+  padding: 12px 30px;
+  color: #4B0082;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  filter: url(#rough-filter);
+  transform: rotate(1deg);
+  box-shadow: 2px 4px 0px #FFD6A5;
+}
+
+.weather-button:active {
+  background-color: #FFD6A5;
+  transform: rotate(1deg) scale(0.96);
+  box-shadow: 1px 2px 0px #FFD6A5;
+}
+
+/* Speciaal effect voor weerpopup */
+@keyframes weatherPopIn {
+  0% { transform: scale(0.8) rotate(-1deg); opacity: 0; }
+  50% { transform: scale(1.05) rotate(-1deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+}
+
+/* Zon-animatie voor leuk effect */
+.sun-ray {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: -40px;
+  right: -40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23FFD700' /%3E%3C/svg%3E");
+  background-size: contain;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: sunRotate 20s linear infinite;
+}
+
+@keyframes sunRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* Media query voor kleine schermen */
 @media (max-width: 480px) {
   .top-nav-bar {
@@ -1039,5 +1130,23 @@ body {
   
   .popup-content p {
     font-size: 1.6rem;
+  }
+  
+  .weather-popup-content {
+    padding: 25px 20px;
+    width: 90%;
+  }
+  
+  .weather-popup h2 {
+    font-size: 1.8rem;
+  }
+  
+  .weather-popup p {
+    font-size: 1.4rem;
+  }
+  
+  .weather-button {
+    font-size: 1.3rem;
+    padding: 10px 25px;
   }
 }
