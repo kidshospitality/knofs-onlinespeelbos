@@ -368,7 +368,8 @@
       const gameItems = document.querySelectorAll('.section');
       
       gameItems.forEach(item => {
-        if (item.id === 'connect-four' || item.id === 'tic-tac-toe' || item.id === 'pancake-dobble') {
+        if (item.id === 'connect-four' || item.id === 'tic-tac-toe') {
+          // Voor 4 op een rij en Boter Kaas en Eieren: toon de popup
           item.addEventListener('click', function() {
             const gameId = this.id;
             const gameName = this.querySelector('.section-title').textContent;
@@ -385,10 +386,17 @@
               case 'tic-tac-toe':
                 typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
                 break;
-              case 'pancake-dobble':
-                typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Wil je tegen mij spelen of tegen een vriend?");
-                break;
             }
+          });
+        } else if (item.id === 'pancake-dobble') {
+          // Voor Pannenkoeken Dobble: ga direct naar het spel
+          item.addEventListener('click', function() {
+            typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Ik doe mijn best tegen jou!");
+            
+            // Direct naar Dobble sturen (zonder popup) na korte vertraging voor de spraakbericht
+            setTimeout(() => {
+              window.location.href = `games/pancake-dobble.html?mode=vs-knof`;
+            }, 1500);
           });
         }
       });
