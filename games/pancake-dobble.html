@@ -124,6 +124,23 @@
       font-family: Georgia, serif;
     }
 
+    .game-rules {
+      background-color: #FFEF9E;
+      padding: 15px;
+      border-radius: 15px;
+      border: 3px solid #FFDDA1;
+      max-width: 500px;
+      filter: url(#rough-filter);
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .game-rules p {
+      margin: 0 0 8px 0;
+      color: #7A4127;
+      font-size: 1.1rem;
+    }
+
     .level-buttons-container {
       display: flex;
       flex-direction: column;
@@ -623,43 +640,6 @@
       opacity: 1;
     }
 
-    /* Tutorial overlay */
-    .tutorial-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-    }
-
-    .tutorial-content {
-      background-color: #F8F6E9;
-      border-radius: 15px;
-      padding: 25px;
-      max-width: 85%;
-      text-align: center;
-      position: relative;
-      filter: url(#rough-filter);
-      border: 4px solid #FFDDA1;
-    }
-
-    .tutorial-content h2 {
-      color: #FF9A5A;
-      margin-top: 0;
-      font-size: 1.8rem;
-    }
-
-    .tutorial-content p {
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-      line-height: 1.5;
-    }
-
     /* Canvas voor confetti effect */
     #confetti-canvas {
       position: fixed;
@@ -710,14 +690,6 @@
       }
 
       .knof-message {
-        font-size: 1.1rem;
-      }
-      
-      .tutorial-content h2 {
-        font-size: 1.6rem;
-      }
-      
-      .tutorial-content p {
         font-size: 1.1rem;
       }
 
@@ -784,14 +756,6 @@
         text-align: center;
         font-size: 1rem;
       }
-      
-      .tutorial-content h2 {
-        font-size: 1.4rem;
-      }
-      
-      .tutorial-content p {
-        font-size: 1rem;
-      }
 
       .winner-banner {
         font-size: 1.7rem;
@@ -823,15 +787,19 @@
   <!-- Hoofdcontent - Ingrediënten Zoeken spel -->
   <div class="app-container">
     <div class="game-container">
-      <!-- Niveau selectie scherm -->
+      <!-- Niveau selectie scherm met geïntegreerde uitleg -->
       <div class="level-select-screen" id="level-select-screen">
-        <div class="level-title">Ingrediënten Zoeken</div>
+        <div class="level-title">Pancake Dobble</div>
         
         <div class="knof-challenge">
           <img src="../images/knof-hoofd.png" alt="Knof" class="knof-image">
           <div class="knof-message">
-            "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Kies maar hoe moeilijk je het wilt maken!"
+            "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Zoek het ingrediënt dat ik toon voordat ik jou te snel af ben!"
           </div>
+        </div>
+        
+        <div class="game-rules">
+          <p><strong>Spelregels:</strong> Ik toon een ingrediënt. Zoek dit zo snel mogelijk op de pannenkoek. Wie het eerst 10 punten heeft, wint!</p>
         </div>
         
         <div class="level-buttons-container">
@@ -930,19 +898,6 @@
       <div class="feedback-popup" id="feedback-popup"></div>
     </div>
   </div>
-  
-  <!-- Tutorial overlay -->
-  <div class="tutorial-overlay" id="tutorial-overlay" style="display: none;">
-    <div class="tutorial-content">
-      <h2>Hoe speel je Ingrediënten Zoeken?</h2>
-      <p>Zoek het aangegeven ingrediënt zo snel mogelijk op de pannenkoek voordat Knof het vindt!</p>
-      <div style="margin: 20px 0;">
-        <img src="../images/ingredient-example.png" alt="Voorbeeld" style="max-width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px;">
-        <p>Wie het eerst 10 punten heeft is de winnaar. Elke ronde moet je zoeken naar een ander ingrediënt!</p>
-      </div>
-      <button class="game-button" id="tutorial-close">Begrepen!</button>
-    </div>
-  </div>
 
   <!-- Container voor bottom navigatie -->
   <div id="bottom-nav-container"></div>
@@ -958,7 +913,6 @@
       const gameBoard = document.getElementById('game-board');
       const resultsScreen = document.getElementById('results-screen');
       const feedbackPopup = document.getElementById('feedback-popup');
-      const tutorialOverlay = document.getElementById('tutorial-overlay');
       const confettiCanvas = document.getElementById('confetti-canvas');
       
       const countdownNumber = document.getElementById('countdown-number');
@@ -980,7 +934,6 @@
       const backButton2 = document.getElementById('back-button2');
       const playAgainButton = document.getElementById('play-again-button');
       const menuButton = document.getElementById('menu-button');
-      const tutorialClose = document.getElementById('tutorial-close');
       
       // Game variabelen
       const INGREDIENTS = [
@@ -1012,7 +965,6 @@
       let confetti = [];
       let confettiActive = false;
       let confettiAnimationId = null;
-      let isFirstPlay = !localStorage.getItem('ingredientGameTutorialSeen');
       
       // Event listeners
       easyLevelButton.addEventListener('click', () => startGame('easy'));
@@ -1022,12 +974,6 @@
       backButton2.addEventListener('click', showLevelSelect);
       playAgainButton.addEventListener('click', resetGame);
       menuButton.addEventListener('click', showLevelSelect);
-      tutorialClose.addEventListener('click', () => {
-        tutorialOverlay.style.display = 'none';
-        if (!gameActive) {
-          showLevelSelect();
-        }
-      });
       
       // Handle confetti effect
       function startConfetti() {
@@ -1529,18 +1475,13 @@
         return newArray;
       }
       
-      // Begin met het bepalen of we de tutorial moeten tonen
-      if (isFirstPlay) {
-        tutorialOverlay.style.display = 'flex';
-        localStorage.setItem('ingredientGameTutorialSeen', 'true');
-      } else {
-        showLevelSelect();
-      }
+      // Start met het hoofdscherm direct
+      showLevelSelect();
       
       // Welkom bericht
       if (typeof typeSpeechMessage === 'function') {
         setTimeout(() => {
-          typeSpeechMessage("Welkom bij Ingrediënten Zoeken! Ik daag je uit om tegen mij te spelen. Kies een niveau om te beginnen.");
+          typeSpeechMessage("Welkom bij Pancake Dobble! Ik daag je uit om tegen mij te spelen. Kies een niveau om te beginnen.");
         }, 500);
       }
       
