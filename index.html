@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
   <style>
-    /* Stijl voor de weer-popup */
+    /* Stijl voor de weer-popup - aangepast om overeen te komen met de bestaande popup */
     .weather-popup {
       display: none;
       position: fixed;
@@ -24,22 +24,22 @@
       padding: 20px;
     }
     
+    /* Aangepast naar dezelfde stijl als popup-content */
     .weather-popup-content {
       background-color: #FFFFFF;
       border-radius: 20px;
-      border: 3px solid #DDD8C4;
-      padding: 30px 25px;
+      padding: 25px;
       width: 85%;
       max-width: 320px;
       text-align: center;
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      filter: url(#subtle-filter);
+      position: relative;
       animation: popIn 0.4s ease-out forwards;
     }
     
     .weather-popup h2 {
       margin: 0 0 15px;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: #55A54A;
     }
     
@@ -50,31 +50,21 @@
       line-height: 1.4;
     }
     
-    .weather-button {
-      background-color: #F4F1E4;
-      border: 2px solid #6B5344;
-      border-radius: 12px;
-      padding: 12px 25px;
+    /* Sluitknop styling aangepast naar dezelfde stijl */
+    .close-weather {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
       color: #6B5344;
-      font-size: 1.2rem;
       cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    
-    .weather-button:active {
-      background-color: #E8E4D0;
-      transform: scale(0.98);
     }
     
     /* Animatie voor de popup */
     @keyframes popIn {
       0% { transform: scale(0.8); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
-    }
-    
-    /* Subtiel filter voor handgetekend effect */
-    #subtle-filter {
-      filter: url(#rough-filter);
     }
   </style>
 </head>
@@ -182,12 +172,12 @@
     </div>
   </div>
 
-  <!-- Weer popup -->
+  <!-- Weer popup - aangepast om overeen te komen met popup-message -->
   <div class="weather-popup" id="weatherPopup">
     <div class="weather-popup-content">
+      <span class="close-weather" onclick="closeWeatherPopup()">&times;</span>
       <h2>☀️ Lekker weer alert! ☀️</h2>
       <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?</p>
-      <button class="weather-button" onclick="closeWeatherPopup()">Leuk!</button>
     </div>
   </div>
 
@@ -253,6 +243,13 @@
       window.addEventListener('click', function(event) {
         if (event.target == document.getElementById('popup-message')) {
           document.getElementById('popup-message').style.display = 'none';
+        }
+      });
+
+      // Ook voor weerPopup klikken buiten de popup om te sluiten
+      window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('weatherPopup')) {
+          closeWeatherPopup();
         }
       });
     });
