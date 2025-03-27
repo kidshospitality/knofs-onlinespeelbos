@@ -69,11 +69,11 @@
       align-items: center;
       margin-bottom: 20px;
       background-color: #FFE4B5;
-      padding: 15px 20px;
+      padding: 20px 25px;
       border-radius: 15px;
       filter: url(#rough-filter);
       border: 3px solid #FF9A5A;
-      max-width: 500px;
+      max-width: 600px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.1);
       transform: rotate(-1deg);
       transition: transform 0.3s;
@@ -84,9 +84,9 @@
     }
 
     .knof-image {
-      width: 80px;
-      height: 80px;
-      margin-right: 15px;
+      width: 90px;
+      height: 90px;
+      margin-right: 20px;
       filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.2));
       animation: knof-bounce 2s infinite alternate ease-in-out;
     }
@@ -98,7 +98,7 @@
 
     .knof-message {
       text-align: left;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       color: #7A4127;
       line-height: 1.4;
       position: relative;
@@ -124,31 +124,14 @@
       font-family: Georgia, serif;
     }
 
-    .game-rules {
-      background-color: #FFEF9E;
-      padding: 15px;
-      border-radius: 15px;
-      border: 3px solid #FFDDA1;
-      max-width: 500px;
-      filter: url(#rough-filter);
-      margin-bottom: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .game-rules p {
-      margin: 0 0 8px 0;
-      color: #7A4127;
-      font-size: 1.1rem;
-    }
-
     .level-buttons-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 15px;
       width: 100%;
-      max-width: 600px;
-      margin-top: 20px;
+      max-width: 800px;
+      margin-top: 40px;
       position: relative;
     }
 
@@ -158,18 +141,18 @@
       top: -30px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1.3rem;
+      font-size: 1.6rem;
       color: #7A4127;
       font-weight: bold;
       background-color: rgba(255, 235, 205, 0.8);
-      padding: 5px 15px;
+      padding: 8px 20px;
       border-radius: 20px;
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
 
     .level-buttons {
       display: flex;
-      gap: 20px;
+      gap: 25px;
       flex-wrap: wrap;
       justify-content: center;
       width: 100%;
@@ -177,20 +160,20 @@
 
     .level-button {
       flex: 1;
-      min-width: 160px;
+      min-width: 200px;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 15px 25px;
-      border-radius: 12px;
-      font-size: 1.2rem;
+      padding: 25px 30px;
+      border-radius: 15px;
+      font-size: 1.8rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       filter: url(#rough-filter);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
       overflow: hidden;
       color: #5A3612;
@@ -198,12 +181,12 @@
 
     .level-button:hover {
       transform: translateY(-8px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
     }
 
     .level-button.easy {
       background-color: #A5E6A5;
-      border: 3px solid #8BCC8B;
+      border: 4px solid #8BCC8B;
     }
 
     .level-button.easy:hover {
@@ -212,7 +195,7 @@
 
     .level-button.medium {
       background-color: #FFD6A5;
-      border: 3px solid #FFBA76;
+      border: 4px solid #FFBA76;
     }
 
     .level-button.medium:hover {
@@ -221,7 +204,7 @@
 
     .level-button.hard {
       background-color: #FFA5A5;
-      border: 3px solid #FF7676;
+      border: 4px solid #FF7676;
     }
 
     .level-button.hard:hover {
@@ -229,15 +212,16 @@
     }
 
     .level-icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
+      font-size: 3rem;
+      margin-bottom: 12px;
     }
 
     .level-description {
-      font-size: 0.85rem;
-      margin-top: 8px;
-      opacity: 0.8;
+      font-size: 1.1rem;
+      margin-top: 10px;
       font-weight: normal;
+      color: #7A4127;
+      line-height: 1.4;
     }
 
     /* Countdown scherm */
@@ -396,7 +380,6 @@
       position: relative;
       border-radius: 50%;
       overflow: hidden;
-      /* Verwijder de directe background-image */
     }
 
     /* Nieuwe manier om de pancake afbeelding te tonen zonder witte rand */
@@ -460,9 +443,9 @@
       }
     }
 
+    /* Basis stijl voor game-ingredient */
     .game-ingredient {
       position: absolute;
-      font-size: 3rem;
       z-index: 1;
       display: flex;
       justify-content: center;
@@ -470,8 +453,27 @@
       transform-origin: center;
       transition: transform 0.2s;
       cursor: pointer;
-      width: 60px;
-      height: 60px;
+    }
+
+    /* Specifieke grootte voor makkelijk niveau */
+    .game-ingredient.easy-size {
+      font-size: 4rem;
+      width: 80px;
+      height: 80px;
+    }
+
+    /* Specifieke grootte voor normaal niveau */
+    .game-ingredient.medium-size {
+      font-size: 3.2rem;
+      width: 65px;
+      height: 65px;
+    }
+
+    /* Specifieke grootte voor moeilijk niveau */
+    .game-ingredient.hard-size {
+      font-size: 2.5rem;
+      width: 50px;
+      height: 50px;
     }
 
     .game-ingredient:hover {
@@ -659,10 +661,22 @@
         height: 100px;
       }
       
-      .game-ingredient {
-        font-size: 2.5rem;
-        width: 50px;
-        height: 50px;
+      .game-ingredient.easy-size {
+        font-size: 3.5rem;
+        width: 70px;
+        height: 70px;
+      }
+      
+      .game-ingredient.medium-size {
+        font-size: 2.8rem;
+        width: 56px;
+        height: 56px;
+      }
+      
+      .game-ingredient.hard-size {
+        font-size: 2.2rem;
+        width: 45px;
+        height: 45px;
       }
       
       .pancake {
@@ -671,26 +685,25 @@
       }
 
       .level-button {
-        padding: 10px 20px;
-        font-size: 1.1rem;
-        min-width: 120px;
+        padding: 20px 25px;
+        font-size: 1.6rem;
       }
 
       .level-icon {
-        font-size: 1.8rem;
+        font-size: 2.5rem;
       }
 
       .level-description {
-        font-size: 0.8rem;
+        font-size: 1rem;
       }
 
       .knof-image {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
       }
 
       .knof-message {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
       }
 
       .final-scores {
@@ -711,6 +724,18 @@
       .scores-container, .time-display {
         width: 90%;
       }
+      
+      .knof-challenge {
+        padding: 15px;
+      }
+      
+      .knof-message {
+        font-size: 1.2rem;
+      }
+      
+      .level-buttons {
+        gap: 15px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -721,6 +746,12 @@
       
       .level-button {
         min-width: 100%;
+        padding: 15px 20px;
+        font-size: 1.4rem;
+      }
+      
+      .level-description {
+        font-size: 0.9rem;
       }
       
       .target-ingredient {
@@ -729,7 +760,19 @@
         height: 80px;
       }
       
-      .game-ingredient {
+      .game-ingredient.easy-size {
+        font-size: 3rem;
+        width: 60px;
+        height: 60px;
+      }
+      
+      .game-ingredient.medium-size {
+        font-size: 2.4rem;
+        width: 48px;
+        height: 48px;
+      }
+      
+      .game-ingredient.hard-size {
         font-size: 2rem;
         width: 40px;
         height: 40px;
@@ -746,15 +789,15 @@
       }
 
       .knof-image {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         margin-right: 0;
         margin-bottom: 10px;
       }
 
       .knof-message {
         text-align: center;
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
 
       .winner-banner {
@@ -794,12 +837,8 @@
         <div class="knof-challenge">
           <img src="../images/knof-hoofd.png" alt="Knof" class="knof-image">
           <div class="knof-message">
-            "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Zoek het ingrediënt dat ik toon voordat ik jou te snel af ben!"
+            "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Zoek het ingrediënt dat ik toon voordat ik jou te snel af ben! Wie het eerst 10 punten heeft, wint!"
           </div>
-        </div>
-        
-        <div class="game-rules">
-          <p><strong>Spelregels:</strong> Ik toon een ingrediënt. Zoek dit zo snel mogelijk op de pannenkoek. Wie het eerst 10 punten heeft, wint!</p>
         </div>
         
         <div class="level-buttons-container">
@@ -807,17 +846,17 @@
             <div class="level-button easy" id="easy-level">
               <div class="level-icon">🥄</div>
               Makkelijk
-              <div class="level-description">5 ingrediënten<br>30 seconden per ronde</div>
+              <div class="level-description">5 ingrediënten - 30 seconden</div>
             </div>
             <div class="level-button medium" id="medium-level">
               <div class="level-icon">🍴</div>
               Normaal
-              <div class="level-description">7 ingrediënten<br>20 seconden per ronde</div>
+              <div class="level-description">7 ingrediënten - 20 seconden</div>
             </div>
             <div class="level-button hard" id="hard-level">
               <div class="level-icon">🔥</div>
               Moeilijk
-              <div class="level-description">9 ingrediënten<br>10 seconden per ronde</div>
+              <div class="level-description">9 ingrediënten - 10 seconden</div>
             </div>
           </div>
         </div>
@@ -1116,10 +1155,18 @@
         const minDistancePercent = 25;
         const positions = [];
         
+        // Bepaal CSS class voor ingrediënt grootte op basis van niveau
+        let sizeClass = 'medium-size';
+        if (currentLevel === 'easy') {
+          sizeClass = 'easy-size';
+        } else if (currentLevel === 'hard') {
+          sizeClass = 'hard-size';
+        }
+        
         // Voor elke ingredient, plaats het op een niet-overlappende positie
         ingredients.forEach(ingredient => {
           const element = document.createElement('div');
-          element.className = 'game-ingredient';
+          element.className = `game-ingredient ${sizeClass}`;
           element.textContent = ingredient;
           element.dataset.ingredient = ingredient;
           
@@ -1162,7 +1209,18 @@
       function getRandomPancakePosition() {
         // Genereer een random hoek en afstand van het centrum (in polaire coördinaten)
         const angle = Math.random() * Math.PI * 2; // 0 to 2π (volle cirkel)
-        const radius = Math.sqrt(Math.random()) * 40; // Wortel zorgt voor betere spreiding, max 40% van de straal
+        
+        // Maak de spreiding afhankelijk van het niveau
+        // Bij makkelijk: meer naar buiten (beter zichtbaar)
+        // Bij moeilijk: meer naar binnen (meer geclusterd)
+        let maxRadius = 40;
+        if (currentLevel === 'easy') {
+          maxRadius = 42; // Meer verspreiding
+        } else if (currentLevel === 'hard') {
+          maxRadius = 38; // Minder verspreiding
+        }
+        
+        const radius = Math.sqrt(Math.random()) * maxRadius; // Wortel zorgt voor betere spreiding
         
         // Converteer polar naar cartesiaanse coördinaten (als percentage van pancake grootte)
         // 50% is het midden, dus we voegen 50% toe om naar het juiste coördinatenstelsel te gaan
@@ -1174,11 +1232,19 @@
       
       // Controleert of een positie overlapt met bestaande posities
       function positionOverlapsExisting(newPos, existingPositions, minDistance) {
+        // Pas minimum afstand aan op basis van niveau
+        let adjustedMinDistance = minDistance;
+        if (currentLevel === 'easy') {
+          adjustedMinDistance = minDistance * 1.2; // Meer ruimte tussen ingrediënten
+        } else if (currentLevel === 'hard') {
+          adjustedMinDistance = minDistance * 0.8; // Minder ruimte tussen ingrediënten
+        }
+        
         return existingPositions.some(pos => {
           const dx = newPos.x - pos.x;
           const dy = newPos.y - pos.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          return distance < minDistance;
+          return distance < adjustedMinDistance;
         });
       }
       
