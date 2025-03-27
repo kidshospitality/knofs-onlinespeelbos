@@ -185,8 +185,8 @@
   <!-- Weer popup -->
   <div class="weather-popup" id="weatherPopup">
     <div class="weather-popup-content">
-      <h2>☀️ Lekker weer vandaag! ☀️</h2>
-      <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Knof heeft zin in een buitenactiviteit!</p>
+      <h2>☀️ Lekker weer alert! ☀️</h2>
+      <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?</p>
       <button class="weather-button" onclick="closeWeatherPopup()">Leuk!</button>
     </div>
   </div>
@@ -295,13 +295,13 @@
       
       // Verschillende berichten afhankelijk van temperatuur
       if (temperature >= 25) {
-        message.textContent = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen! Knof heeft een ijsje verdiend!`;
+        message.textContent = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen!`;
         typeSpeechMessage("Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan?");
       } else if (temperature >= 20) {
         message.textContent = `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur!`;
         typeSpeechMessage("Het is zo'n mooie dag! Ik wil graag buiten spelen!");
       } else {
-        message.textContent = `Het is ${temperature}°C, prima weer om buiten te spelen! Knof wil graag naar het speelbos!`;
+        message.textContent = `Het is ${temperature}°C, prima weer om buiten te spelen! Knof wil graag naar de speeltuin!`;
         typeSpeechMessage("Het is lekker weer vandaag! Perfect voor buitenactiviteiten!");
       }
       
