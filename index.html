@@ -8,6 +8,75 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
   <link rel="apple-touch-icon" href="images/icon-192.png">
+  <style>
+    /* Stijl voor de weer-popup */
+    .weather-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(248, 246, 233, 0.9);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .weather-popup-content {
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      border: 3px solid #DDD8C4;
+      padding: 30px 25px;
+      width: 85%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      filter: url(#subtle-filter);
+      animation: popIn 0.4s ease-out forwards;
+    }
+    
+    .weather-popup h2 {
+      margin: 0 0 15px;
+      font-size: 1.8rem;
+      color: #55A54A;
+    }
+    
+    .weather-popup p {
+      margin-bottom: 20px;
+      color: #6B5344;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    
+    .weather-button {
+      background-color: #F4F1E4;
+      border: 2px solid #6B5344;
+      border-radius: 12px;
+      padding: 12px 25px;
+      color: #6B5344;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .weather-button:active {
+      background-color: #E8E4D0;
+      transform: scale(0.98);
+    }
+    
+    /* Animatie voor de popup */
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Subtiel filter voor handgetekend effect */
+    #subtle-filter {
+      filter: url(#rough-filter);
+    }
+  </style>
 </head>
 <body>
   <!-- SVG filters for hand-drawn effect -->
@@ -20,6 +89,10 @@
       <filter id="squiggly-filter">
         <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
         <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
+      </filter>
+      <filter id="subtle-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.005" numOctaves="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.5" xChannelSelector="R" yChannelSelector="G"/>
       </filter>
     </defs>
   </svg>
@@ -109,6 +182,15 @@
     </div>
   </div>
 
+  <!-- Weer popup -->
+  <div class="weather-popup" id="weatherPopup">
+    <div class="weather-popup-content">
+      <h2>☀️ Lekker weer vandaag! ☀️</h2>
+      <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Knof heeft zin in een buitenactiviteit!</p>
+      <button class="weather-button" onclick="closeWeatherPopup()">Leuk!</button>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/common.js"></script>
   <script>
@@ -118,6 +200,9 @@
       setTimeout(() => {
         typeSpeechMessage("Hoi! Ik ben Knof. Hoe voel je je vandaag?");
       }, 500);
+
+      // Check het weer als de pagina laadt
+      setTimeout(checkWeather, 2000);
       
       // Event listeners voor de stemmings-buttons
       document.getElementById('blij-btn').addEventListener('click', () => {
@@ -171,6 +256,64 @@
         }
       });
     });
+
+    // Weer-gerelateerde functies
+    function checkWeather() {
+      console.log('Weer controleren...');
+      
+      // Controleer of de popup al is getoond in deze sessie
+      if (sessionStorage.getItem('weatherPopupShown')) {
+        console.log('Weer-popup is al getoond deze sessie');
+        return;
+      }
+      
+      // API call naar OpenWeatherMap
+      fetch('https://api.openweathermap.org/data/2.5/weather?q=Hardenberg,NL&appid=a99dfbc3210902e1a5e905997c8fa237&units=metric')
+        .then(response => response.json())
+        .then(data => {
+          console.log('Weer data:', data);
+          const temperature = Math.round(data.main.temp);
+          console.log('Temperatuur:', temperature);
+          
+          if (temperature >= 10) {
+            console.log('Het is lekker weer, popup wordt getoond!');
+            showWeatherPopup(temperature);
+            // Markeer dat de popup is getoond
+            sessionStorage.setItem('weatherPopupShown', 'true');
+          } else {
+            console.log('Niet warm genoeg voor de popup');
+          }
+        })
+        .catch(error => {
+          console.error('Fout bij ophalen weerdata:', error);
+        });
+    }
+
+    function showWeatherPopup(temperature) {
+      const popup = document.getElementById('weatherPopup');
+      const message = document.getElementById('weatherMessage');
+      
+      // Verschillende berichten afhankelijk van temperatuur
+      if (temperature >= 25) {
+        message.textContent = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen! Knof heeft een ijsje verdiend!`;
+        typeSpeechMessage("Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan?");
+      } else if (temperature >= 20) {
+        message.textContent = `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur!`;
+        typeSpeechMessage("Het is zo'n mooie dag! Ik wil graag buiten spelen!");
+      } else {
+        message.textContent = `Het is ${temperature}°C, prima weer om buiten te spelen! Knof wil graag naar het speelbos!`;
+        typeSpeechMessage("Het is lekker weer vandaag! Perfect voor buitenactiviteiten!");
+      }
+      
+      // Toon de popup
+      popup.style.display = 'flex';
+    }
+
+    function closeWeatherPopup() {
+      const popup = document.getElementById('weatherPopup');
+      popup.style.display = 'none';
+      typeSpeechMessage("Leuk hè, buiten spelen! Laten we straks gaan!");
+    }
   </script>
 </body>
 </html>
