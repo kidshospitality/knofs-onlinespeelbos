@@ -44,7 +44,7 @@
     }
     
     .weather-popup p {
-      margin-bottom: 20px;
+      margin-bottom: 0;
       color: #6B5344;
       font-size: 1.1rem;
       line-height: 1.4;
@@ -65,6 +65,18 @@
     @keyframes popIn {
       0% { transform: scale(0.8); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Weer icoon animatie */
+    @keyframes sunShine {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    .sun-emoji {
+      display: inline-block;
+      animation: sunShine 3s infinite ease-in-out;
     }
   </style>
 </head>
@@ -176,7 +188,7 @@
   <div class="weather-popup" id="weatherPopup">
     <div class="weather-popup-content">
       <span class="close-weather" onclick="closeWeatherPopup()">&times;</span>
-      <h2>☀️ Lekker weer alert! ☀️</h2>
+      <h2><span class="sun-emoji">☀️</span> Lekker weer alert! <span class="sun-emoji">☀️</span></h2>
       <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?</p>
     </div>
   </div>
@@ -266,7 +278,12 @@
       
       // API call naar OpenWeatherMap
       fetch('https://api.openweathermap.org/data/2.5/weather?q=Hardenberg,NL&appid=a99dfbc3210902e1a5e905997c8fa237&units=metric')
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Weer API antwoordt niet');
+          }
+          return response.json();
+        })
         .then(data => {
           console.log('Weer data:', data);
           const temperature = Math.round(data.main.temp);
@@ -274,7 +291,7 @@
           
           if (temperature >= 10) {
             console.log('Het is lekker weer, popup wordt getoond!');
-            showWeatherPopup(temperature);
+            showWeatherPopup(temperature, data.weather[0].description);
             // Markeer dat de popup is getoond
             sessionStorage.setItem('weatherPopupShown', 'true');
           } else {
@@ -283,27 +300,40 @@
         })
         .catch(error => {
           console.error('Fout bij ophalen weerdata:', error);
+          // Fallback om de popup toch te tonen bij API-fouten (alleen voor testdoeleinden)
+          // showWeatherPopup(22, 'zonnig');
         });
     }
 
-    function showWeatherPopup(temperature) {
+    function showWeatherPopup(temperature, weatherDesc) {
       const popup = document.getElementById('weatherPopup');
       const message = document.getElementById('weatherMessage');
       
-      // Verschillende berichten afhankelijk van temperatuur
+      // Berichten gebaseerd op de temperatuur
+      let messageText = '';
+      let speechText = '';
+      
       if (temperature >= 25) {
-        message.textContent = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen!`;
-        typeSpeechMessage("Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan?");
+        messageText = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen en misschien wel een ijsje te eten! 🍦`;
+        speechText = "Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan en een ijsje eten?";
       } else if (temperature >= 20) {
-        message.textContent = `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur!`;
-        typeSpeechMessage("Het is zo'n mooie dag! Ik wil graag buiten spelen!");
+        messageText = `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur in de speeltuin! 🌳`;
+        speechText = "Het is zo'n mooie dag! Ik wil graag buiten spelen in de speeltuin!";
+      } else if (temperature >= 15) {
+        messageText = `Het is ${temperature}°C, prima weer om buiten te spelen! Misschien kun je Knof helpen met schatten zoeken? 🔍`;
+        speechText = "Het is lekker weer voor een speurtocht! Zullen we samen schatten gaan zoeken?";
       } else {
-        message.textContent = `Het is ${temperature}°C, prima weer om buiten te spelen! Knof wil graag naar de speeltuin!`;
-        typeSpeechMessage("Het is lekker weer vandaag! Perfect voor buitenactiviteiten!");
+        messageText = `Het is ${temperature}°C, een beetje fris maar nog steeds leuk om even buiten te spelen! Neem wel een vestje mee! 🧥`;
+        speechText = "Het is een beetje fris, maar buiten spelen is nog steeds leuk! Vergeet je vestje niet!";
       }
+      
+      message.textContent = messageText;
       
       // Toon de popup
       popup.style.display = 'flex';
+      
+      // Laat Knof praten
+      typeSpeechMessage(speechText);
     }
 
     function closeWeatherPopup() {
