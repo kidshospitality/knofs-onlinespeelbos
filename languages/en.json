@@ -80,3 +80,7 @@
   "chat_placeholder": "Ask Knof a question here...",
   "chat_title": "Talk to Knof"
 }
+{
+  "chat_page_title": "Talk to Knof - Knof's Play Forest",
+  ...
+}
