@@ -82,5 +82,38 @@
 }
 {
   "chat_page_title": "Talk to Knof - Knof's Play Forest",
-  ...
+}
+{
+  "connect_four_title": "Connect Four - Knof's Games",
+  "connect_four_you": "You",
+  "connect_four_knof": "Knof",
+  "connect_four_player1": "Player 1",
+  "connect_four_player2": "Player 2",
+  "connect_four_new_game": "New Game",
+  "connect_four_reset": "Reset",
+  "back": "Back",
+  "connect_four_welcome_knof": "Connect Four is one of my favorite games! You play with the syrup pancakes, and I play with the sugar pancakes. Let's start!",
+  "connect_four_welcome_friend": "Have fun with Connect Four! Player 1 plays with syrup pancakes and Player 2 with sugar pancakes. Who will win?",
+  "connect_four_reset_message": "Scores have been reset. We're starting from zero again!",
+  "connect_four_restart_knof": "Let's play again. Have fun!",
+  "connect_four_restart_friend": "New round, new chances! Who will win this time?",
+  "connect_four_wins_message": "{winner} wins!",
+  "connect_four_win_player": "You have won! Congratulations! You're good at this game.",
+  "connect_four_win_knof": "I won! That was a fun game. Do you want to play again?",
+  "connect_four_win_generic": "{winner} has won! That was exciting!",
+  "connect_four_draw": "It's a draw!",
+  "connect_four_draw_message": "It's a draw! You're evenly matched.",
+  "connect_four_taunt_win_1": "I think I'm going to win here!",
+  "connect_four_taunt_win_2": "Look what I'm doing here!",
+  "connect_four_taunt_win_3": "Four in a row for me!",
+  "connect_four_taunt_win_4": "My sugar pancake fits perfectly here!",
+  "connect_four_block_1": "That was almost successful!",
+  "connect_four_block_2": "I see what you're trying to do!",
+  "connect_four_block_3": "Not so fast!",
+  "connect_four_block_4": "I'm blocking your pancake plan!",
+  "connect_four_normal_1": "Hmm, let me think...",
+  "connect_four_normal_2": "I choose this spot!",
+  "connect_four_normal_3": "My turn!",
+  "connect_four_normal_4": "My sugar pancake goes here!",
+  "connect_four_normal_5": "This is a good move, I think."
 }
