@@ -21,9 +21,7 @@
   "chat_subtitle": "Stelle deinem Freund Fragen!",
   "weather_title": "Schönes Wetter Alarm!",
   "weather_message": "Es ist herrliches Wetter zum Spielen im Freien! Hast du schon unseren Spielplatz gesehen?",
-  "popup_message": "Diese Funktion wird noch gebacken, komm bald wieder! 🧁"
-}
-{
+  "popup_message": "Diese Funktion wird noch gebacken, komm bald wieder! 🧁",
   "games_title": "Knofs Spiele",
   "games_corner": "Knofs Spielecke",
   "connect_four": "4 Gewinnt",
@@ -43,9 +41,7 @@
   "pancake_dobble_message": "Pfannkuchen Dobble ist mein Lieblingsspiel! Ich gebe mein Bestes gegen dich!",
   "play_against_knof_message": "Schön, dass du {game} gegen mich spielen möchtest! Ich gebe mein Bestes!",
   "play_with_friend_message": "{game} zusammen zu spielen macht Spaß! Viel Spaß!",
-  "other_game_choice": "Möchtest du ein anderes Spiel auswählen? Sie sind alle toll!"
-}
-{
+  "other_game_choice": "Möchtest du ein anderes Spiel auswählen? Sie sind alle toll!",
   "coloring_page_title": "Malbuch - Knofs Spielwald",
   "coloring_welcome": "Schön, dass du zum Malen kommst! Was werden wir machen?",
   "drawing_toolbar_label": "Zeichenwerkzeuge",
@@ -66,24 +62,15 @@
   "action_undo": "Rückgängig",
   "save_drawing_title": "Zeichnung speichern",
   "save_drawing_message": "Deine Zeichnung wurde in deinen Bildern gespeichert!",
-  "drawing_error": "Beim Speichern deiner Zeichnung ist ein Fehler aufgetreten"
-}
-{
+  "drawing_error": "Beim Speichern deiner Zeichnung ist ein Fehler aufgetreten",
   "memory_intro": "Memory ist ein Spiel, bei dem du dir merken musst, wo die Bilder sind. Klicke auf zwei Karten, um zu sehen, ob sie gleich sind!",
   "puzzle_intro": "In diesem Puzzlespiel musst du die Teile an die richtige Stelle legen. Ziehe die Teile an die richtige Stelle!",
   "drawing_intro": "Ich werde etwas zeichnen und du musst erraten, was es ist! Bist du bereit?",
   "games_intro": "Lass uns spielen! Wähle ein Spiel, das dir gefällt.",
-  "memory_welcome": "Willkommen beim Memory-Spiel! Finde alle Paare, um zu gewinnen!"
-}
-{
+  "memory_welcome": "Willkommen beim Memory-Spiel! Finde alle Paare, um zu gewinnen!",
   "chat_page_title": "Sprechen mit Knof - Knofs Spielwald",
   "chat_placeholder": "Stelle Knof hier eine Frage...",
-  "chat_title": "Sprechen mit Knof"
-}
-{
-  "chat_page_title": "Sprechen mit Knof - Knofs Spielwald",
-}
-{
+  "chat_title": "Sprechen mit Knof",
   "connect_four_title": "4 Gewinnt - Knofs Spiele",
   "connect_four_you": "Du",
   "connect_four_knof": "Knof",
@@ -91,7 +78,6 @@
   "connect_four_player2": "Spieler 2",
   "connect_four_new_game": "Neues Spiel",
   "connect_four_reset": "Zurücksetzen",
-  "back": "Zurück",
   "connect_four_welcome_knof": "4 Gewinnt ist eines meiner Lieblingsspiele! Du spielst mit den Sirupwaffeln und ich spiele mit den Zuckerwaffeln. Lass uns anfangen!",
   "connect_four_welcome_friend": "Viel Spaß mit 4 Gewinnt! Spieler 1 spielt mit Sirupwaffeln und Spieler 2 mit Zuckerwaffeln. Wer gewinnt?",
   "connect_four_reset_message": "Punkte wurden zurückgesetzt. Wir fangen wieder bei Null an!",
@@ -115,9 +101,7 @@
   "connect_four_normal_2": "Ich wähle diesen Platz!",
   "connect_four_normal_3": "Ich bin dran!",
   "connect_four_normal_4": "Meine Zuckerwaffel kommt hierhin!",
-  "connect_four_normal_5": "Das ist ein guter Zug, denke ich."
-}
-{
+  "connect_four_normal_5": "Das ist ein guter Zug, denke ich.",
   "tic_tac_toe_game_title": "Tic Tac Toe - Knofs Spiele",
   "player_you": "Du",
   "player_knof": "Knof",
@@ -125,7 +109,6 @@
   "player_2": "Spieler 2",
   "new_game": "Neues Spiel",
   "reset": "Zurücksetzen",
-  "back": "Zurück",
   "ttt_welcome_vs_knof": "Tic Tac Toe! Du spielst mit den Sirup-Pfannkuchen und ich spiele mit den Zucker-Pfannkuchen. Wer fängt an?",
   "ttt_welcome_vs_friend": "Viel Spaß bei Tic Tac Toe! Spieler 1 spielt mit Sirup-Pfannkuchen und Spieler 2 mit Zucker-Pfannkuchen. Viel Glück!",
   "reset_scores_message": "Die Punktzahlen wurden zurückgesetzt. Wir beginnen wieder bei Null!",
@@ -149,9 +132,7 @@
   "knof_normal_move_2": "Ich wähle diesen Platz!",
   "knof_normal_move_3": "Ich bin dran!",
   "knof_normal_move_4": "Mein Zucker-Pfannkuchen geht hier hin!",
-  "knof_normal_move_5": "Ich denke, das ist ein guter Zug."
-}
-{
+  "knof_normal_move_5": "Ich denke, das ist ein guter Zug.",
   "dobble_game_title": "Zutaten Suchen - Knofs Spiele",
   "pancake_dobble_title": "Pfannkuchen Dobble",
   "pancake_dobble_challenge": "\"Ich fordere dich heraus! Wer findet am schnellsten die richtige Zutat auf dem Pfannkuchen? Such nach der Zutat, die ich dir zeige, bevor ich dich schlage! Wer zuerst 10 Punkte hat, gewinnt!\"",
