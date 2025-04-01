@@ -45,3 +45,26 @@
   "play_with_friend_message": "{game} samen spelen is gezellig! Veel plezier!",
   "other_game_choice": "Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!"
 }
+{
+  "coloring_page_title": "Kleurboek - Knof's Speelbos",
+  "coloring_welcome": "Leuk dat je komt kleuren! Wat zullen we maken?",
+  "drawing_toolbar_label": "Teken gereedschappen",
+  "coloring_canvas_label": "Kleur canvas",
+  "color_red": "Rood",
+  "color_blue": "Blauw",
+  "color_green": "Groen",
+  "color_yellow": "Geel",
+  "color_orange": "Oranje",
+  "color_purple": "Paars",
+  "color_black": "Zwart",
+  "tool_pencil": "Potlood",
+  "tool_brush": "Kwast",
+  "tool_eraser": "Gum",
+  "tool_fill": "Vullen",
+  "action_clear": "Wissen",
+  "action_save": "Opslaan",
+  "action_undo": "Ongedaan maken",
+  "save_drawing_title": "Tekening opslaan",
+  "save_drawing_message": "Je tekening is opgeslagen in je afbeeldingen!",
+  "drawing_error": "Er ging iets mis bij het opslaan van je tekening"
+}
