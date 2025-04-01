@@ -45,3 +45,26 @@
   "play_with_friend_message": "{game} zusammen zu spielen macht Spaß! Viel Spaß!",
   "other_game_choice": "Möchtest du ein anderes Spiel auswählen? Sie sind alle toll!"
 }
+{
+  "coloring_page_title": "Malbuch - Knofs Spielwald",
+  "coloring_welcome": "Schön, dass du zum Malen kommst! Was werden wir machen?",
+  "drawing_toolbar_label": "Zeichenwerkzeuge",
+  "coloring_canvas_label": "Malcanvas",
+  "color_red": "Rot",
+  "color_blue": "Blau",
+  "color_green": "Grün",
+  "color_yellow": "Gelb",
+  "color_orange": "Orange",
+  "color_purple": "Lila",
+  "color_black": "Schwarz",
+  "tool_pencil": "Bleistift",
+  "tool_brush": "Pinsel",
+  "tool_eraser": "Radiergummi",
+  "tool_fill": "Füllen",
+  "action_clear": "Löschen",
+  "action_save": "Speichern",
+  "action_undo": "Rückgängig",
+  "save_drawing_title": "Zeichnung speichern",
+  "save_drawing_message": "Deine Zeichnung wurde in deinen Bildern gespeichert!",
+  "drawing_error": "Beim Speichern deiner Zeichnung ist ein Fehler aufgetreten"
+}
