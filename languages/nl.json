@@ -68,3 +68,10 @@
   "save_drawing_message": "Je tekening is opgeslagen in je afbeeldingen!",
   "drawing_error": "Er ging iets mis bij het opslaan van je tekening"
 }
+{
+  "memory_intro": "Memory is een spel waarbij je moet onthouden waar de plaatjes zijn. Klik op twee kaartjes om te zien of ze hetzelfde zijn!",
+  "puzzle_intro": "In dit puzzelspel moet je de stukjes op de juiste plek leggen. Sleep de stukjes naar de juiste plaats!",
+  "drawing_intro": "Ik ga iets tekenen en jij moet raden wat het is! Ben je er klaar voor?",
+  "games_intro": "Laten we spelen! Kies een spelletje dat je leuk vindt.",
+  "memory_welcome": "Welkom bij het Memory spel! Zoek alle paren om te winnen!"
+}
