@@ -82,5 +82,38 @@
 }
 {
   "chat_page_title": "Praten met Knof - Knof's Speelbos",
-  ...
+}
+{
+  "connect_four_title": "4 op een rij - Knof's Spelletjes",
+  "connect_four_you": "Jij",
+  "connect_four_knof": "Knof",
+  "connect_four_player1": "Speler 1",
+  "connect_four_player2": "Speler 2",
+  "connect_four_new_game": "Nieuw spel",
+  "connect_four_reset": "Reset",
+  "back": "Terug",
+  "connect_four_welcome_knof": "4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Laten we beginnen!",
+  "connect_four_welcome_friend": "Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?",
+  "connect_four_reset_message": "Scores zijn gereset. We beginnen weer bij nul!",
+  "connect_four_restart_knof": "Laten we nog een keer spelen. Veel plezier!",
+  "connect_four_restart_friend": "Nieuwe ronde, nieuwe kansen! Wie wint deze keer?",
+  "connect_four_wins_message": "{winner} wint!",
+  "connect_four_win_player": "Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.",
+  "connect_four_win_knof": "Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?",
+  "connect_four_win_generic": "{winner} heeft gewonnen! Dat was spannend!",
+  "connect_four_draw": "Gelijkspel!",
+  "connect_four_draw_message": "Het is gelijkspel! Jullie zijn aan elkaar gewaagd.",
+  "connect_four_taunt_win_1": "Ik denk dat ik hier ga winnen!",
+  "connect_four_taunt_win_2": "Kijk eens wat ik hier doe!",
+  "connect_four_taunt_win_3": "Vier op een rij voor mij!",
+  "connect_four_taunt_win_4": "Mijn suikerpannenkoek past hier perfect!",
+  "connect_four_block_1": "Dat was bijna gelukt!",
+  "connect_four_block_2": "Ik zie wat je probeert te doen!",
+  "connect_four_block_3": "Niet zo snel!",
+  "connect_four_block_4": "Ik blokkeer je pannenkoek-plan!",
+  "connect_four_normal_1": "Hmm, laat me eens nadenken...",
+  "connect_four_normal_2": "Ik kies deze plek!",
+  "connect_four_normal_3": "Mijn beurt!",
+  "connect_four_normal_4": "Mijn suikerpannenkoek gaat hier!",
+  "connect_four_normal_5": "Dit is een goede zet denk ik."
 }
