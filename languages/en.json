@@ -21,9 +21,7 @@
   "chat_subtitle": "Ask your friend questions!",
   "weather_title": "Nice Weather Alert!",
   "weather_message": "It's great weather to play outside! Have you seen our playground yet?",
-  "popup_message": "This feature is still baking, come back soon! 🧁"
-}
-{
+  "popup_message": "This feature is still baking, come back soon! 🧁",
   "games_title": "Knof's Games",
   "games_corner": "Knof's Game Corner",
   "connect_four": "Connect Four",
@@ -43,9 +41,7 @@
   "pancake_dobble_message": "Pancake Dobble is my favorite! I'll do my best against you!",
   "play_against_knof_message": "I'm glad you want to play {game} against me! I'll do my best!",
   "play_with_friend_message": "Playing {game} together is fun! Enjoy!",
-  "other_game_choice": "Would you like to choose another game? They're all fun!"
-}
-{
+  "other_game_choice": "Would you like to choose another game? They're all fun!",
   "coloring_page_title": "Coloring Book - Knof's Play Forest",
   "coloring_welcome": "Great to see you coloring! What shall we create?",
   "drawing_toolbar_label": "Drawing tools",
@@ -66,24 +62,15 @@
   "action_undo": "Undo",
   "save_drawing_title": "Save Drawing",
   "save_drawing_message": "Your drawing has been saved to your pictures!",
-  "drawing_error": "Something went wrong saving your drawing"
-}
-{
+  "drawing_error": "Something went wrong saving your drawing",
   "memory_intro": "Memory is a game where you need to remember where the pictures are. Click on two cards to see if they match!",
   "puzzle_intro": "In this puzzle game, you need to place the pieces in the right spot. Drag the pieces to the correct position!",
   "drawing_intro": "I'm going to draw something and you have to guess what it is! Are you ready?",
   "games_intro": "Let's play! Choose a game you like.",
-  "memory_welcome": "Welcome to the Memory game! Find all pairs to win!"
-}
-{
+  "memory_welcome": "Welcome to the Memory game! Find all pairs to win!",
   "chat_page_title": "Talk to Knof - Knof's Play Forest",
   "chat_placeholder": "Ask Knof a question here...",
-  "chat_title": "Talk to Knof"
-}
-{
-  "chat_page_title": "Talk to Knof - Knof's Play Forest",
-}
-{
+  "chat_title": "Talk to Knof",
   "connect_four_title": "Connect Four - Knof's Games",
   "connect_four_you": "You",
   "connect_four_knof": "Knof",
@@ -91,7 +78,6 @@
   "connect_four_player2": "Player 2",
   "connect_four_new_game": "New Game",
   "connect_four_reset": "Reset",
-  "back": "Back",
   "connect_four_welcome_knof": "Connect Four is one of my favorite games! You play with the syrup pancakes, and I play with the sugar pancakes. Let's start!",
   "connect_four_welcome_friend": "Have fun with Connect Four! Player 1 plays with syrup pancakes and Player 2 with sugar pancakes. Who will win?",
   "connect_four_reset_message": "Scores have been reset. We're starting from zero again!",
@@ -115,9 +101,7 @@
   "connect_four_normal_2": "I choose this spot!",
   "connect_four_normal_3": "My turn!",
   "connect_four_normal_4": "My sugar pancake goes here!",
-  "connect_four_normal_5": "This is a good move, I think."
-}
-{
+  "connect_four_normal_5": "This is a good move, I think.",
   "tic_tac_toe_game_title": "Tic Tac Toe - Knof's Games",
   "player_you": "You",
   "player_knof": "Knof",
@@ -125,7 +109,6 @@
   "player_2": "Player 2",
   "new_game": "New Game",
   "reset": "Reset",
-  "back": "Back",
   "ttt_welcome_vs_knof": "Tic Tac Toe! You play with the syrup pancakes and I play with the sugar pancakes. Who starts?",
   "ttt_welcome_vs_friend": "Have fun playing Tic Tac Toe! Player 1 plays with syrup pancakes and Player 2 with sugar pancakes. Good luck!",
   "reset_scores_message": "Scores have been reset. We start from zero again!",
@@ -149,9 +132,7 @@
   "knof_normal_move_2": "I choose this spot!",
   "knof_normal_move_3": "My turn!",
   "knof_normal_move_4": "My sugar pancake goes here!",
-  "knof_normal_move_5": "I think this is a good move."
-}
-{
+  "knof_normal_move_5": "I think this is a good move.",
   "dobble_game_title": "Find Ingredients - Knof's Games",
   "pancake_dobble_title": "Pancake Dobble",
   "pancake_dobble_challenge": "\"I challenge you! Who can find the right ingredient on the pancake the fastest? Look for the ingredient I show you before I beat you to it! First to 10 points wins!\"",
