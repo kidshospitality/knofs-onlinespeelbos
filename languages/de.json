@@ -23,3 +23,25 @@
   "weather_message": "Es ist herrliches Wetter zum Spielen im Freien! Hast du schon unseren Spielplatz gesehen?",
   "popup_message": "Diese Funktion wird noch gebacken, komm bald wieder! 🧁"
 }
+{
+  "games_title": "Knofs Spiele",
+  "games_corner": "Knofs Spielecke",
+  "connect_four": "4 Gewinnt",
+  "connect_four_subtitle": "Bringe 4 Steine in eine Reihe, Spalte oder Diagonale!",
+  "tic_tac_toe": "Tic Tac Toe",
+  "tic_tac_toe_subtitle": "Bringe drei in eine Reihe, um zu gewinnen!",
+  "pancake_dobble": "Pfannkuchen Dobble",
+  "pancake_dobble_subtitle": "Finde so schnell wie möglich die passenden Bilder",
+  "how_to_play": "Wie möchtest du spielen?",
+  "how_to_play_format": "Wie möchtest du {game} spielen?",
+  "play_against_knof": "Gegen Knof spielen",
+  "play_with_friend": "Mit einem Freund spielen",
+  "back": "Zurück",
+  "games_welcome": "Willkommen bei den Spielen! Was möchtest du spielen? Ich mag sie alle!",
+  "connect_four_message": "4 Gewinnt macht super Spaß! Möchtest du gegen mich oder gegen einen Freund spielen?",
+  "tic_tac_toe_message": "Tic Tac Toe! Möchtest du gegen mich oder gegen einen Freund spielen?",
+  "pancake_dobble_message": "Pfannkuchen Dobble ist mein Lieblingsspiel! Ich gebe mein Bestes gegen dich!",
+  "play_against_knof_message": "Schön, dass du {game} gegen mich spielen möchtest! Ich gebe mein Bestes!",
+  "play_with_friend_message": "{game} zusammen zu spielen macht Spaß! Viel Spaß!",
+  "other_game_choice": "Möchtest du ein anderes Spiel auswählen? Sie sind alle toll!"
+}
