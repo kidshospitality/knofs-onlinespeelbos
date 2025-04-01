@@ -248,9 +248,9 @@ function typeText(element, text, speed = 50) {
   // Bepaal de snelheid op basis van instellingen (indien beschikbaar)
   const textSpeedSetting = localStorage.getItem('textSpeed') || 'medium';
   const speedMap = {
-    slow: 100,    // Langzamer (2x zo langzaam als normaal)
-    medium: 50,   // Normaal
-    fast: 30      // Snel
+    slow: 175,    // Langzamer (2x zo langzaam als normaal)
+    medium: 75,   // Normaal
+    fast: 40      // Snel
   };
   speed = speedMap[textSpeedSetting] || speed;
   
