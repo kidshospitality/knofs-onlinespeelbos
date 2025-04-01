@@ -42,7 +42,7 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 55px; /* Verhoogd voor betere spacing */
+      bottom: 65px; /* Verhoogd voor betere spacing */
       display: flex;
       flex-direction: column;
       background-color: transparent !important;
@@ -64,6 +64,10 @@
       flex-direction: column;
       border: none !important; /* Verwijder alle borders */
       padding-bottom: 30px !important;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      z-index: 1;
     }
     
     /* Bottom navigation fix */
@@ -100,6 +104,7 @@
       width: 0;
       height: 0;
       overflow: hidden;
+      display: none; /* Filters verbergen om trilling te voorkomen */
     }
     
     /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
@@ -114,75 +119,23 @@
       pointer-events: none; /* Zodat het niet interactief is */
     }
     
-    /* Nieuwe Pickaxe chatbot stijl */
-    #deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: block;
-      border: none !important; /* Verwijder alle borders */
-    }
-    
-    /* Overschrijf de chat-container stijlen uit style.css */
-    .chat-container {
+    /* Chat iframe stijl - aangepast voor betere weergave en stabiliteit */
+    .chat-iframe {
+      width: 100% !important;
+      height: calc(100vh - 70px) !important; /* Vaste berekening */
+      min-height: 400px !important; /* Minimale hoogte */
       border: none !important;
+      border-radius: 0 !important;
       filter: none !important;
-      box-shadow: none !important;
-      background-color: transparent !important;
-    }
-    
-    /* Verwijder alle randen van Pickaxe elementen */
-    #deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d * {
-      border: none !important;
-      box-shadow: none !important;
-    }
-    
-    /* Verberg eventuele andere borders in geneste elementen */
-    .app-container * {
-      border: none !important;
-    }
-    
-    /* Gebruik negatieve CSS-reset voor borders in de chatbot */
-    [class*="chat"], [class*="message"], [class*="bubble"], 
-    [class*="container"], [class*="panel"], [class*="box"], 
-    [class*="input"], [class*="wrapper"] {
-      border: none !important;
-      box-shadow: none !important;
-    }
-    
-    /* Verhoog de positie van het inputveld */
-    [class*="pickaxe-input-container"],
-    [class*="input-container"],
-    [class*="message-input-container"],
-    [class*="textarea-container"],
-    [id*="input-container"] {
-      margin-bottom: 15px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
-      position: relative !important;
-      bottom: 20px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
-      padding-bottom: 10px !important;
-    }
-    
-    /* Zorg ervoor dat de verstuurknop ook mee omhoog gaat */
-    [class*="send-button"],
-    [class*="submit-button"],
-    button[type="submit"] {
-      position: relative !important;
-      bottom: 20px !important; /* Zelfde waarde als hierboven */
-    }
-    
-    /* Zorg dat de iframe en chatwidget niet expanderen naar boven */
-    iframe, 
-    [class*="chat-widget"],
-    [class*="chat-window"],
-    [class*="pickaxe-widget"] {
-      top: 0 !important;
-      bottom: auto !important;
-      height: 100% !important;
-      position: absolute !important;
-      transform: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      max-height: 100% !important;
+      animation: none !important;
+      transition: none !important;
+      -webkit-transform: translate3d(0,0,0) !important;
+      transform: translate3d(0,0,0) !important;
+      -webkit-backface-visibility: hidden !important;
+      backface-visibility: hidden !important;
+      -webkit-perspective: 1000 !important;
+      perspective: 1000 !important;
+      will-change: transform !important;
     }
     
     /* Laadanimatie stijl */
@@ -216,19 +169,7 @@
   </style>
 </head>
 <body>
-  <!-- SVG filters for hand-drawn effect -->
-  <svg class="svg-filters">
-    <defs>
-      <filter id="rough-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-      <filter id="squiggly-filter">
-        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="turbulence" seed="2"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="6" />
-      </filter>
-    </defs>
-  </svg>
+  <!-- SVG filters verwijderd om trillingen te voorkomen -->
 
   <!-- Container voor top navigatie (nu verborgen) -->
   <div id="top-nav-container"></div>
@@ -236,7 +177,7 @@
   <!-- Settings modal container -->
   <div id="settings-modal-container"></div>
 
-  <!-- Hoofdcontent - Chat met Pickaxe chatbot -->
+  <!-- Hoofdcontent - Chat met Pickaxe chatbot via iframe -->
   <div class="app-container">
     <div id="chatbot-wrapper" class="chatbot-wrapper">
       <!-- Laadanimatie voor de chatbot -->
@@ -245,8 +186,13 @@
         <p data-i18n="loading_chat">Knof wordt wakker...</p>
       </div>
       
-      <!-- Nieuwe Pickaxe chatbot embed code -->
-      <div id="deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d"></div>
+      <!-- Directe iframe embed -->
+      <iframe 
+        id="chat-iframe"
+        class="chat-iframe"
+        src="https://studio.pickaxe.co/_embed/Knof_de_Pad_0BLW7?d=deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d" 
+        frameborder="0">
+      </iframe>
     </div>
   </div>
 
@@ -322,151 +268,46 @@
           `;
         }
       }
-      
-      // Verwijder alle randen van chatinterface elementen en voorkom naar boven schalen
-      function removeBorders() {
-        // Direct op pickaxe container
-        const pickaxeContainer = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
-        if (pickaxeContainer) {
-          pickaxeContainer.style.border = 'none';
-          pickaxeContainer.style.boxShadow = 'none';
-          pickaxeContainer.style.borderRadius = '0';
-          
-          // Voorkom dat de container omhoog schaalt
-          pickaxeContainer.style.position = 'relative';
-          pickaxeContainer.style.top = '0';
-          pickaxeContainer.style.transform = 'none';
-          pickaxeContainer.style.height = '100%';
-        }
-        
-        // Zoek alle elementen die mogelijk borders hebben
-        const borderElements = document.querySelectorAll('[class*="chat"], [class*="message"], [class*="bubble"], [class*="container"], [class*="panel"], [class*="box"], [class*="input"], [class*="wrapper"]');
-        borderElements.forEach(element => {
-          element.style.border = 'none';
-          element.style.boxShadow = 'none';
-        });
 
-        // Voorkom naar boven schalen voor alle iframe en chat-widget elementen
-        const iframeElements = document.querySelectorAll('iframe, [class*="chat-widget"], [class*="chat-window"], [class*="pickaxe-widget"]');
-        iframeElements.forEach(element => {
-          element.style.position = 'absolute';
-          element.style.top = '0';
-          element.style.bottom = 'auto';
-          element.style.height = '100%';
-          element.style.maxHeight = '100%';
-          element.style.transform = 'none';
-          element.style.margin = '0';
-          element.style.padding = '0';
-        });
-
-        // Extra: vertaal eventuele placeholder teksten of knoppen in de chatinterface
-        translateChatElements();
-      }
-
-      // Functie om vertaling toe te passen op dynamische chatbot elementen
-      function translateChatElements() {
-        // Probeer eventuele inputvelden te vinden en vertaal de placeholder
-        const inputFields = document.querySelectorAll('[placeholder], [aria-placeholder]');
-        inputFields.forEach(input => {
-          // Alleen als de taal niet Nederlands is (standaard)
-          const currentLang = localStorage.getItem('language') || 'nl';
-          if (currentLang !== 'nl') {
-            const placeholder = input.getAttribute('placeholder') || input.getAttribute('aria-placeholder');
-            if (placeholder && placeholder.includes('Typ een bericht')) {
-              if (currentLang === 'en') {
-                input.setAttribute('placeholder', 'Type a message...');
-                if (input.hasAttribute('aria-placeholder')) {
-                  input.setAttribute('aria-placeholder', 'Type a message...');
-                }
-              } else if (currentLang === 'de') {
-                input.setAttribute('placeholder', 'Nachricht eingeben...');
-                if (input.hasAttribute('aria-placeholder')) {
-                  input.setAttribute('aria-placeholder', 'Nachricht eingeben...');
-                }
-              }
-            }
-          }
-        });
-
-        // Probeer de verzendknop te vinden en te vertalen
-        const sendButtons = document.querySelectorAll('button[type="submit"], [class*="send-button"]');
-        sendButtons.forEach(button => {
-          const currentLang = localStorage.getItem('language') || 'nl';
-          if (currentLang !== 'nl') {
-            // Controleer op 'Verstuur' tekst
-            if (button.textContent.includes('Verstuur') || button.textContent.includes('Verzenden')) {
-              if (currentLang === 'en') {
-                button.textContent = 'Send';
-              } else if (currentLang === 'de') {
-                button.textContent = 'Senden';
-              }
-            }
-          }
-        });
-      }
-      
-      // Controleer of Pickaxe is geladen en verberg de laadanimatie
-      function checkPickaxeLoaded() {
-        // Check of er elementen binnen de container zijn toegevoegd
-        const pickaxeContainer = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
-        
-        if (pickaxeContainer && (
-            pickaxeContainer.children.length > 0 || 
-            pickaxeContainer.innerHTML.trim() !== '' ||
-            document.querySelector('iframe')
-        )) {
-          const loader = document.getElementById('chat-loading');
-          if (loader) loader.style.display = 'none';
-          
-          // Verwijder borders en voorkom naar boven schalen
-          removeBorders();
-          return true;
-        }
-        
-        return false;
-      }
-
-      // Handmatige timeout om laadanimatie te verbergen na een bepaalde tijd (als fallback)
-      setTimeout(function() {
+      // Verberg laadanimatie als iframe geladen is
+      const chatIframe = document.getElementById('chat-iframe');
+      chatIframe.onload = function() {
         const loader = document.getElementById('chat-loading');
         if (loader) {
           loader.style.display = 'none';
         }
         
-        // Verwijder borders en voorkom naar boven schalen
-        removeBorders();
-      }, 5000); // Verberg na 5 seconden
+        // Probeer iframe content aan te passen om trillingen te voorkomen
+        try {
+          const iframeDoc = this.contentDocument || this.contentWindow.document;
+          const style = iframeDoc.createElement('style');
+          style.textContent = `
+            * {
+              filter: none !important;
+              animation: none !important;
+              transition: none !important;
+              transform: translateZ(0);
+              backface-visibility: hidden;
+            }
+          `;
+          iframeDoc.head.appendChild(style);
+        } catch(e) {
+          console.log('Kan iframe content niet aanpassen vanwege same-origin policy');
+        }
+      };
+      
+      // Fallback om laadanimatie te verbergen na timeout
+      setTimeout(function() {
+        const loader = document.getElementById('chat-loading');
+        if (loader) {
+          loader.style.display = 'none';
+        }
+      }, 3000);
 
       // Voer direct uit en blijf controleren
       forceHideTopNav();
       setInterval(forceHideTopNav, 1000);
-      
-      // Wacht tot Pickaxe is geladen en verwijder dan borders en voorkom naar boven schalen
-      setTimeout(removeBorders, 1000);
-      setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
-
-      // Controleer regelmatig of Pickaxe is geladen
-      const loadCheckInterval = setInterval(() => {
-        if (checkPickaxeLoaded()) {
-          clearInterval(loadCheckInterval);
-          // Extra run om borders te verwijderen en naar boven schalen te voorkomen
-          setTimeout(removeBorders, 300);
-        }
-      }, 500);
-
-      // Luister naar eventuele taalwijzigingen
-      window.addEventListener('languageChanged', function(e) {
-        translateChatElements();
-      });
-      
-      // Fix na volledig laden van de pagina
-      window.addEventListener('load', function() {
-        setTimeout(removeBorders, 1000);
-      });
     });
   </script>
-  
-  <!-- Nieuwe Pickaxe Chatbot Script -->
-  <script src="https://studio.pickaxe.co/api/embed/bundle.js"></script>
 </body>
 </html>
