@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Boter Kaas en Eieren - Knof's Spelletjes</title>
+  <title data-i18n="tic_tac_toe_game_title">Boter Kaas en Eieren - Knof's Spelletjes</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -272,14 +272,14 @@
         <div class="score-board">
           <div class="score-card" id="player-score-card">
             <div class="player-heading">
-              <h3 id="player1-name">Jij</h3>
+              <h3 id="player1-name" data-i18n="player_you">Jij</h3>
               <div class="player-icon x-mark" id="player1-indicator"></div>
             </div>
             <p id="player-score">0</p>
           </div>
           <div class="score-card" id="opponent-score-card">
             <div class="player-heading">
-              <h3 id="opponent-name">Knof</h3>
+              <h3 id="opponent-name" data-i18n="player_knof">Knof</h3>
               <div class="player-icon knof-mark" id="player2-indicator"></div>
             </div>
             <p id="opponent-score">0</p>
@@ -287,9 +287,9 @@
         </div>
         <div class="win-message" id="win-message"></div>
         <div class="buttons-container">
-          <button class="game-button" id="restart-button">Nieuw spel</button>
-          <button class="game-button" id="reset-scores">Reset</button>
-          <button class="game-button" id="back-button">Terug</button>
+          <button class="game-button" id="restart-button" data-i18n="new_game">Nieuw spel</button>
+          <button class="game-button" id="reset-scores" data-i18n="reset">Reset</button>
+          <button class="game-button" id="back-button" data-i18n="back">Terug</button>
         </div>
       </div>
     </div>
@@ -302,463 +302,494 @@
   <script src="../js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Instellingen voor het spel
-      const BOARD_SIZE = 3;
-      
-      // Spelstatus
-      let gameBoard = Array(9).fill('');
-      let currentPlayer = 'X'; // X voor speler 1, O voor speler 2 (Knof of vriend)
-      let gameOver = false;
-      let gameMode = '';
-      let playerMarks = {
-        'X': 'x-mark',
-        'O': 'o-mark'
-      };
-      let winningCells = [];
-      let scores = {
-        player: 0,
-        opponent: 0
-      };
-      let lastWinner = ''; // Bijhouden wie de laatste winnaar was voor om-en-om starten
-      
-      // Elementen selecteren
-      const gameBoardEl = document.getElementById('game-board');
-      const player1NameEl = document.getElementById('player1-name');
-      const playerScoreEl = document.getElementById('player-score');
-      const opponentNameEl = document.getElementById('opponent-name');
-      const opponentScoreEl = document.getElementById('opponent-score');
-      const winMessage = document.getElementById('win-message');
-      const restartButton = document.getElementById('restart-button');
-      const resetScoresButton = document.getElementById('reset-scores');
-      const backButton = document.getElementById('back-button');
-      const confettiCanvas = document.getElementById('confetti-canvas');
-      const context = confettiCanvas.getContext('2d');
-      
-      // Variabelen voor spelelementen die tijdens het spel worden bijgewerkt
-      let player1Indicator = document.getElementById('player1-indicator');
-      let player2Indicator = document.getElementById('player2-indicator');
-      
-      // Confetti systeem
-      let confetti = [];
-      let confettiActive = false;
-      let confettiAnimationId = null;
-      
-      function resizeCanvas() {
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-      }
-      
-      function startConfetti() {
-        stopConfetti(); // Stop any existing confetti first
-        confettiActive = true;
-        confetti = [];
-        resizeCanvas();
+      // Eerst de vertalingen laden
+      loadTranslations().then(() => {
+        // Instellingen voor het spel
+        const BOARD_SIZE = 3;
         
-        // Create confetti particles
-        for (let i = 0; i < 100; i++) {
-          confetti.push({
-            x: Math.random() * confettiCanvas.width,
-            y: Math.random() * -confettiCanvas.height,
-            size: Math.random() * 10 + 5,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            rotation: Math.random() * 360,
-            rotationSpeed: Math.random() * 2 - 1,
-            speed: Math.random() * 5 + 2
-          });
+        // Spelstatus
+        let gameBoard = Array(9).fill('');
+        let currentPlayer = 'X'; // X voor speler 1, O voor speler 2 (Knof of vriend)
+        let gameOver = false;
+        let gameMode = '';
+        let playerMarks = {
+          'X': 'x-mark',
+          'O': 'o-mark'
+        };
+        let winningCells = [];
+        let scores = {
+          player: 0,
+          opponent: 0
+        };
+        let lastWinner = ''; // Bijhouden wie de laatste winnaar was voor om-en-om starten
+        
+        // Elementen selecteren
+        const gameBoardEl = document.getElementById('game-board');
+        const player1NameEl = document.getElementById('player1-name');
+        const playerScoreEl = document.getElementById('player-score');
+        const opponentNameEl = document.getElementById('opponent-name');
+        const opponentScoreEl = document.getElementById('opponent-score');
+        const winMessage = document.getElementById('win-message');
+        const restartButton = document.getElementById('restart-button');
+        const resetScoresButton = document.getElementById('reset-scores');
+        const backButton = document.getElementById('back-button');
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const context = confettiCanvas.getContext('2d');
+        
+        // Variabelen voor spelelementen die tijdens het spel worden bijgewerkt
+        let player1Indicator = document.getElementById('player1-indicator');
+        let player2Indicator = document.getElementById('player2-indicator');
+        
+        // Confetti systeem
+        let confetti = [];
+        let confettiActive = false;
+        let confettiAnimationId = null;
+        
+        function resizeCanvas() {
+          confettiCanvas.width = window.innerWidth;
+          confettiCanvas.height = window.innerHeight;
         }
         
-        animateConfetti();
-      }
-      
-      function stopConfetti() {
-        confettiActive = false;
-        if (confettiAnimationId) {
-          cancelAnimationFrame(confettiAnimationId);
-          confettiAnimationId = null;
-        }
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-      
-      function animateConfetti() {
-        if (!confettiActive) return;
-        
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        
-        for (let i = 0; i < confetti.length; i++) {
-          const p = confetti[i];
+        function startConfetti() {
+          stopConfetti(); // Stop any existing confetti first
+          confettiActive = true;
+          confetti = [];
+          resizeCanvas();
           
-          context.save();
-          context.translate(p.x, p.y);
-          context.rotate(p.rotation * Math.PI / 180);
-          context.fillStyle = p.color;
-          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          context.restore();
-          
-          p.y += p.speed;
-          p.rotation += p.rotationSpeed;
-          
-          if (p.y > confettiCanvas.height) {
-            p.y = -10;
-            p.x = Math.random() * confettiCanvas.width;
+          // Create confetti particles
+          for (let i = 0; i < 100; i++) {
+            confetti.push({
+              x: Math.random() * confettiCanvas.width,
+              y: Math.random() * -confettiCanvas.height,
+              size: Math.random() * 10 + 5,
+              color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+              rotation: Math.random() * 360,
+              rotationSpeed: Math.random() * 2 - 1,
+              speed: Math.random() * 5 + 2
+            });
           }
-        }
-        
-        confettiAnimationId = requestAnimationFrame(animateConfetti);
-      }
-      
-      window.addEventListener('resize', resizeCanvas);
-      
-      // URL parameters uitlezen voor spelmodus
-      const urlParams = new URLSearchParams(window.location.search);
-      gameMode = urlParams.get('mode') || 'vs-knof';
-      
-      // Aanpassingen voor de verschillende spelmodi
-      if (gameMode === 'vs-knof') {
-        // Speler 2 is Knof in deze modus
-        playerMarks['O'] = 'knof-mark';
-        player1NameEl.textContent = 'Jij';
-        opponentNameEl.textContent = 'Knof';
-        // Welkomstbericht
-        setTimeout(() => {
-          typeSpeechMessage("Boter, kaas en eieren! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Wie begint?");
-        }, 500);
-      } else {
-        // Speler 2 is een vriend
-        playerMarks['O'] = 'o-mark';
-        player1NameEl.textContent = 'Speler 1';
-        opponentNameEl.textContent = 'Speler 2';
-        // Welkomstbericht
-        setTimeout(() => {
-          typeSpeechMessage("Veel plezier met boter, kaas en eieren! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Succes!");
-        }, 500);
-      }
-      
-      // Event listeners
-      backButton.addEventListener('click', function() {
-        window.location.href = '../games.html';
-      });
-      
-      resetScoresButton.addEventListener('click', function() {
-        scores.player = 0;
-        scores.opponent = 0;
-        lastWinner = ''; // Reset ook de laatste winnaar
-        updateScores();
-        
-        // Opnieuw initialiseren van het spel met een willekeurige starter
-        initializeGame(true); // Voeg een parameter toe om een willekeurige starter aan te geven
-        
-        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
-      });
-      
-      // Opnieuw starten
-      restartButton.addEventListener('click', function() {
-        initializeGame();
-        if (gameMode === 'vs-knof') {
-          typeSpeechMessage("Laten we nog een keer spelen. Veel plezier!");
-        } else {
-          typeSpeechMessage("Nieuwe ronde, nieuwe kansen! Wie wint deze keer?");
-        }
-      });
-      
-      // Initialiseer het spelbord
-      function initializeGame(randomizeStarter = false) {
-        // Reset game state
-        gameBoard = Array(9).fill('');
-        gameOver = false;
-        
-        // Bepaal de startende speler
-        if (randomizeStarter) {
-          // Bij reset-scores een willekeurige starter kiezen
-          currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
-        } else if (lastWinner === 'X') {
-          currentPlayer = 'O'; // Als X de laatste keer won, begint O
-        } else if (lastWinner === 'O') {
-          currentPlayer = 'X'; // Als O de laatste keer won, begint X
-        } else {
-          currentPlayer = 'X'; // Standaard begint X
-        }
-        
-        winningCells = [];
-        
-        // Reset UI
-        createGameBoard();
-        updateTurnIndicator();
-        winMessage.textContent = '';
-        
-        // Stop confetti als dat actief is
-        stopConfetti();
-        
-        // Laat Knof automatisch zetten als hij mag beginnen
-        if (currentPlayer === 'O' && gameMode === 'vs-knof' && !gameOver) {
-          setTimeout(makeKnofMove, 1000);
-        }
-      }
-      
-      // Maak het visuele spelbord
-      function createGameBoard() {
-        gameBoardEl.innerHTML = '';
-        
-        for (let i = 0; i < 9; i++) {
-          const cell = document.createElement('div');
-          cell.className = 'cell';
-          cell.dataset.index = i;
           
-          cell.addEventListener('click', function() {
-            if (!gameOver && gameBoard[i] === '') {
-              // In vs-knof mode alleen klikken toestaan voor speler 1
-              // In vs-friend mode voor beide spelers
-              if ((gameMode === 'vs-knof' && currentPlayer === 'X') || gameMode !== 'vs-knof') {
-                makeMove(i);
-              }
+          animateConfetti();
+        }
+        
+        function stopConfetti() {
+          confettiActive = false;
+          if (confettiAnimationId) {
+            cancelAnimationFrame(confettiAnimationId);
+            confettiAnimationId = null;
+          }
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+        
+        function animateConfetti() {
+          if (!confettiActive) return;
+          
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          
+          for (let i = 0; i < confetti.length; i++) {
+            const p = confetti[i];
+            
+            context.save();
+            context.translate(p.x, p.y);
+            context.rotate(p.rotation * Math.PI / 180);
+            context.fillStyle = p.color;
+            context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            context.restore();
+            
+            p.y += p.speed;
+            p.rotation += p.rotationSpeed;
+            
+            if (p.y > confettiCanvas.height) {
+              p.y = -10;
+              p.x = Math.random() * confettiCanvas.width;
             }
-          });
+          }
           
-          gameBoardEl.appendChild(cell);
+          confettiAnimationId = requestAnimationFrame(animateConfetti);
         }
-      }
-      
-      // Update scores
-      function updateScores() {
-        playerScoreEl.textContent = scores.player;
-        opponentScoreEl.textContent = scores.opponent;
-      }
-      
-      // Voer een zet uit
-      function makeMove(index) {
-        if (gameBoard[index] !== '' || gameOver) return;
         
-        // Zet uitvoeren
-        gameBoard[index] = currentPlayer;
+        window.addEventListener('resize', resizeCanvas);
         
-        // Update de UI
-        const cell = document.querySelector(`.cell[data-index="${index}"]`);
-        cell.classList.add(playerMarks[currentPlayer]);
+        // URL parameters uitlezen voor spelmodus
+        const urlParams = new URLSearchParams(window.location.search);
+        gameMode = urlParams.get('mode') || 'vs-knof';
         
-        // Controleer op winnende zet
-        const winResult = checkWin();
-        if (winResult) {
-          gameOver = true;
-          winningCells = winResult;
-          highlightWinningCells();
-          
-          // Sla op wie de winnaar is voor het om-en-om beginnen
-          lastWinner = currentPlayer;
-          
-          // Bepaal de juiste tekst afhankelijk van spelmodus
-          let winner;
-          if (gameMode === 'vs-knof') {
-            winner = currentPlayer === 'X' ? 'Jij' : 'Knof';
-          } else {
-            winner = currentPlayer === 'X' ? 'Speler 1' : 'Speler 2';
-          }
-          
-          winMessage.textContent = `${winner} wint!`;
-          
-          // Update scores
-          if (currentPlayer === 'X') {
-            scores.player++;
-          } else {
-            scores.opponent++;
-          }
+        // Aanpassingen voor de verschillende spelmodi
+        if (gameMode === 'vs-knof') {
+          // Speler 2 is Knof in deze modus
+          playerMarks['O'] = 'knof-mark';
+          player1NameEl.textContent = __("player_you", "Jij");
+          opponentNameEl.textContent = __("player_knof", "Knof");
+          // Welkomstbericht
+          setTimeout(() => {
+            typeSpeechMessage(__("ttt_welcome_vs_knof", "Boter, kaas en eieren! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Wie begint?"));
+          }, 500);
+        } else {
+          // Speler 2 is een vriend
+          playerMarks['O'] = 'o-mark';
+          player1NameEl.textContent = __("player_1", "Speler 1");
+          opponentNameEl.textContent = __("player_2", "Speler 2");
+          // Welkomstbericht
+          setTimeout(() => {
+            typeSpeechMessage(__("ttt_welcome_vs_friend", "Veel plezier met boter, kaas en eieren! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Succes!"));
+          }, 500);
+        }
+        
+        // Event listeners
+        backButton.addEventListener('click', function() {
+          window.location.href = '../games.html';
+        });
+        
+        resetScoresButton.addEventListener('click', function() {
+          scores.player = 0;
+          scores.opponent = 0;
+          lastWinner = ''; // Reset ook de laatste winnaar
           updateScores();
           
-          // Toon confetti voor beide spelers
-          startConfetti();
+          // Opnieuw initialiseren van het spel met een willekeurige starter
+          initializeGame(true); // Voeg een parameter toe om een willekeurige starter aan te geven
           
-          // Toon passend bericht afhankelijk van de spelmodus
+          typeSpeechMessage(__("reset_scores_message", "Scores zijn gereset. We beginnen weer bij nul!"));
+        });
+        
+        // Opnieuw starten
+        restartButton.addEventListener('click', function() {
+          initializeGame();
           if (gameMode === 'vs-knof') {
-            if (currentPlayer === 'X') {
-              typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
-            } else {
-              typeSpeechMessage("Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?");
-            }
+            typeSpeechMessage(__("new_game_vs_knof", "Laten we nog een keer spelen. Veel plezier!"));
           } else {
-            typeSpeechMessage(`${winner} heeft gewonnen! Dat was spannend!`);
+            typeSpeechMessage(__("new_game_vs_friend", "Nieuwe ronde, nieuwe kansen! Wie wint deze keer?"));
           }
-        } else if (checkDraw()) {
-          gameOver = true;
-          winMessage.textContent = "Gelijkspel!";
-          typeSpeechMessage("Het is gelijkspel! Jullie zijn aan elkaar gewaagd.");
-        } else {
-          // Wissel van speler
-          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-          updateTurnIndicator();
+        });
+        
+        // Initialiseer het spelbord
+        function initializeGame(randomizeStarter = false) {
+          // Reset game state
+          gameBoard = Array(9).fill('');
+          gameOver = false;
           
-          // Als de huidige speler Knof is en het is vs-knof modus, laat Knof een zet doen
+          // Bepaal de startende speler
+          if (randomizeStarter) {
+            // Bij reset-scores een willekeurige starter kiezen
+            currentPlayer = Math.random() < 0.5 ? 'X' : 'O';
+          } else if (lastWinner === 'X') {
+            currentPlayer = 'O'; // Als X de laatste keer won, begint O
+          } else if (lastWinner === 'O') {
+            currentPlayer = 'X'; // Als O de laatste keer won, begint X
+          } else {
+            currentPlayer = 'X'; // Standaard begint X
+          }
+          
+          winningCells = [];
+          
+          // Reset UI
+          createGameBoard();
+          updateTurnIndicator();
+          winMessage.textContent = '';
+          
+          // Stop confetti als dat actief is
+          stopConfetti();
+          
+          // Laat Knof automatisch zetten als hij mag beginnen
           if (currentPlayer === 'O' && gameMode === 'vs-knof' && !gameOver) {
             setTimeout(makeKnofMove, 1000);
           }
         }
-      }
-      
-      // Highlight de winnende cellen
-      function highlightWinningCells() {
-        winningCells.forEach(index => {
-          const cell = document.querySelector(`.cell[data-index="${index}"]`);
-          if (cell) cell.classList.add('winning');
-        });
-      }
-      
-      // Knof's AI zet
-      function makeKnofMove() {
-        if (gameOver) return;
         
-        // Bereken de beste zet met minimax
-        const bestMove = findBestMove();
-        
-        // Mogelijk leuk commentaar afhankelijk van de situatie
-        let isWinningMove = false;
-        let isBlockingMove = false;
-        
-        // Test of dit een winnende zet is
-        gameBoard[bestMove] = 'O';
-        if (checkWin()) {
-          isWinningMove = true;
-        }
-        gameBoard[bestMove] = '';
-        
-        // Test of dit een blokkerende zet is
-        for (let i = 0; i < 9; i++) {
-          if (gameBoard[i] === '') {
-            gameBoard[i] = 'X';
-            if (checkWin()) {
-              isBlockingMove = (bestMove === i);
-            }
-            gameBoard[i] = '';
+        // Maak het visuele spelbord
+        function createGameBoard() {
+          gameBoardEl.innerHTML = '';
+          
+          for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.index = i;
+            
+            cell.addEventListener('click', function() {
+              if (!gameOver && gameBoard[i] === '') {
+                // In vs-knof mode alleen klikken toestaan voor speler 1
+                // In vs-friend mode voor beide spelers
+                if ((gameMode === 'vs-knof' && currentPlayer === 'X') || gameMode !== 'vs-knof') {
+                  makeMove(i);
+                }
+              }
+            });
+            
+            gameBoardEl.appendChild(cell);
           }
         }
         
-        if (isWinningMove) {
-          const taunts = [
-            "Ik denk dat ik hier ga winnen!",
-            "Kijk eens wat ik hier doe!",
-            "Drie op een rij voor mij!",
-            "Mijn suikerpannenkoek past hier perfect!"
-          ];
-          typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
-        } 
-        else if (isBlockingMove) {
-          const blockMessages = [
-            "Dat was bijna gelukt!",
-            "Ik zie wat je probeert te doen!",
-            "Niet zo snel!",
-            "Ik blokkeer je pannenkoek-plan!"
-          ];
-          typeSpeechMessage(blockMessages[Math.floor(Math.random() * blockMessages.length)]);
+        // Update scores
+        function updateScores() {
+          playerScoreEl.textContent = scores.player;
+          opponentScoreEl.textContent = scores.opponent;
         }
-        else {
-          // Willekeurig commentaar voor normale zetten
-          const normalMoves = [
-            "Hmm, laat me eens nadenken...",
-            "Ik kies deze plek!",
-            "Mijn beurt!",
-            "Mijn suikerpannenkoek gaat hier!",
-            "Dit is een goede zet denk ik."
+        
+        // Voer een zet uit
+        function makeMove(index) {
+          if (gameBoard[index] !== '' || gameOver) return;
+          
+          // Zet uitvoeren
+          gameBoard[index] = currentPlayer;
+          
+          // Update de UI
+          const cell = document.querySelector(`.cell[data-index="${index}"]`);
+          cell.classList.add(playerMarks[currentPlayer]);
+          
+          // Controleer op winnende zet
+          const winResult = checkWin();
+          if (winResult) {
+            gameOver = true;
+            winningCells = winResult;
+            highlightWinningCells();
+            
+            // Sla op wie de winnaar is voor het om-en-om beginnen
+            lastWinner = currentPlayer;
+            
+            // Bepaal de juiste tekst afhankelijk van spelmodus
+            let winner;
+            if (gameMode === 'vs-knof') {
+              winner = currentPlayer === 'X' ? __("player_you", "Jij") : __("player_knof", "Knof");
+            } else {
+              winner = currentPlayer === 'X' ? __("player_1", "Speler 1") : __("player_2", "Speler 2");
+            }
+            
+            winMessage.textContent = __("player_wins", "{winner} wint!").replace("{winner}", winner);
+            
+            // Update scores
+            if (currentPlayer === 'X') {
+              scores.player++;
+            } else {
+              scores.opponent++;
+            }
+            updateScores();
+            
+            // Toon confetti voor beide spelers
+            startConfetti();
+            
+            // Toon passend bericht afhankelijk van de spelmodus
+            if (gameMode === 'vs-knof') {
+              if (currentPlayer === 'X') {
+                typeSpeechMessage(__("player_wins_message", "Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel."));
+              } else {
+                typeSpeechMessage(__("knof_wins_message", "Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?"));
+              }
+            } else {
+              typeSpeechMessage(__("friend_wins_message", "{winner} heeft gewonnen! Dat was spannend!").replace("{winner}", winner));
+            }
+          } else if (checkDraw()) {
+            gameOver = true;
+            winMessage.textContent = __("draw", "Gelijkspel!");
+            typeSpeechMessage(__("draw_message", "Het is gelijkspel! Jullie zijn aan elkaar gewaagd."));
+          } else {
+            // Wissel van speler
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            updateTurnIndicator();
+            
+            // Als de huidige speler Knof is en het is vs-knof modus, laat Knof een zet doen
+            if (currentPlayer === 'O' && gameMode === 'vs-knof' && !gameOver) {
+              setTimeout(makeKnofMove, 1000);
+            }
+          }
+        }
+        
+        // Highlight de winnende cellen
+        function highlightWinningCells() {
+          winningCells.forEach(index => {
+            const cell = document.querySelector(`.cell[data-index="${index}"]`);
+            if (cell) cell.classList.add('winning');
+          });
+        }
+        
+        // Knof's AI zet
+        function makeKnofMove() {
+          if (gameOver) return;
+          
+          // Bereken de beste zet met minimax
+          const bestMove = findBestMove();
+          
+          // Mogelijk leuk commentaar afhankelijk van de situatie
+          let isWinningMove = false;
+          let isBlockingMove = false;
+          
+          // Test of dit een winnende zet is
+          gameBoard[bestMove] = 'O';
+          if (checkWin()) {
+            isWinningMove = true;
+          }
+          gameBoard[bestMove] = '';
+          
+          // Test of dit een blokkerende zet is
+          for (let i = 0; i < 9; i++) {
+            if (gameBoard[i] === '') {
+              gameBoard[i] = 'X';
+              if (checkWin()) {
+                isBlockingMove = (bestMove === i);
+              }
+              gameBoard[i] = '';
+            }
+          }
+          
+          if (isWinningMove) {
+            const taunts = [
+              __("knof_winning_move_1", "Ik denk dat ik hier ga winnen!"),
+              __("knof_winning_move_2", "Kijk eens wat ik hier doe!"),
+              __("knof_winning_move_3", "Drie op een rij voor mij!"),
+              __("knof_winning_move_4", "Mijn suikerpannenkoek past hier perfect!")
+            ];
+            typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
+          } 
+          else if (isBlockingMove) {
+            const blockMessages = [
+              __("knof_blocking_move_1", "Dat was bijna gelukt!"),
+              __("knof_blocking_move_2", "Ik zie wat je probeert te doen!"),
+              __("knof_blocking_move_3", "Niet zo snel!"),
+              __("knof_blocking_move_4", "Ik blokkeer je pannenkoek-plan!")
+            ];
+            typeSpeechMessage(blockMessages[Math.floor(Math.random() * blockMessages.length)]);
+          }
+          else {
+            // Willekeurig commentaar voor normale zetten
+            const normalMoves = [
+              __("knof_normal_move_1", "Hmm, laat me eens nadenken..."),
+              __("knof_normal_move_2", "Ik kies deze plek!"),
+              __("knof_normal_move_3", "Mijn beurt!"),
+              __("knof_normal_move_4", "Mijn suikerpannenkoek gaat hier!"),
+              __("knof_normal_move_5", "Dit is een goede zet denk ik.")
+            ];
+            
+            // 20% kans op commentaar
+            if (Math.random() < 0.2) {
+              typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
+            }
+          }
+          
+          makeMove(bestMove);
+        }
+        
+        // Minimax algoritme voor Boter Kaas en Eieren
+        function findBestMove() {
+          // 1. Kijk eerst of we direct kunnen winnen
+          for (let i = 0; i < 9; i++) {
+            if (gameBoard[i] === '') {
+              gameBoard[i] = 'O';
+              if (checkWin()) {
+                gameBoard[i] = '';
+                return i;
+              }
+              gameBoard[i] = '';
+            }
+          }
+          
+          // 2. Kijk of we een winnende zet moeten blokkeren
+          for (let i = 0; i < 9; i++) {
+            if (gameBoard[i] === '') {
+              gameBoard[i] = 'X';
+              if (checkWin()) {
+                gameBoard[i] = '';
+                return i;
+              }
+              gameBoard[i] = '';
+            }
+          }
+          
+          // 3. Pak het centrum als het beschikbaar is
+          if (gameBoard[4] === '') {
+            return 4;
+          }
+          
+          // 4. Pak een hoek als beschikbaar
+          const corners = [0, 2, 6, 8];
+          const availableCorners = corners.filter(i => gameBoard[i] === '');
+          if (availableCorners.length > 0) {
+            return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+          }
+          
+          // 5. Pak een zijkant als beschikbaar
+          const sides = [1, 3, 5, 7];
+          const availableSides = sides.filter(i => gameBoard[i] === '');
+          if (availableSides.length > 0) {
+            return availableSides[Math.floor(Math.random() * availableSides.length)];
+          }
+          
+          // 6. Pak een willekeurige lege cel (dit zou eigenlijk niet nodig moeten zijn)
+          const emptyCells = gameBoard.map((cell, index) => cell === '' ? index : -1).filter(i => i !== -1);
+          if (emptyCells.length > 0) {
+            return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+          }
+          
+          return -1; // Geen beschikbare zet (dit zou niet moeten gebeuren)
+        }
+        
+        // Update de beurtindicator
+        function updateTurnIndicator() {
+          if (!player1Indicator || !player2Indicator) return;
+          
+          if (currentPlayer === 'X') {
+            player1Indicator.classList.add('active-player');
+            player2Indicator.classList.remove('active-player');
+          } else {
+            player1Indicator.classList.remove('active-player');
+            player2Indicator.classList.add('active-player');
+          }
+        }
+        
+        // Controleer op winnende zet
+        function checkWin() {
+          const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rijen
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // kolommen
+            [0, 4, 8], [2, 4, 6]             // diagonalen
           ];
           
-          // 20% kans op commentaar
-          if (Math.random() < 0.2) {
-            typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
-          }
-        }
-        
-        makeMove(bestMove);
-      }
-      
-      // Minimax algoritme voor Boter Kaas en Eieren
-      function findBestMove() {
-        // 1. Kijk eerst of we direct kunnen winnen
-        for (let i = 0; i < 9; i++) {
-          if (gameBoard[i] === '') {
-            gameBoard[i] = 'O';
-            if (checkWin()) {
-              gameBoard[i] = '';
-              return i;
+          for (let pattern of winPatterns) {
+            const [a, b, c] = pattern;
+            if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+              return pattern;
             }
-            gameBoard[i] = '';
           }
+          
+          return null;
         }
         
-        // 2. Kijk of we een winnende zet moeten blokkeren
-        for (let i = 0; i < 9; i++) {
-          if (gameBoard[i] === '') {
-            gameBoard[i] = 'X';
-            if (checkWin()) {
-              gameBoard[i] = '';
-              return i;
-            }
-            gameBoard[i] = '';
-          }
+        // Controleer op gelijkspel
+        function checkDraw() {
+          return !gameBoard.includes('');
         }
         
-        // 3. Pak het centrum als het beschikbaar is
-        if (gameBoard[4] === '') {
-          return 4;
-        }
-        
-        // 4. Pak een hoek als beschikbaar
-        const corners = [0, 2, 6, 8];
-        const availableCorners = corners.filter(i => gameBoard[i] === '');
-        if (availableCorners.length > 0) {
-          return availableCorners[Math.floor(Math.random() * availableCorners.length)];
-        }
-        
-        // 5. Pak een zijkant als beschikbaar
-        const sides = [1, 3, 5, 7];
-        const availableSides = sides.filter(i => gameBoard[i] === '');
-        if (availableSides.length > 0) {
-          return availableSides[Math.floor(Math.random() * availableSides.length)];
-        }
-        
-        // 6. Pak een willekeurige lege cel (dit zou eigenlijk niet nodig moeten zijn)
-        const emptyCells = gameBoard.map((cell, index) => cell === '' ? index : -1).filter(i => i !== -1);
-        if (emptyCells.length > 0) {
-          return emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        }
-        
-        return -1; // Geen beschikbare zet (dit zou niet moeten gebeuren)
-      }
+        // Start het spel
+        initializeGame();
+        updateScores();
+        resizeCanvas();
+      });
       
-      // Update de beurtindicator
-      function updateTurnIndicator() {
-        if (!player1Indicator || !player2Indicator) return;
+      // Event listener voor taalwijzigingen om UI elementen bij te werken
+      document.addEventListener('languageChanged', function() {
+        // Update de UI elementen wanneer de taal verandert
+        const player1NameEl = document.getElementById('player1-name');
+        const opponentNameEl = document.getElementById('opponent-name');
+        const restartButton = document.getElementById('restart-button');
+        const resetScoresButton = document.getElementById('reset-scores');
+        const backButton = document.getElementById('back-button');
         
-        if (currentPlayer === 'X') {
-          player1Indicator.classList.add('active-player');
-          player2Indicator.classList.remove('active-player');
+        // URL parameters uitlezen voor spelmodus
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameMode = urlParams.get('mode') || 'vs-knof';
+        
+        // Update de teksten op basis van de spelmoduss
+        if (gameMode === 'vs-knof') {
+          player1NameEl.textContent = __("player_you", "Jij");
+          opponentNameEl.textContent = __("player_knof", "Knof");
         } else {
-          player1Indicator.classList.remove('active-player');
-          player2Indicator.classList.add('active-player');
-        }
-      }
-      
-      // Controleer op winnende zet
-      function checkWin() {
-        const winPatterns = [
-          [0, 1, 2], [3, 4, 5], [6, 7, 8], // rijen
-          [0, 3, 6], [1, 4, 7], [2, 5, 8], // kolommen
-          [0, 4, 8], [2, 4, 6]             // diagonalen
-        ];
-        
-        for (let pattern of winPatterns) {
-          const [a, b, c] = pattern;
-          if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
-            return pattern;
-          }
+          player1NameEl.textContent = __("player_1", "Speler 1");
+          opponentNameEl.textContent = __("player_2", "Speler 2");
         }
         
-        return null;
-      }
-      
-      // Controleer op gelijkspel
-      function checkDraw() {
-        return !gameBoard.includes('');
-      }
-      
-      // Start het spel
-      initializeGame();
-      updateScores();
-      resizeCanvas();
+        // Update de knoppen
+        restartButton.textContent = __("new_game", "Nieuw spel");
+        resetScoresButton.textContent = __("reset", "Reset");
+        backButton.textContent = __("back", "Terug");
+      });
     });
   </script>
 </body>
