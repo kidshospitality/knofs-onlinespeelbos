@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Knof's Spelletjes</title>
+  <title data-i18n="games_title">Knof's Spelletjes</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -211,14 +211,14 @@
 
   <!-- Hoofdcontent - Spelletjespagina -->
   <div class="app-container">
-    <h1 class="page-title">Knof's Spelletjeshoek</h1>
+    <h1 class="page-title" data-i18n="games_corner">Knof's Spelletjeshoek</h1>
     
     <div class="sections-container">
       <!-- 4 op een rij Section -->
       <div class="section" id="connect-four" data-game-color="#55A54A" data-game-color-rgb="85, 165, 74">
         <div class="section-bg-games"></div>
-        <div class="section-title">4 op een rij</div>
-        <div class="section-subtitle">Krijg 4 schijfjes op een rij, kolom of diagonaal!</div>
+        <div class="section-title" data-i18n="connect_four">4 op een rij</div>
+        <div class="section-subtitle" data-i18n="connect_four_subtitle">Krijg 4 schijfjes op een rij, kolom of diagonaal!</div>
         <span class="section-arrow"></span>
         <!-- Connect Four SVG icon -->
         <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -245,8 +245,8 @@
       <!-- Boter Kaas en Eieren Section -->
       <div class="section" id="tic-tac-toe" data-game-color="#F07C3E" data-game-color-rgb="240, 124, 62">
         <div class="section-bg-coloring"></div>
-        <div class="section-title">Boter, Kaas en Eieren</div>
-        <div class="section-subtitle">Krijg drie op een rij om te winnen!</div>
+        <div class="section-title" data-i18n="tic_tac_toe">Boter, Kaas en Eieren</div>
+        <div class="section-subtitle" data-i18n="tic_tac_toe_subtitle">Krijg drie op een rij om te winnen!</div>
         <span class="section-arrow"></span>
         <!-- Tic Tac Toe SVG icon -->
         <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -266,8 +266,8 @@
       <!-- Pannenkoeken Dobble Section -->
       <div class="section" id="pancake-dobble" data-game-color="#9B5DE5" data-game-color-rgb="155, 93, 229">
         <div class="section-bg-placemat"></div>
-        <div class="section-title">Pannenkoeken Dobble</div>
-        <div class="section-subtitle">Vind zo snel mogelijk de overeenkomende plaatjes</div>
+        <div class="section-title" data-i18n="pancake_dobble">Pannenkoeken Dobble</div>
+        <div class="section-subtitle" data-i18n="pancake_dobble_subtitle">Vind zo snel mogelijk de overeenkomende plaatjes</div>
         <span class="section-arrow"></span>
         <!-- Pancake Dobble SVG icon -->
         <svg class="game-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -293,7 +293,7 @@
   <!-- Spelmodus keuze overlay -->
   <div class="modal" id="game-mode-overlay">
     <div class="modal-content" id="game-mode-container">
-      <h2 class="modal-title" id="overlay-title">Hoe wil je spelen?</h2>
+      <h2 class="modal-title" id="overlay-title" data-i18n="how_to_play">Hoe wil je spelen?</h2>
       <div class="buttons-container">
         <div class="button" id="play-with-knof">
           <div class="button-bg"></div>
@@ -303,7 +303,7 @@
                 <path d="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10s10-4.48 10-10S17.52,2 12,2zM12,6c1.93,0 3.5,1.57 3.5,3.5S13.93,13 12,13s-3.5-1.57 -3.5-3.5S10.07,6 12,6zM12,20c-2.03,0 -4.43,-0.82 -6.14,-2.88C7.55,15.8 9.68,15 12,15s4.45,0.8 6.14,2.12C16.43,19.18 14.03,20 12,20z" fill="currentColor"/>
               </svg>
             </div>
-            <div class="button-text" id="knof-title">Spelen tegen Knof</div>
+            <div class="button-text" id="knof-title" data-i18n="play_against_knof">Spelen tegen Knof</div>
           </span>
         </div>
         <div class="button" id="play-with-friend">
@@ -314,11 +314,11 @@
                 <path d="M16,11c1.66,0 2.99,-1.34 2.99,-3S17.66,5 16,5c-1.66,0 -3,1.34 -3,3s1.34,3 3,3zm-8,0c1.66,0 2.99,-1.34 2.99,-3S9.66,5 8,5C6.34,5 5,6.34 5,8s1.34,3 3,3zm0,2c-2.33,0 -7,1.17 -7,3.5V19h14v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5zm8,0c-0.29,0 -0.62,0.02 -0.97,0.05c1.16,0.84 1.97,1.97 1.97,3.45V19h6v-2.5c0,-2.33 -4.67,-3.5 -7,-3.5z" fill="currentColor"/>
               </svg>
             </div>
-            <div class="button-text" id="friend-title">Spelen met een vriend</div>
+            <div class="button-text" id="friend-title" data-i18n="play_with_friend">Spelen met een vriend</div>
           </span>
         </div>
       </div>
-      <button class="modal-button" id="cancel-game">Terug</button>
+      <button class="modal-button" id="cancel-game" data-i18n="back">Terug</button>
     </div>
   </div>
 
@@ -329,10 +329,12 @@
   <script src="js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Welkomstbericht voor games pagina
-      setTimeout(() => {
-        typeSpeechMessage("Welkom bij de spelletjes! Wat wil je spelen? Ik vind ze allemaal leuk!");
-      }, 500);
+      // Welkomstbericht voor games pagina - wordt uitgevoerd nadat de vertalingen zijn geladen
+      loadTranslations().then(() => {
+        setTimeout(() => {
+          typeSpeechMessage(__("games_welcome", "Welkom bij de spelletjes! Wat wil je spelen? Ik vind ze allemaal leuk!"));
+        }, 500);
+      });
       
       // Variabelen voor de overlay en spel selectie
       const overlay = document.getElementById('game-mode-overlay');
@@ -361,8 +363,9 @@
         document.documentElement.style.setProperty('--game-color', gameColor);
         document.documentElement.style.setProperty('--game-color-rgb', gameColorRGB);
         
-        // Pas titel aan
-        overlayTitle.textContent = `Hoe wil je ${gameName} spelen?`;
+        // Pas titel aan met vertaling
+        const howToPlayFormat = __("how_to_play_format", "Hoe wil je {game} spelen?");
+        overlayTitle.textContent = howToPlayFormat.replace('{game}', gameName);
         
         // Toon overlay
         overlay.style.display = 'flex';
@@ -390,17 +393,17 @@
             // Verschillende berichten per spel
             switch(gameId) {
               case 'connect-four':
-                typeSpeechMessage("4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?");
+                typeSpeechMessage(__("connect_four_message", "4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?"));
                 break;
               case 'tic-tac-toe':
-                typeSpeechMessage("Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?");
+                typeSpeechMessage(__("tic_tac_toe_message", "Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?"));
                 break;
             }
           });
         } else if (item.id === 'pancake-dobble') {
           // Voor Pannenkoeken Dobble: ga direct naar het spel
           item.addEventListener('click', function() {
-            typeSpeechMessage("Pannenkoeken Dobble is mijn favoriet! Ik doe mijn best tegen jou!");
+            typeSpeechMessage(__("pancake_dobble_message", "Pannenkoeken Dobble is mijn favoriet! Ik doe mijn best tegen jou!"));
             
             // Direct naar Dobble sturen (zonder popup) na korte vertraging voor de spraakbericht
             setTimeout(() => {
@@ -413,7 +416,11 @@
       // Event listener voor tegen Knof spelen
       playWithKnof.addEventListener('click', () => {
         hideOverlay();
-        typeSpeechMessage(`Leuk dat je ${selectedGameName} tegen mij wilt spelen! Ik doe mijn best!`);
+        
+        const message = __("play_against_knof_message", "Leuk dat je {game} tegen mij wilt spelen! Ik doe mijn best!")
+          .replace("{game}", selectedGameName);
+        
+        typeSpeechMessage(message);
         
         // Stuur naar de juiste game pagina met mode parameter
         setTimeout(() => {
@@ -424,7 +431,11 @@
       // Event listener voor tegen een vriend spelen
       playWithFriend.addEventListener('click', () => {
         hideOverlay();
-        typeSpeechMessage(`${selectedGameName} samen spelen is gezellig! Veel plezier!`);
+        
+        const message = __("play_with_friend_message", "{game} samen spelen is gezellig! Veel plezier!")
+          .replace("{game}", selectedGameName);
+        
+        typeSpeechMessage(message);
         
         // Stuur naar de juiste game pagina met mode parameter
         setTimeout(() => {
@@ -435,7 +446,7 @@
       // Event listener voor cancel button
       cancelButton.addEventListener('click', () => {
         hideOverlay();
-        typeSpeechMessage("Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!");
+        typeSpeechMessage(__("other_game_choice", "Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!"));
       });
     });
   </script>
