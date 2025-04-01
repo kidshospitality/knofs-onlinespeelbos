@@ -45,3 +45,26 @@
   "play_with_friend_message": "Playing {game} together is fun! Enjoy!",
   "other_game_choice": "Would you like to choose another game? They're all fun!"
 }
+{
+  "coloring_page_title": "Coloring Book - Knof's Play Forest",
+  "coloring_welcome": "Great to see you coloring! What shall we create?",
+  "drawing_toolbar_label": "Drawing tools",
+  "coloring_canvas_label": "Coloring canvas",
+  "color_red": "Red",
+  "color_blue": "Blue",
+  "color_green": "Green",
+  "color_yellow": "Yellow",
+  "color_orange": "Orange",
+  "color_purple": "Purple",
+  "color_black": "Black",
+  "tool_pencil": "Pencil",
+  "tool_brush": "Brush",
+  "tool_eraser": "Eraser",
+  "tool_fill": "Fill",
+  "action_clear": "Clear",
+  "action_save": "Save",
+  "action_undo": "Undo",
+  "save_drawing_title": "Save Drawing",
+  "save_drawing_message": "Your drawing has been saved to your pictures!",
+  "drawing_error": "Something went wrong saving your drawing"
+}
