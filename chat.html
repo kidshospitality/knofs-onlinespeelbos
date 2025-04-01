@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Praten met Knof - Knof's Speelbos</title>
+  <title data-i18n="chat_page_title">Praten met Knof - Knof's Speelbos</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -289,6 +289,51 @@
           element.style.border = 'none';
           element.style.boxShadow = 'none';
         });
+
+        // Extra: vertaal eventuele placeholder teksten of knoppen in de chatinterface
+        translateChatElements();
+      }
+
+      // Functie om vertaling toe te passen op dynamische chatbot elementen
+      function translateChatElements() {
+        // Probeer eventuele inputvelden te vinden en vertaal de placeholder
+        const inputFields = document.querySelectorAll('[placeholder], [aria-placeholder]');
+        inputFields.forEach(input => {
+          // Alleen als de taal niet Nederlands is (standaard)
+          const currentLang = localStorage.getItem('language') || 'nl';
+          if (currentLang !== 'nl') {
+            const placeholder = input.getAttribute('placeholder') || input.getAttribute('aria-placeholder');
+            if (placeholder && placeholder.includes('Typ een bericht')) {
+              if (currentLang === 'en') {
+                input.setAttribute('placeholder', 'Type a message...');
+                if (input.hasAttribute('aria-placeholder')) {
+                  input.setAttribute('aria-placeholder', 'Type a message...');
+                }
+              } else if (currentLang === 'de') {
+                input.setAttribute('placeholder', 'Nachricht eingeben...');
+                if (input.hasAttribute('aria-placeholder')) {
+                  input.setAttribute('aria-placeholder', 'Nachricht eingeben...');
+                }
+              }
+            }
+          }
+        });
+
+        // Probeer de verzendknop te vinden en te vertalen
+        const sendButtons = document.querySelectorAll('button[type="submit"], [class*="send-button"]');
+        sendButtons.forEach(button => {
+          const currentLang = localStorage.getItem('language') || 'nl';
+          if (currentLang !== 'nl') {
+            // Controleer op 'Verstuur' tekst
+            if (button.textContent.includes('Verstuur') || button.textContent.includes('Verzenden')) {
+              if (currentLang === 'en') {
+                button.textContent = 'Send';
+              } else if (currentLang === 'de') {
+                button.textContent = 'Senden';
+              }
+            }
+          }
+        });
       }
       
       // Voer direct uit en blijf controleren
@@ -298,6 +343,11 @@
       // Wacht tot Pickaxe is geladen en verwijder dan borders
       setTimeout(removeBorders, 1000);
       setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
+
+      // Luister naar eventuele taalwijzigingen
+      window.addEventListener('languageChanged', function(e) {
+        translateChatElements();
+      });
     });
   </script>
   
