@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-685BXDXHF8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-685BXDXHF8');
-</script>
+  <!-- Google tag (gtag.js) behouden -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-685BXDXHF8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-685BXDXHF8');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title data-i18n="chat_page_title">Praten met Knof - Knof's Speelbos</title>
@@ -42,15 +41,15 @@
       top: 0;
       left: 0;
       right: 0;
-      bottom: 65px; /* Verhoogd voor betere spacing */
+      bottom: 0; /* Aangepast naar 0 */
       display: flex;
       flex-direction: column;
       background-color: transparent !important;
       -webkit-transform: translateZ(0);
       transform: translateZ(0);
-      height: calc(100% - 65px); /* Aangepast */
-      margin: 0 !important; /* Verwijder eventuele marges */
-      padding: 0 !important; /* Verwijder eventuele padding */
+      height: 100%; /* Aangepast naar 100% */
+      margin: 0 !important;
+      padding: 0 !important;
     }
     
     /* Style voor de chatbot container */
@@ -62,8 +61,8 @@
       background-color: transparent !important;
       display: flex;
       flex-direction: column;
-      border: none !important; /* Verwijder alle borders */
-      padding-bottom: 30px !important;
+      border: none !important;
+      padding-bottom: 55px !important; /* Aangepast om ruimte te maken voor de menubalk */
     }
     
     /* Bottom navigation fix */
@@ -73,7 +72,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 999; /* Hogere z-index */
+      z-index: 999;
       height: 50px;
       display: flex !important;
       visibility: visible !important;
@@ -108,10 +107,10 @@
       bottom: 50px;
       left: 0;
       right: 0;
-      height: 20px; /* Verhoogd van 15px naar 20px */
+      height: 20px;
       background-color: transparent;
-      z-index: 990; /* Net onder de navigatiebalk maar boven chatbot */
-      pointer-events: none; /* Zodat het niet interactief is */
+      z-index: 990;
+      pointer-events: none;
     }
     
     /* Pickaxe chatbot stijl */
@@ -120,7 +119,7 @@
       height: 100%;
       position: relative;
       display: block;
-      border: none !important; /* Verwijder alle borders */
+      border: none !important;
     }
     
     /* Overschrijf de chat-container stijlen uit style.css */
@@ -156,9 +155,9 @@
     [class*="message-input-container"],
     [class*="textarea-container"],
     [id*="input-container"] {
-      margin-bottom: 15px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
+      margin-bottom: 15px !important;
       position: relative !important;
-      bottom: 20px !important; /* Verhoog deze waarde om het inputveld verder omhoog te duwen */
+      bottom: 20px !important;
       padding-bottom: 10px !important;
     }
     
@@ -167,7 +166,13 @@
     [class*="submit-button"],
     button[type="submit"] {
       position: relative !important;
-      bottom: 20px !important; /* Zelfde waarde als hierboven */
+      bottom: 20px !important;
+    }
+    
+    /* Fix voor chatbot iframe hoogte */
+    iframe {
+      height: 100% !important;
+      min-height: calc(100vh - 70px) !important;
     }
   </style>
 </head>
@@ -271,6 +276,21 @@
             height: 50px !important;
           `;
         }
+        
+        // Forceer de chatbot-wrapper om de juiste ruimte in te nemen
+        const chatbotWrapper = document.getElementById('chatbot-wrapper');
+        if (chatbotWrapper) {
+          chatbotWrapper.style.height = 'calc(100% - 50px)';
+          chatbotWrapper.style.paddingBottom = '50px';
+        }
+        
+        // Probeer iframe te vinden en deze de juiste hoogte te geven
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+          iframe.style.height = 'calc(100vh - 70px)';
+          iframe.style.minHeight = 'calc(100vh - 70px)';
+          iframe.style.maxHeight = 'calc(100vh - 70px)';
+        });
       }
       
       // Verwijder alle randen van chatinterface elementen
@@ -281,6 +301,7 @@
           pickaxeContainer.style.border = 'none';
           pickaxeContainer.style.boxShadow = 'none';
           pickaxeContainer.style.borderRadius = '0';
+          pickaxeContainer.style.height = 'calc(100vh - 50px)';
         }
         
         // Zoek alle elementen die mogelijk borders hebben
@@ -288,6 +309,13 @@
         borderElements.forEach(element => {
           element.style.border = 'none';
           element.style.boxShadow = 'none';
+        });
+
+        // Zoek naar iframes en zet de juiste hoogte
+        const iframes = document.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+          iframe.style.height = 'calc(100vh - 70px)';
+          iframe.style.minHeight = 'calc(100vh - 70px)';
         });
 
         // Extra: vertaal eventuele placeholder teksten of knoppen in de chatinterface
@@ -342,11 +370,25 @@
       
       // Wacht tot Pickaxe is geladen en verwijder dan borders
       setTimeout(removeBorders, 1000);
-      setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
+      setTimeout(removeBorders, 2000); // Nog een keer controleren
+      setTimeout(removeBorders, 3000); // En nog een keer na 3 seconden
+      setInterval(removeBorders, 5000); // Blijf controleren op nieuwe elementen
 
       // Luister naar eventuele taalwijzigingen
       window.addEventListener('languageChanged', function(e) {
         translateChatElements();
+      });
+      
+      // Extra: observeer het DOM voor dynamische wijzigingen
+      const observer = new MutationObserver(function(mutations) {
+        removeBorders();
+        forceHideTopNav();
+      });
+      
+      // Start observeren van het hele document
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
       });
     });
   </script>
