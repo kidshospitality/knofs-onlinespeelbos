@@ -21,9 +21,7 @@
   "chat_subtitle": "Stel vragen aan je vriend!",
   "weather_title": "Lekker weer alert!",
   "weather_message": "Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?",
-  "popup_message": "Deze functie wordt nog gebakken, kom snel terug! 🧁"
-}
-{
+  "popup_message": "Deze functie wordt nog gebakken, kom snel terug! 🧁",
   "games_title": "Knof's Spelletjes",
   "games_corner": "Knof's Spelletjeshoek",
   "connect_four": "4 op een rij",
@@ -43,9 +41,7 @@
   "pancake_dobble_message": "Pannenkoeken Dobble is mijn favoriet! Ik doe mijn best tegen jou!",
   "play_against_knof_message": "Leuk dat je {game} tegen mij wilt spelen! Ik doe mijn best!",
   "play_with_friend_message": "{game} samen spelen is gezellig! Veel plezier!",
-  "other_game_choice": "Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!"
-}
-{
+  "other_game_choice": "Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!",
   "coloring_page_title": "Kleurboek - Knof's Speelbos",
   "coloring_welcome": "Leuk dat je komt kleuren! Wat zullen we maken?",
   "drawing_toolbar_label": "Teken gereedschappen",
@@ -66,24 +62,15 @@
   "action_undo": "Ongedaan maken",
   "save_drawing_title": "Tekening opslaan",
   "save_drawing_message": "Je tekening is opgeslagen in je afbeeldingen!",
-  "drawing_error": "Er ging iets mis bij het opslaan van je tekening"
-}
-{
+  "drawing_error": "Er ging iets mis bij het opslaan van je tekening",
   "memory_intro": "Memory is een spel waarbij je moet onthouden waar de plaatjes zijn. Klik op twee kaartjes om te zien of ze hetzelfde zijn!",
   "puzzle_intro": "In dit puzzelspel moet je de stukjes op de juiste plek leggen. Sleep de stukjes naar de juiste plaats!",
   "drawing_intro": "Ik ga iets tekenen en jij moet raden wat het is! Ben je er klaar voor?",
   "games_intro": "Laten we spelen! Kies een spelletje dat je leuk vindt.",
-  "memory_welcome": "Welkom bij het Memory spel! Zoek alle paren om te winnen!"
-}
-{
+  "memory_welcome": "Welkom bij het Memory spel! Zoek alle paren om te winnen!",
   "chat_page_title": "Praten met Knof - Knof's Speelbos",
   "chat_placeholder": "Stel hier je vraag aan Knof...",
-  "chat_title": "Praten met Knof"
-}
-{
-  "chat_page_title": "Praten met Knof - Knof's Speelbos",
-}
-{
+  "chat_title": "Praten met Knof",
   "connect_four_title": "4 op een rij - Knof's Spelletjes",
   "connect_four_you": "Jij",
   "connect_four_knof": "Knof",
@@ -91,7 +78,6 @@
   "connect_four_player2": "Speler 2",
   "connect_four_new_game": "Nieuw spel",
   "connect_four_reset": "Reset",
-  "back": "Terug",
   "connect_four_welcome_knof": "4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Laten we beginnen!",
   "connect_four_welcome_friend": "Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?",
   "connect_four_reset_message": "Scores zijn gereset. We beginnen weer bij nul!",
@@ -115,9 +101,7 @@
   "connect_four_normal_2": "Ik kies deze plek!",
   "connect_four_normal_3": "Mijn beurt!",
   "connect_four_normal_4": "Mijn suikerpannenkoek gaat hier!",
-  "connect_four_normal_5": "Dit is een goede zet denk ik."
-}
-{
+  "connect_four_normal_5": "Dit is een goede zet denk ik.",
   "tic_tac_toe_game_title": "Boter Kaas en Eieren - Knof's Spelletjes",
   "player_you": "Jij",
   "player_knof": "Knof",
@@ -125,7 +109,6 @@
   "player_2": "Speler 2",
   "new_game": "Nieuw spel",
   "reset": "Reset",
-  "back": "Terug",
   "ttt_welcome_vs_knof": "Boter, kaas en eieren! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Wie begint?",
   "ttt_welcome_vs_friend": "Veel plezier met boter, kaas en eieren! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Succes!",
   "reset_scores_message": "Scores zijn gereset. We beginnen weer bij nul!",
@@ -149,9 +132,7 @@
   "knof_normal_move_2": "Ik kies deze plek!",
   "knof_normal_move_3": "Mijn beurt!",
   "knof_normal_move_4": "Mijn suikerpannenkoek gaat hier!",
-  "knof_normal_move_5": "Dit is een goede zet denk ik."
-}
-{
+  "knof_normal_move_5": "Dit is een goede zet denk ik.",
   "dobble_game_title": "Ingrediënten Zoeken - Knof's Spelletjes",
   "pancake_dobble_title": "Pancake Dobble",
   "pancake_dobble_challenge": "\"Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Zoek het ingrediënt dat ik toon voordat ik jou te snel af ben! Wie het eerst 10 punten heeft, wint!\"",
