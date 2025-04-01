@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>4 op een rij - Knof's Spelletjes</title>
+  <title data-i18n="connect_four_title">4 op een rij - Knof's Spelletjes</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -292,14 +292,14 @@
         <div class="score-board">
           <div class="score-card" id="player-score-card">
             <div class="player-heading">
-              <h3 id="player1-name">Jij</h3>
+              <h3 id="player1-name" data-i18n="connect_four_you">Jij</h3>
               <div class="player-icon player1-piece" id="player1-indicator"></div>
             </div>
             <p id="player-score">0</p>
           </div>
           <div class="score-card" id="opponent-score-card">
             <div class="player-heading">
-              <h3 id="opponent-name">Knof</h3>
+              <h3 id="opponent-name" data-i18n="connect_four_knof">Knof</h3>
               <div class="player-icon knof-piece" id="player2-indicator"></div>
             </div>
             <p id="opponent-score">0</p>
@@ -307,9 +307,9 @@
         </div>
         <div class="win-message" id="win-message"></div>
         <div class="buttons-container">
-          <button class="game-button" id="restart-button">Nieuw spel</button>
-          <button class="game-button" id="reset-scores">Reset</button>
-          <button class="game-button" id="back-button">Terug</button>
+          <button class="game-button" id="restart-button" data-i18n="connect_four_new_game">Nieuw spel</button>
+          <button class="game-button" id="reset-scores" data-i18n="connect_four_reset">Reset</button>
+          <button class="game-button" id="back-button" data-i18n="back">Terug</button>
         </div>
       </div>
     </div>
@@ -322,743 +322,746 @@
   <script src="../js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Instellingen voor het spel
-      const ROWS = 6;
-      const COLS = 7;
-      const WINNING_LENGTH = 4;
-      
-      // Spelstatus
-      let gameBoard = [];
-      let currentPlayer = 1; // 1 voor speler 1, 2 voor speler 2 (Knof of vriend)
-      let gameOver = false;
-      let gameMode = '';
-      let playerPieces = {
-        1: 'player1-piece',
-        2: 'player2-piece'
-      };
-      let winningCells = [];
-      let scores = {
-        player: 0,
-        opponent: 0
-      };
-      let lastWinner = 0; // Bijhouden wie de laatste winnaar was voor om-en-om starten
-      
-      // Elementen selecteren
-      const gameBoardEl = document.getElementById('game-board');
-      const player1NameEl = document.getElementById('player1-name');
-      const playerScoreEl = document.getElementById('player-score');
-      const opponentNameEl = document.getElementById('opponent-name');
-      const opponentScoreEl = document.getElementById('opponent-score');
-      const winMessage = document.getElementById('win-message');
-      const restartButton = document.getElementById('restart-button');
-      const resetScoresButton = document.getElementById('reset-scores');
-      const backButton = document.getElementById('back-button');
-      const confettiCanvas = document.getElementById('confetti-canvas');
-      const context = confettiCanvas.getContext('2d');
-      
-      // Variabelen voor spelelementen die tijdens het spel worden bijgewerkt
-      let player1Indicator;
-      let player2Indicator;
-      let columnHover;
-      
-      // Confetti systeem
-      let confetti = [];
-      let confettiActive = false;
-      let confettiAnimationId = null;
-      
-      function resizeCanvas() {
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-      }
-      
-      function startConfetti() {
-        stopConfetti(); // Stop any existing confetti first
-        confettiActive = true;
-        confetti = [];
-        resizeCanvas();
+      // Laad eerst de vertalingen
+      loadTranslations().then(() => {
+        // Instellingen voor het spel
+        const ROWS = 6;
+        const COLS = 7;
+        const WINNING_LENGTH = 4;
         
-        // Create confetti particles
-        for (let i = 0; i < 100; i++) {
-          confetti.push({
-            x: Math.random() * confettiCanvas.width,
-            y: Math.random() * -confettiCanvas.height,
-            size: Math.random() * 10 + 5,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            rotation: Math.random() * 360,
-            rotationSpeed: Math.random() * 2 - 1,
-            speed: Math.random() * 5 + 2
-          });
+        // Spelstatus
+        let gameBoard = [];
+        let currentPlayer = 1; // 1 voor speler 1, 2 voor speler 2 (Knof of vriend)
+        let gameOver = false;
+        let gameMode = '';
+        let playerPieces = {
+          1: 'player1-piece',
+          2: 'player2-piece'
+        };
+        let winningCells = [];
+        let scores = {
+          player: 0,
+          opponent: 0
+        };
+        let lastWinner = 0; // Bijhouden wie de laatste winnaar was voor om-en-om starten
+        
+        // Elementen selecteren
+        const gameBoardEl = document.getElementById('game-board');
+        const player1NameEl = document.getElementById('player1-name');
+        const playerScoreEl = document.getElementById('player-score');
+        const opponentNameEl = document.getElementById('opponent-name');
+        const opponentScoreEl = document.getElementById('opponent-score');
+        const winMessage = document.getElementById('win-message');
+        const restartButton = document.getElementById('restart-button');
+        const resetScoresButton = document.getElementById('reset-scores');
+        const backButton = document.getElementById('back-button');
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const context = confettiCanvas.getContext('2d');
+        
+        // Variabelen voor spelelementen die tijdens het spel worden bijgewerkt
+        let player1Indicator;
+        let player2Indicator;
+        let columnHover;
+        
+        // Confetti systeem
+        let confetti = [];
+        let confettiActive = false;
+        let confettiAnimationId = null;
+        
+        function resizeCanvas() {
+          confettiCanvas.width = window.innerWidth;
+          confettiCanvas.height = window.innerHeight;
         }
         
-        animateConfetti();
-      }
-      
-      function stopConfetti() {
-        confettiActive = false;
-        if (confettiAnimationId) {
-          cancelAnimationFrame(confettiAnimationId);
-          confettiAnimationId = null;
-        }
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-      
-      function animateConfetti() {
-        if (!confettiActive) return;
-        
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        
-        for (let i = 0; i < confetti.length; i++) {
-          const p = confetti[i];
+        function startConfetti() {
+          stopConfetti(); // Stop any existing confetti first
+          confettiActive = true;
+          confetti = [];
+          resizeCanvas();
           
-          context.save();
-          context.translate(p.x, p.y);
-          context.rotate(p.rotation * Math.PI / 180);
-          context.fillStyle = p.color;
-          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          context.restore();
-          
-          p.y += p.speed;
-          p.rotation += p.rotationSpeed;
-          
-          if (p.y > confettiCanvas.height) {
-            p.y = -10;
-            p.x = Math.random() * confettiCanvas.width;
+          // Create confetti particles
+          for (let i = 0; i < 100; i++) {
+            confetti.push({
+              x: Math.random() * confettiCanvas.width,
+              y: Math.random() * -confettiCanvas.height,
+              size: Math.random() * 10 + 5,
+              color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+              rotation: Math.random() * 360,
+              rotationSpeed: Math.random() * 2 - 1,
+              speed: Math.random() * 5 + 2
+            });
           }
+          
+          animateConfetti();
         }
         
-        confettiAnimationId = requestAnimationFrame(animateConfetti);
-      }
-      
-      window.addEventListener('resize', resizeCanvas);
-      
-      // URL parameters uitlezen voor spelmodus
-      const urlParams = new URLSearchParams(window.location.search);
-      gameMode = urlParams.get('mode') || 'vs-knof';
-      
-      // Aanpassingen voor de verschillende spelmodi
-      if (gameMode === 'vs-knof') {
-        // Speler 2 is Knof in deze modus
-        playerPieces[2] = 'knof-piece';
-        player1NameEl.textContent = 'Jij';
-        opponentNameEl.textContent = 'Knof';
-        // Welkomstbericht
-        setTimeout(() => {
-          typeSpeechMessage("4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Laten we beginnen!");
-        }, 500);
-      } else {
-        // Speler 2 is een vriend
-        playerPieces[2] = 'player2-piece';
-        player1NameEl.textContent = 'Speler 1';
-        opponentNameEl.textContent = 'Speler 2';
-        // Welkomstbericht
-        setTimeout(() => {
-          typeSpeechMessage("Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?");
-        }, 500);
-      }
-      
-      // Event listeners
-      backButton.addEventListener('click', function() {
-        window.location.href = '../games.html';
-      });
-      
-      resetScoresButton.addEventListener('click', function() {
-        scores.player = 0;
-        scores.opponent = 0;
-        lastWinner = 0; // Reset ook de laatste winnaar
-        updateScores();
+        function stopConfetti() {
+          confettiActive = false;
+          if (confettiAnimationId) {
+            cancelAnimationFrame(confettiAnimationId);
+            confettiAnimationId = null;
+          }
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
         
-        // Opnieuw initialiseren van het spel met een willekeurige starter
-        initializeGame(true); // Voeg een parameter toe om een willekeurige starter aan te geven
+        function animateConfetti() {
+          if (!confettiActive) return;
+          
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          
+          for (let i = 0; i < confetti.length; i++) {
+            const p = confetti[i];
+            
+            context.save();
+            context.translate(p.x, p.y);
+            context.rotate(p.rotation * Math.PI / 180);
+            context.fillStyle = p.color;
+            context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            context.restore();
+            
+            p.y += p.speed;
+            p.rotation += p.rotationSpeed;
+            
+            if (p.y > confettiCanvas.height) {
+              p.y = -10;
+              p.x = Math.random() * confettiCanvas.width;
+            }
+          }
+          
+          confettiAnimationId = requestAnimationFrame(animateConfetti);
+        }
         
-        typeSpeechMessage("Scores zijn gereset. We beginnen weer bij nul!");
-      });
-      
-      // Opnieuw starten
-      restartButton.addEventListener('click', function() {
-        initializeGame();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // URL parameters uitlezen voor spelmodus
+        const urlParams = new URLSearchParams(window.location.search);
+        gameMode = urlParams.get('mode') || 'vs-knof';
+        
+        // Aanpassingen voor de verschillende spelmodi
         if (gameMode === 'vs-knof') {
-          typeSpeechMessage("Laten we nog een keer spelen. Veel plezier!");
+          // Speler 2 is Knof in deze modus
+          playerPieces[2] = 'knof-piece';
+          player1NameEl.textContent = __("connect_four_you", "Jij");
+          opponentNameEl.textContent = __("connect_four_knof", "Knof");
+          // Welkomstbericht
+          setTimeout(() => {
+            typeSpeechMessage(__("connect_four_welcome_knof", "4 op een rij is een van mijn favoriete spellen! Jij speelt met de strooppannenkoeken en ik speel met de suikerpannenkoeken. Laten we beginnen!"));
+          }, 500);
         } else {
-          typeSpeechMessage("Nieuwe ronde, nieuwe kansen! Wie wint deze keer?");
-        }
-      });
-      
-      // Initialiseer het spelbord
-      function initializeGame(randomizeStarter = false) {
-        // Reset game state
-        gameBoard = [];
-        for (let i = 0; i < ROWS; i++) {
-          const row = [];
-          for (let j = 0; j < COLS; j++) {
-            row.push(0); // 0 betekent lege cel
-          }
-          gameBoard.push(row);
+          // Speler 2 is een vriend
+          playerPieces[2] = 'player2-piece';
+          player1NameEl.textContent = __("connect_four_player1", "Speler 1");
+          opponentNameEl.textContent = __("connect_four_player2", "Speler 2");
+          // Welkomstbericht
+          setTimeout(() => {
+            typeSpeechMessage(__("connect_four_welcome_friend", "Veel plezier met 4 op een rij! Speler 1 speelt met strooppannenkoeken en Speler 2 met suikerpannenkoeken. Wie wint?"));
+          }, 500);
         }
         
-        gameOver = false;
-        
-        // Bepaal de startende speler
-        if (randomizeStarter) {
-          // Bij reset-scores een willekeurige starter kiezen
-          currentPlayer = Math.random() < 0.5 ? 1 : 2;
-        } else if (lastWinner === 1) {
-          currentPlayer = 2; // Als speler 1 de laatste keer won, begint speler 2
-        } else if (lastWinner === 2) {
-          currentPlayer = 1; // Als speler 2 de laatste keer won, begint speler 1
-        } else {
-          currentPlayer = 1; // Standaard begint speler 1
-        }
-        
-        winningCells = [];
-        
-        // Reset UI
-        createGameBoard();
-        updateTurnIndicator();
-        winMessage.textContent = '';
-        
-        // Stop confetti als dat actief is
-        stopConfetti();
-        
-        // Laat Knof automatisch zetten als hij mag beginnen
-        if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
-          setTimeout(makeKnofMove, 1000);
-        }
-      }
-      
-      // Maak het visuele spelbord
-      function createGameBoard() {
-        gameBoardEl.innerHTML = '<div class="column-hover" id="column-hover"></div>';
-        
-        for (let col = 0; col < COLS; col++) {
-          const column = document.createElement('div');
-          column.className = 'column';
-          column.dataset.col = col;
-          
-          for (let row = 0; row < ROWS; row++) {
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            cell.dataset.row = row;
-            cell.dataset.col = col;
-            column.appendChild(cell);
-          }
-          
-          gameBoardEl.appendChild(column);
-        }
-        
-        // Hover effect voor kolommen
-        const columns = document.querySelectorAll('.column');
-        columns.forEach(column => {
-          column.addEventListener('mouseenter', function() {
-            if (!gameOver) {
-              // Sta hover alleen toe voor menselijke spelers
-              // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
-              if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
-                  (gameMode === 'vs-friend') || 
-                  (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
-                const colIndex = parseInt(this.dataset.col);
-                showColumnHover(colIndex);
-              }
-            }
-          });
-          
-          column.addEventListener('click', function() {
-            if (!gameOver) {
-              // Sta klikken alleen toe voor menselijke spelers
-              // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
-              if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
-                  (gameMode === 'vs-friend') || 
-                  (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
-                const colIndex = parseInt(this.dataset.col);
-                makeMove(colIndex);
-              }
-            }
-          });
+        // Event listeners
+        backButton.addEventListener('click', function() {
+          window.location.href = '../games.html';
         });
         
-        gameBoardEl.addEventListener('mouseleave', function() {
-          hideColumnHover();
+        resetScoresButton.addEventListener('click', function() {
+          scores.player = 0;
+          scores.opponent = 0;
+          lastWinner = 0; // Reset ook de laatste winnaar
+          updateScores();
+          
+          // Opnieuw initialiseren van het spel met een willekeurige starter
+          initializeGame(true); // Voeg een parameter toe om een willekeurige starter aan te geven
+          
+          typeSpeechMessage(__("connect_four_reset_message", "Scores zijn gereset. We beginnen weer bij nul!"));
         });
         
-        // Update references to elements that were recreated
-        columnHover = document.getElementById('column-hover');
-        player1Indicator = document.getElementById('player1-indicator');
-        player2Indicator = document.getElementById('player2-indicator');
-        
-        // Reset player indicators to match game mode
-        if (gameMode === 'vs-knof') {
-          player2Indicator.className = 'player-icon knof-piece';
-        } else {
-          player2Indicator.className = 'player-icon player2-piece';
-        }
-      }
-      
-      // Toon hover effect voor een kolom
-      function showColumnHover(colIndex) {
-        if (gameOver || !isValidMove(colIndex) || !columnHover) return;
-        
-        const columnWidth = gameBoardEl.offsetWidth / COLS;
-        columnHover.style.display = 'block';
-        columnHover.style.left = `${colIndex * columnWidth}px`;
-        
-        // Toon de juiste kleur hover effect afhankelijk van de huidige speler
-        columnHover.className = 'column-hover ' + playerPieces[currentPlayer];
-      }
-      
-      // Verberg hover effect
-      function hideColumnHover() {
-        if (columnHover) columnHover.style.display = 'none';
-      }
-      
-      // Update scores
-      function updateScores() {
-        playerScoreEl.textContent = scores.player;
-        opponentScoreEl.textContent = scores.opponent;
-      }
-      
-      // Controleer of een zet geldig is
-      function isValidMove(colIndex) {
-        return gameBoard[0][colIndex] === 0; // Kijk of de bovenste cel in de kolom leeg is
-      }
-      
-      // Voer een zet uit
-      function makeMove(colIndex) {
-        if (!isValidMove(colIndex) || gameOver) return;
-        
-        // Vind de laagste lege cel in de kolom (beginnend vanaf de onderkant)
-        let rowIndex = ROWS - 1;
-        while (rowIndex >= 0 && gameBoard[rowIndex][colIndex] !== 0) {
-          rowIndex--;
-        }
-        
-        if (rowIndex >= 0) {
-          // Zet uitvoeren
-          gameBoard[rowIndex][colIndex] = currentPlayer;
-          
-          // Animeer de schijf
-          const cell = document.querySelector(`.cell[data-row="${rowIndex}"][data-col="${colIndex}"]`);
-          cell.classList.add(playerPieces[currentPlayer]);
-          
-          // Controleer op winnende zet
-          const winResult = checkWin(rowIndex, colIndex);
-          if (winResult) {
-            gameOver = true;
-            winningCells = winResult;
-            highlightWinningCells();
-            
-            // Sla op wie de winnaar is voor het om-en-om beginnen
-            lastWinner = currentPlayer;
-            
-            // Bepaal de juiste tekst afhankelijk van spelmodus
-            let winner;
-            if (gameMode === 'vs-knof') {
-              winner = currentPlayer === 1 ? 'Jij' : 'Knof';
-            } else {
-              winner = currentPlayer === 1 ? 'Speler 1' : 'Speler 2';
-            }
-            
-            winMessage.textContent = `${winner} wint!`;
-            
-            // Update scores
-            if (currentPlayer === 1) {
-              scores.player++;
-            } else {
-              scores.opponent++;
-            }
-            updateScores();
-            
-            // Toon confetti voor beide spelers
-            startConfetti();
-            
-            // Toon passend bericht afhankelijk van de spelmodus
-            if (gameMode === 'vs-knof') {
-              if (currentPlayer === 1) {
-                typeSpeechMessage("Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel.");
-              } else {
-                typeSpeechMessage("Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?");
-              }
-            } else {
-              typeSpeechMessage(`${winner} heeft gewonnen! Dat was spannend!`);
-            }
-          } else if (checkDraw()) {
-            gameOver = true;
-            winMessage.textContent = "Gelijkspel!";
-            typeSpeechMessage("Het is gelijkspel! Jullie zijn aan elkaar gewaagd.");
+        // Opnieuw starten
+        restartButton.addEventListener('click', function() {
+          initializeGame();
+          if (gameMode === 'vs-knof') {
+            typeSpeechMessage(__("connect_four_restart_knof", "Laten we nog een keer spelen. Veel plezier!"));
           } else {
-            // Wissel van speler
-            currentPlayer = currentPlayer === 1 ? 2 : 1;
-            updateTurnIndicator();
+            typeSpeechMessage(__("connect_four_restart_friend", "Nieuwe ronde, nieuwe kansen! Wie wint deze keer?"));
+          }
+        });
+        
+        // Initialiseer het spelbord
+        function initializeGame(randomizeStarter = false) {
+          // Reset game state
+          gameBoard = [];
+          for (let i = 0; i < ROWS; i++) {
+            const row = [];
+            for (let j = 0; j < COLS; j++) {
+              row.push(0); // 0 betekent lege cel
+            }
+            gameBoard.push(row);
+          }
+          
+          gameOver = false;
+          
+          // Bepaal de startende speler
+          if (randomizeStarter) {
+            // Bij reset-scores een willekeurige starter kiezen
+            currentPlayer = Math.random() < 0.5 ? 1 : 2;
+          } else if (lastWinner === 1) {
+            currentPlayer = 2; // Als speler 1 de laatste keer won, begint speler 2
+          } else if (lastWinner === 2) {
+            currentPlayer = 1; // Als speler 2 de laatste keer won, begint speler 1
+          } else {
+            currentPlayer = 1; // Standaard begint speler 1
+          }
+          
+          winningCells = [];
+          
+          // Reset UI
+          createGameBoard();
+          updateTurnIndicator();
+          winMessage.textContent = '';
+          
+          // Stop confetti als dat actief is
+          stopConfetti();
+          
+          // Laat Knof automatisch zetten als hij mag beginnen
+          if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
+            setTimeout(makeKnofMove, 1000);
+          }
+        }
+        
+        // Maak het visuele spelbord
+        function createGameBoard() {
+          gameBoardEl.innerHTML = '<div class="column-hover" id="column-hover"></div>';
+          
+          for (let col = 0; col < COLS; col++) {
+            const column = document.createElement('div');
+            column.className = 'column';
+            column.dataset.col = col;
             
-            // Als de huidige speler Knof is en het is vs-knof modus, laat Knof een zet doen
-            if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
-              setTimeout(makeKnofMove, 1000);
+            for (let row = 0; row < ROWS; row++) {
+              const cell = document.createElement('div');
+              cell.className = 'cell';
+              cell.dataset.row = row;
+              cell.dataset.col = col;
+              column.appendChild(cell);
+            }
+            
+            gameBoardEl.appendChild(column);
+          }
+          
+          // Hover effect voor kolommen
+          const columns = document.querySelectorAll('.column');
+          columns.forEach(column => {
+            column.addEventListener('mouseenter', function() {
+              if (!gameOver) {
+                // Sta hover alleen toe voor menselijke spelers
+                // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
+                if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
+                    (gameMode === 'vs-friend') || 
+                    (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
+                  const colIndex = parseInt(this.dataset.col);
+                  showColumnHover(colIndex);
+                }
+              }
+            });
+            
+            column.addEventListener('click', function() {
+              if (!gameOver) {
+                // Sta klikken alleen toe voor menselijke spelers
+                // In vs-knof mode alleen voor speler 1, in vs-friend mode voor beide spelers
+                if ((gameMode === 'vs-knof' && currentPlayer === 1) || 
+                    (gameMode === 'vs-friend') || 
+                    (gameMode !== 'vs-knof' && currentPlayer !== 2)) {
+                  const colIndex = parseInt(this.dataset.col);
+                  makeMove(colIndex);
+                }
+              }
+            });
+          });
+          
+          gameBoardEl.addEventListener('mouseleave', function() {
+            hideColumnHover();
+          });
+          
+          // Update references to elements that were recreated
+          columnHover = document.getElementById('column-hover');
+          player1Indicator = document.getElementById('player1-indicator');
+          player2Indicator = document.getElementById('player2-indicator');
+          
+          // Reset player indicators to match game mode
+          if (gameMode === 'vs-knof') {
+            player2Indicator.className = 'player-icon knof-piece';
+          } else {
+            player2Indicator.className = 'player-icon player2-piece';
+          }
+        }
+        
+        // Toon hover effect voor een kolom
+        function showColumnHover(colIndex) {
+          if (gameOver || !isValidMove(colIndex) || !columnHover) return;
+          
+          const columnWidth = gameBoardEl.offsetWidth / COLS;
+          columnHover.style.display = 'block';
+          columnHover.style.left = `${colIndex * columnWidth}px`;
+          
+          // Toon de juiste kleur hover effect afhankelijk van de huidige speler
+          columnHover.className = 'column-hover ' + playerPieces[currentPlayer];
+        }
+        
+        // Verberg hover effect
+        function hideColumnHover() {
+          if (columnHover) columnHover.style.display = 'none';
+        }
+        
+        // Update scores
+        function updateScores() {
+          playerScoreEl.textContent = scores.player;
+          opponentScoreEl.textContent = scores.opponent;
+        }
+        
+        // Controleer of een zet geldig is
+        function isValidMove(colIndex) {
+          return gameBoard[0][colIndex] === 0; // Kijk of de bovenste cel in de kolom leeg is
+        }
+        
+        // Voer een zet uit
+        function makeMove(colIndex) {
+          if (!isValidMove(colIndex) || gameOver) return;
+          
+          // Vind de laagste lege cel in de kolom (beginnend vanaf de onderkant)
+          let rowIndex = ROWS - 1;
+          while (rowIndex >= 0 && gameBoard[rowIndex][colIndex] !== 0) {
+            rowIndex--;
+          }
+          
+          if (rowIndex >= 0) {
+            // Zet uitvoeren
+            gameBoard[rowIndex][colIndex] = currentPlayer;
+            
+            // Animeer de schijf
+            const cell = document.querySelector(`.cell[data-row="${rowIndex}"][data-col="${colIndex}"]`);
+            cell.classList.add(playerPieces[currentPlayer]);
+            
+            // Controleer op winnende zet
+            const winResult = checkWin(rowIndex, colIndex);
+            if (winResult) {
+              gameOver = true;
+              winningCells = winResult;
+              highlightWinningCells();
+              
+              // Sla op wie de winnaar is voor het om-en-om beginnen
+              lastWinner = currentPlayer;
+              
+              // Bepaal de juiste tekst afhankelijk van spelmodus
+              let winner;
+              if (gameMode === 'vs-knof') {
+                winner = currentPlayer === 1 ? __("connect_four_you", "Jij") : __("connect_four_knof", "Knof");
+              } else {
+                winner = currentPlayer === 1 ? __("connect_four_player1", "Speler 1") : __("connect_four_player2", "Speler 2");
+              }
+              
+              winMessage.textContent = __("connect_four_wins_message", "{winner} wint!").replace("{winner}", winner);
+              
+              // Update scores
+              if (currentPlayer === 1) {
+                scores.player++;
+              } else {
+                scores.opponent++;
+              }
+              updateScores();
+              
+              // Toon confetti voor beide spelers
+              startConfetti();
+              
+              // Toon passend bericht afhankelijk van de spelmodus
+              if (gameMode === 'vs-knof') {
+                if (currentPlayer === 1) {
+                  typeSpeechMessage(__("connect_four_win_player", "Je hebt gewonnen! Gefeliciteerd! Je bent goed in dit spel."));
+                } else {
+                  typeSpeechMessage(__("connect_four_win_knof", "Ik heb gewonnen! Dat was een leuk potje. Wil je nog een keer spelen?"));
+                }
+              } else {
+                typeSpeechMessage(__("connect_four_win_generic", "{winner} heeft gewonnen! Dat was spannend!").replace("{winner}", winner));
+              }
+            } else if (checkDraw()) {
+              gameOver = true;
+              winMessage.textContent = __("connect_four_draw", "Gelijkspel!");
+              typeSpeechMessage(__("connect_four_draw_message", "Het is gelijkspel! Jullie zijn aan elkaar gewaagd."));
+            } else {
+              // Wissel van speler
+              currentPlayer = currentPlayer === 1 ? 2 : 1;
+              updateTurnIndicator();
+              
+              // Als de huidige speler Knof is en het is vs-knof modus, laat Knof een zet doen
+              if (currentPlayer === 2 && gameMode === 'vs-knof' && !gameOver) {
+                setTimeout(makeKnofMove, 1000);
+              }
             }
           }
         }
-      }
-      
-      // Highlight de winnende cellen
-      function highlightWinningCells() {
-        winningCells.forEach(([row, col]) => {
-          const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-          if (cell) cell.classList.add('winning');
-        });
-      }
-      
-      // Knof's AI zet
-      function makeKnofMove() {
-        if (gameOver) return;
         
-        // Implementeer Minimax algoritme voor beter AI gedrag
-        const bestMove = findBestMove();
+        // Highlight de winnende cellen
+        function highlightWinningCells() {
+          winningCells.forEach(([row, col]) => {
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            if (cell) cell.classList.add('winning');
+          });
+        }
         
-        // Leuk commentaar van Knof toevoegen afhankelijk van de situatie
-        // Kijk of Knof kan winnen met deze zet
-        let rowIndex = findLowestEmptyRow(bestMove);
-        if (rowIndex >= 0) {
-          gameBoard[rowIndex][bestMove] = 2; // Proefzet
-          const willWin = checkWin(rowIndex, bestMove);
-          gameBoard[rowIndex][bestMove] = 0; // Zet terugdraaien
+        // Knof's AI zet
+        function makeKnofMove() {
+          if (gameOver) return;
           
-          if (willWin) {
-            // Knof weet dat hij gaat winnen
-            const taunts = [
-              "Ik denk dat ik hier ga winnen!",
-              "Kijk eens wat ik hier doe!",
-              "Vier op een rij voor mij!",
-              "Mijn suikerpannenkoek past hier perfect!"
-            ];
-            typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
-          } 
-          else {
-            // Kijk of Knof een blokkerend zet doet
-            let isBlocking = false;
-            for (let col = 0; col < COLS; col++) {
-              if (col === bestMove) continue; // Skip de huidige zet
-              
-              let r = findLowestEmptyRow(col);
-              if (r >= 0) {
-                gameBoard[r][col] = 1; // Doe alsof speler 1 hier zet
-                const wouldWin = checkWin(r, col);
-                gameBoard[r][col] = 0; // Zet terugdraaien
+          // Implementeer Minimax algoritme voor beter AI gedrag
+          const bestMove = findBestMove();
+          
+          // Leuk commentaar van Knof toevoegen afhankelijk van de situatie
+          // Kijk of Knof kan winnen met deze zet
+          let rowIndex = findLowestEmptyRow(bestMove);
+          if (rowIndex >= 0) {
+            gameBoard[rowIndex][bestMove] = 2; // Proefzet
+            const willWin = checkWin(rowIndex, bestMove);
+            gameBoard[rowIndex][bestMove] = 0; // Zet terugdraaien
+            
+            if (willWin) {
+              // Knof weet dat hij gaat winnen
+              const taunts = [
+                __("connect_four_taunt_win_1", "Ik denk dat ik hier ga winnen!"),
+                __("connect_four_taunt_win_2", "Kijk eens wat ik hier doe!"),
+                __("connect_four_taunt_win_3", "Vier op een rij voor mij!"),
+                __("connect_four_taunt_win_4", "Mijn suikerpannenkoek past hier perfect!")
+              ];
+              typeSpeechMessage(taunts[Math.floor(Math.random() * taunts.length)]);
+            } 
+            else {
+              // Kijk of Knof een blokkerend zet doet
+              let isBlocking = false;
+              for (let col = 0; col < COLS; col++) {
+                if (col === bestMove) continue; // Skip de huidige zet
                 
-                if (wouldWin && col !== bestMove) {
-                  // Knof's bestMove is anders dan deze kolom, maar er was een blokkerende zet nodig
-                  isBlocking = true;
-                  const blockMessages = [
-                    "Dat was bijna gelukt!",
-                    "Ik zie wat je probeert te doen!",
-                    "Niet zo snel!",
-                    "Ik blokkeer je pannenkoek-plan!"
-                  ];
-                  typeSpeechMessage(blockMessages[Math.floor(Math.random() * blockMessages.length)]);
-                  break;
+                let r = findLowestEmptyRow(col);
+                if (r >= 0) {
+                  gameBoard[r][col] = 1; // Doe alsof speler 1 hier zet
+                  const wouldWin = checkWin(r, col);
+                  gameBoard[r][col] = 0; // Zet terugdraaien
+                  
+                  if (wouldWin && col !== bestMove) {
+                    // Knof's bestMove is anders dan deze kolom, maar er was een blokkerende zet nodig
+                    isBlocking = true;
+                    const blockMessages = [
+                      __("connect_four_block_1", "Dat was bijna gelukt!"),
+                      __("connect_four_block_2", "Ik zie wat je probeert te doen!"),
+                      __("connect_four_block_3", "Niet zo snel!"),
+                      __("connect_four_block_4", "Ik blokkeer je pannenkoek-plan!")
+                    ];
+                    typeSpeechMessage(blockMessages[Math.floor(Math.random() * blockMessages.length)]);
+                    break;
+                  }
+                }
+              }
+              
+              // Als het geen blokkerende zet is, willekeurig commentaar
+              if (!isBlocking) {
+                const normalMoves = [
+                  __("connect_four_normal_1", "Hmm, laat me eens nadenken..."),
+                  __("connect_four_normal_2", "Ik kies deze plek!"),
+                  __("connect_four_normal_3", "Mijn beurt!"),
+                  __("connect_four_normal_4", "Mijn suikerpannenkoek gaat hier!"),
+                  __("connect_four_normal_5", "Dit is een goede zet denk ik.")
+                ];
+                
+                // 20% kans op een opmerking
+                if (Math.random() < 0.2) {
+                  typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
                 }
               }
             }
-            
-            // Als het geen blokkerende zet is, willekeurig commentaar
-            if (!isBlocking) {
-              const normalMoves = [
-                "Hmm, laat me eens nadenken...",
-                "Ik kies deze plek!",
-                "Mijn beurt!",
-                "Mijn suikerpannenkoek gaat hier!",
-                "Dit is een goede zet denk ik."
-              ];
+          }
+          
+          makeMove(bestMove);
+        }
+        
+        // Implementatie van het minimax algoritme
+        function evaluateBoard() {
+          // Controleer horizontaal
+          for (let row = 0; row < ROWS; row++) {
+            for (let col = 0; col <= COLS - 4; col++) {
+              let player1Count = 0;
+              let player2Count = 0;
               
-              // 20% kans op een opmerking
-              if (Math.random() < 0.2) {
-                typeSpeechMessage(normalMoves[Math.floor(Math.random() * normalMoves.length)]);
+              for (let i = 0; i < 4; i++) {
+                if (gameBoard[row][col + i] === 1) player1Count++;
+                else if (gameBoard[row][col + i] === 2) player2Count++;
+              }
+              
+              if (player1Count === 4) return -100;
+              if (player2Count === 4) return 100;
+              
+              if (player1Count > 0 && player2Count === 0) {
+                if (player1Count === 3) return -50;
+                if (player1Count === 2) return -10;
+                if (player1Count === 1) return -1;
+              }
+              
+              if (player2Count > 0 && player1Count === 0) {
+                if (player2Count === 3) return 50;
+                if (player2Count === 2) return 10;
+                if (player2Count === 1) return 1;
               }
             }
           }
-        }
-        
-        makeMove(bestMove);
-      }
-      
-      // Implementatie van het minimax algoritme
-      function evaluateBoard() {
-        // Controleer horizontaal
-        for (let row = 0; row < ROWS; row++) {
-          for (let col = 0; col <= COLS - 4; col++) {
-            let player1Count = 0;
-            let player2Count = 0;
-            
-            for (let i = 0; i < 4; i++) {
-              if (gameBoard[row][col + i] === 1) player1Count++;
-              else if (gameBoard[row][col + i] === 2) player2Count++;
-            }
-            
-            if (player1Count === 4) return -100;
-            if (player2Count === 4) return 100;
-            
-            if (player1Count > 0 && player2Count === 0) {
-              if (player1Count === 3) return -50;
-              if (player1Count === 2) return -10;
-              if (player1Count === 1) return -1;
-            }
-            
-            if (player2Count > 0 && player1Count === 0) {
-              if (player2Count === 3) return 50;
-              if (player2Count === 2) return 10;
-              if (player2Count === 1) return 1;
+          
+          // Controleer verticaal
+          for (let row = 0; row <= ROWS - 4; row++) {
+            for (let col = 0; col < COLS; col++) {
+              let player1Count = 0;
+              let player2Count = 0;
+              
+              for (let i = 0; i < 4; i++) {
+                if (gameBoard[row + i][col] === 1) player1Count++;
+                else if (gameBoard[row + i][col] === 2) player2Count++;
+              }
+              
+              if (player1Count === 4) return -100;
+              if (player2Count === 4) return 100;
+              
+              if (player1Count > 0 && player2Count === 0) {
+                if (player1Count === 3) return -50;
+                if (player1Count === 2) return -10;
+                if (player1Count === 1) return -1;
+              }
+              
+              if (player2Count > 0 && player1Count === 0) {
+                if (player2Count === 3) return 50;
+                if (player2Count === 2) return 10;
+                if (player2Count === 1) return 1;
+              }
             }
           }
+          
+          // Controleer diagonaal (/)
+          for (let row = 3; row < ROWS; row++) {
+            for (let col = 0; col <= COLS - 4; col++) {
+              let player1Count = 0;
+              let player2Count = 0;
+              
+              for (let i = 0; i < 4; i++) {
+                if (gameBoard[row - i][col + i] === 1) player1Count++;
+                else if (gameBoard[row - i][col + i] === 2) player2Count++;
+              }
+              
+              if (player1Count === 4) return -100;
+              if (player2Count === 4) return 100;
+              
+              if (player1Count > 0 && player2Count === 0) {
+                if (player1Count === 3) return -50;
+                if (player1Count === 2) return -10;
+                if (player1Count === 1) return -1;
+              }
+              
+              if (player2Count > 0 && player1Count === 0) {
+                if (player2Count === 3) return 50;
+                if (player2Count === 2) return 10;
+                if (player2Count === 1) return 1;
+              }
+            }
+          }
+          
+          // Controleer diagonaal (\)
+          for (let row = 0; row <= ROWS - 4; row++) {
+            for (let col = 0; col <= COLS - 4; col++) {
+              let player1Count = 0;
+              let player2Count = 0;
+              
+              for (let i = 0; i < 4; i++) {
+                if (gameBoard[row + i][col + i] === 1) player1Count++;
+                else if (gameBoard[row + i][col + i] === 2) player2Count++;
+              }
+              
+              if (player1Count === 4) return -100;
+              if (player2Count === 4) return 100;
+              
+              if (player1Count > 0 && player2Count === 0) {
+                if (player1Count === 3) return -50;
+                if (player1Count === 2) return -10;
+                if (player1Count === 1) return -1;
+              }
+              
+              if (player2Count > 0 && player1Count === 0) {
+                if (player2Count === 3) return 50;
+                if (player2Count === 2) return 10;
+                if (player2Count === 1) return 1;
+              }
+            }
+          }
+          
+          return 0; // Neutraal
         }
         
-        // Controleer verticaal
-        for (let row = 0; row <= ROWS - 4; row++) {
+        // Vind de beste zet voor Knof
+        function findBestMove() {
+          // Controleer eerst of we kunnen winnen
           for (let col = 0; col < COLS; col++) {
-            let player1Count = 0;
-            let player2Count = 0;
-            
-            for (let i = 0; i < 4; i++) {
-              if (gameBoard[row + i][col] === 1) player1Count++;
-              else if (gameBoard[row + i][col] === 2) player2Count++;
-            }
-            
-            if (player1Count === 4) return -100;
-            if (player2Count === 4) return 100;
-            
-            if (player1Count > 0 && player2Count === 0) {
-              if (player1Count === 3) return -50;
-              if (player1Count === 2) return -10;
-              if (player1Count === 1) return -1;
-            }
-            
-            if (player2Count > 0 && player1Count === 0) {
-              if (player2Count === 3) return 50;
-              if (player2Count === 2) return 10;
-              if (player2Count === 1) return 1;
-            }
-          }
-        }
-        
-        // Controleer diagonaal (/)
-        for (let row = 3; row < ROWS; row++) {
-          for (let col = 0; col <= COLS - 4; col++) {
-            let player1Count = 0;
-            let player2Count = 0;
-            
-            for (let i = 0; i < 4; i++) {
-              if (gameBoard[row - i][col + i] === 1) player1Count++;
-              else if (gameBoard[row - i][col + i] === 2) player2Count++;
-            }
-            
-            if (player1Count === 4) return -100;
-            if (player2Count === 4) return 100;
-            
-            if (player1Count > 0 && player2Count === 0) {
-              if (player1Count === 3) return -50;
-              if (player1Count === 2) return -10;
-              if (player1Count === 1) return -1;
-            }
-            
-            if (player2Count > 0 && player1Count === 0) {
-              if (player2Count === 3) return 50;
-              if (player2Count === 2) return 10;
-              if (player2Count === 1) return 1;
-            }
-          }
-        }
-        
-        // Controleer diagonaal (\)
-        for (let row = 0; row <= ROWS - 4; row++) {
-          for (let col = 0; col <= COLS - 4; col++) {
-            let player1Count = 0;
-            let player2Count = 0;
-            
-            for (let i = 0; i < 4; i++) {
-              if (gameBoard[row + i][col + i] === 1) player1Count++;
-              else if (gameBoard[row + i][col + i] === 2) player2Count++;
-            }
-            
-            if (player1Count === 4) return -100;
-            if (player2Count === 4) return 100;
-            
-            if (player1Count > 0 && player2Count === 0) {
-              if (player1Count === 3) return -50;
-              if (player1Count === 2) return -10;
-              if (player1Count === 1) return -1;
-            }
-            
-            if (player2Count > 0 && player1Count === 0) {
-              if (player2Count === 3) return 50;
-              if (player2Count === 2) return 10;
-              if (player2Count === 1) return 1;
-            }
-          }
-        }
-        
-        return 0; // Neutraal
-      }
-      
-      // Vind de beste zet voor Knof
-      function findBestMove() {
-        // Controleer eerst of we kunnen winnen
-        for (let col = 0; col < COLS; col++) {
-          if (isValidMove(col)) {
-            let row = findLowestEmptyRow(col);
-            if (row >= 0) {
-              // Tijdelijk zet doen
-              gameBoard[row][col] = 2;
-              const win = checkWin(row, col);
-              // Zet terugdraaien
-              gameBoard[row][col] = 0;
-              
-              if (win) {
-                return col; // Winnende zet
+            if (isValidMove(col)) {
+              let row = findLowestEmptyRow(col);
+              if (row >= 0) {
+                // Tijdelijk zet doen
+                gameBoard[row][col] = 2;
+                const win = checkWin(row, col);
+                // Zet terugdraaien
+                gameBoard[row][col] = 0;
+                
+                if (win) {
+                  return col; // Winnende zet
+                }
               }
             }
           }
-        }
-        
-        // Controleer of we een winnende zet van de tegenstander moeten blokkeren
-        for (let col = 0; col < COLS; col++) {
-          if (isValidMove(col)) {
-            let row = findLowestEmptyRow(col);
-            if (row >= 0) {
-              // Tijdelijk zet doen alsof speler 1 hier zou zetten
-              gameBoard[row][col] = 1;
-              const win = checkWin(row, col);
-              // Zet terugdraaien
-              gameBoard[row][col] = 0;
-              
-              if (win) {
-                return col; // Blokkeer winnende zet
+          
+          // Controleer of we een winnende zet van de tegenstander moeten blokkeren
+          for (let col = 0; col < COLS; col++) {
+            if (isValidMove(col)) {
+              let row = findLowestEmptyRow(col);
+              if (row >= 0) {
+                // Tijdelijk zet doen alsof speler 1 hier zou zetten
+                gameBoard[row][col] = 1;
+                const win = checkWin(row, col);
+                // Zet terugdraaien
+                gameBoard[row][col] = 0;
+                
+                if (win) {
+                  return col; // Blokkeer winnende zet
+                }
               }
             }
           }
-        }
-        
-        // Probeer centrum kolom als die beschikbaar is
-        const middleCol = 3;
-        if (isValidMove(middleCol)) {
-          return middleCol;
-        }
-        
-        // Evalueer elke mogelijke zet met een eenvoudig minimax
-        let bestScore = -Infinity;
-        let bestMoves = [];
-        
-        for (let col = 0; col < COLS; col++) {
-          if (isValidMove(col)) {
-            let row = findLowestEmptyRow(col);
-            if (row >= 0) {
-              // Tijdelijk zet doen
-              gameBoard[row][col] = 2;
-              let score = evaluateBoard();
-              // Zet terugdraaien
-              gameBoard[row][col] = 0;
-              
-              if (score > bestScore) {
-                bestScore = score;
-                bestMoves = [col];
-              } else if (score === bestScore) {
+          
+          // Probeer centrum kolom als die beschikbaar is
+          const middleCol = 3;
+          if (isValidMove(middleCol)) {
+            return middleCol;
+          }
+          
+          // Evalueer elke mogelijke zet met een eenvoudig minimax
+          let bestScore = -Infinity;
+          let bestMoves = [];
+          
+          for (let col = 0; col < COLS; col++) {
+            if (isValidMove(col)) {
+              let row = findLowestEmptyRow(col);
+              if (row >= 0) {
+                // Tijdelijk zet doen
+                gameBoard[row][col] = 2;
+                let score = evaluateBoard();
+                // Zet terugdraaien
+                gameBoard[row][col] = 0;
+                
+                if (score > bestScore) {
+                  bestScore = score;
+                  bestMoves = [col];
+                } else if (score === bestScore) {
+                  bestMoves.push(col);
+                }
+              }
+            }
+          }
+          
+          // Als er geen goede zet is gevonden, kies een willekeurige geldige kolom
+          if (bestMoves.length === 0) {
+            for (let col = 0; col < COLS; col++) {
+              if (isValidMove(col)) {
                 bestMoves.push(col);
               }
             }
           }
+          
+          // Kies een willekeurige zet uit de beste zetten
+          return bestMoves[Math.floor(Math.random() * bestMoves.length)];
         }
         
-        // Als er geen goede zet is gevonden, kies een willekeurige geldige kolom
-        if (bestMoves.length === 0) {
-          for (let col = 0; col < COLS; col++) {
-            if (isValidMove(col)) {
-              bestMoves.push(col);
+        // Vind de laagste lege rij in een kolom
+        function findLowestEmptyRow(col) {
+          for (let row = ROWS - 1; row >= 0; row--) {
+            if (gameBoard[row][col] === 0) {
+              return row;
             }
           }
+          return -1;
         }
         
-        // Kies een willekeurige zet uit de beste zetten
-        return bestMoves[Math.floor(Math.random() * bestMoves.length)];
-      }
-      
-      // Vind de laagste lege rij in een kolom
-      function findLowestEmptyRow(col) {
-        for (let row = ROWS - 1; row >= 0; row--) {
-          if (gameBoard[row][col] === 0) {
-            return row;
-          }
-        }
-        return -1;
-      }
-      
-      // Update de beurtindicator
-      function updateTurnIndicator() {
-        if (!player1Indicator || !player2Indicator) return;
-        
-        if (currentPlayer === 1) {
-          player1Indicator.classList.add('active-player');
-          player2Indicator.classList.remove('active-player');
-        } else {
-          player1Indicator.classList.remove('active-player');
-          player2Indicator.classList.add('active-player');
-        }
-      }
-      
-      // Controleer op winnende zet
-      function checkWin(row, col) {
-        const player = gameBoard[row][col];
-        if (player === 0) return null;
-        
-        const directions = [
-          [0, 1],  // horizontaal
-          [1, 0],  // verticaal
-          [1, 1],  // diagonaal rechtsonder
-          [1, -1]  // diagonaal linksonder
-        ];
-        
-        for (const [dRow, dCol] of directions) {
-          const cells = [];
-          cells.push([row, col]);
+        // Update de beurtindicator
+        function updateTurnIndicator() {
+          if (!player1Indicator || !player2Indicator) return;
           
-          // Controleer in één richting
-          let r = row + dRow;
-          let c = col + dCol;
-          let count = 1;
-          
-          while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
-            cells.push([r, c]);
-            count++;
-            r += dRow;
-            c += dCol;
-          }
-          
-          // Controleer in tegenovergestelde richting
-          r = row - dRow;
-          c = col - dCol;
-          
-          while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
-            cells.push([r, c]);
-            count++;
-            r -= dRow;
-            c -= dCol;
-          }
-          
-          if (count >= 4) {
-            return cells;
+          if (currentPlayer === 1) {
+            player1Indicator.classList.add('active-player');
+            player2Indicator.classList.remove('active-player');
+          } else {
+            player1Indicator.classList.remove('active-player');
+            player2Indicator.classList.add('active-player');
           }
         }
         
-        return null;
-      }
-      
-      // Controleer op gelijkspel
-      function checkDraw() {
-        for (let col = 0; col < COLS; col++) {
-          if (gameBoard[0][col] === 0) {
-            return false; // Er is nog een lege plaats
+        // Controleer op winnende zet
+        function checkWin(row, col) {
+          const player = gameBoard[row][col];
+          if (player === 0) return null;
+          
+          const directions = [
+            [0, 1],  // horizontaal
+            [1, 0],  // verticaal
+            [1, 1],  // diagonaal rechtsonder
+            [1, -1]  // diagonaal linksonder
+          ];
+          
+          for (const [dRow, dCol] of directions) {
+            const cells = [];
+            cells.push([row, col]);
+            
+            // Controleer in één richting
+            let r = row + dRow;
+            let c = col + dCol;
+            let count = 1;
+            
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
+              cells.push([r, c]);
+              count++;
+              r += dRow;
+              c += dCol;
+            }
+            
+            // Controleer in tegenovergestelde richting
+            r = row - dRow;
+            c = col - dCol;
+            
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLS && gameBoard[r][c] === player) {
+              cells.push([r, c]);
+              count++;
+              r -= dRow;
+              c -= dCol;
+            }
+            
+            if (count >= 4) {
+              return cells;
+            }
           }
+          
+          return null;
         }
-        return true; // Bord is vol
-      }
-      
-      // Start het spel
-      initializeGame();
-      updateScores();
-      resizeCanvas();
+        
+        // Controleer op gelijkspel
+        function checkDraw() {
+          for (let col = 0; col < COLS; col++) {
+            if (gameBoard[0][col] === 0) {
+              return false; // Er is nog een lege plaats
+            }
+          }
+          return true; // Bord is vol
+        }
+        
+        // Start het spel
+        initializeGame();
+        updateScores();
+        resizeCanvas();
+      });
     });
   </script>
 </body>
