@@ -82,5 +82,38 @@
 }
 {
   "chat_page_title": "Sprechen mit Knof - Knofs Spielwald",
-  ...
+}
+{
+  "connect_four_title": "4 Gewinnt - Knofs Spiele",
+  "connect_four_you": "Du",
+  "connect_four_knof": "Knof",
+  "connect_four_player1": "Spieler 1",
+  "connect_four_player2": "Spieler 2",
+  "connect_four_new_game": "Neues Spiel",
+  "connect_four_reset": "Zurücksetzen",
+  "back": "Zurück",
+  "connect_four_welcome_knof": "4 Gewinnt ist eines meiner Lieblingsspiele! Du spielst mit den Sirupwaffeln und ich spiele mit den Zuckerwaffeln. Lass uns anfangen!",
+  "connect_four_welcome_friend": "Viel Spaß mit 4 Gewinnt! Spieler 1 spielt mit Sirupwaffeln und Spieler 2 mit Zuckerwaffeln. Wer gewinnt?",
+  "connect_four_reset_message": "Punkte wurden zurückgesetzt. Wir fangen wieder bei Null an!",
+  "connect_four_restart_knof": "Lass uns noch einmal spielen. Viel Spaß!",
+  "connect_four_restart_friend": "Neue Runde, neue Chancen! Wer gewinnt diesmal?",
+  "connect_four_wins_message": "{winner} gewinnt!",
+  "connect_four_win_player": "Du hast gewonnen! Herzlichen Glückwunsch! Du bist gut in diesem Spiel.",
+  "connect_four_win_knof": "Ich habe gewonnen! Das war ein tolles Spiel. Möchtest du noch einmal spielen?",
+  "connect_four_win_generic": "{winner} hat gewonnen! Das war spannend!",
+  "connect_four_draw": "Unentschieden!",
+  "connect_four_draw_message": "Es ist ein Unentschieden! Ihr seid ebenbürtig.",
+  "connect_four_taunt_win_1": "Ich glaube, ich werde hier gewinnen!",
+  "connect_four_taunt_win_2": "Schau, was ich hier mache!",
+  "connect_four_taunt_win_3": "Vier in einer Reihe für mich!",
+  "connect_four_taunt_win_4": "Meine Zuckerwaffel passt hier perfekt!",
+  "connect_four_block_1": "Das war fast geschafft!",
+  "connect_four_block_2": "Ich sehe, was du versuchst!",
+  "connect_four_block_3": "Nicht so schnell!",
+  "connect_four_block_4": "Ich blockiere deinen Waffel-Plan!",
+  "connect_four_normal_1": "Hmm, lass mich nachdenken...",
+  "connect_four_normal_2": "Ich wähle diesen Platz!",
+  "connect_four_normal_3": "Ich bin dran!",
+  "connect_four_normal_4": "Meine Zuckerwaffel kommt hierhin!",
+  "connect_four_normal_5": "Das ist ein guter Zug, denke ich."
 }
