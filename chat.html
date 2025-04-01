@@ -98,13 +98,18 @@
       pointer-events: none !important;
     }
     
-    /* SVG filters niet laten storen */
+    /* SVG filters - display: none verwijderen en vervangen met deze code */
     .svg-filters {
       position: absolute;
       width: 0;
       height: 0;
       overflow: hidden;
-      display: none; /* Filters verbergen om trilling te voorkomen */
+      /* display: none verwijderd om filters zichtbaar te maken */
+    }
+    
+    /* Zorg dat filters alleen worden toegepast op menu-items, niet op iframe */
+    #bottom-nav-container .nav-item {
+      filter: url(#rough-filter);
     }
     
     /* Extra ruimte boven de onderste navigatiebalk - buffer zone */
