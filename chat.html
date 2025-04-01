@@ -2,14 +2,14 @@
 <html lang="nl">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-685BXDXHF8"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-685BXDXHF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    gtag('config', 'G-685BXDXHF8');
-  </script>
+  gtag('config', 'G-685BXDXHF8');
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title data-i18n="chat_page_title">Praten met Knof - Knof's Speelbos</title>
@@ -114,13 +114,24 @@
       pointer-events: none; /* Zodat het niet interactief is */
     }
     
-    /* Nieuwe Pickaxe chatbot stijl */
+    /* Nieuwe Pickaxe chatbot stijl met dezelfde eigenschappen als het origineel */
     #deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d {
       width: 100%;
       height: 100%;
       position: relative;
       display: block;
       border: none !important; /* Verwijder alle borders */
+    }
+    
+    /* Zorg ervoor dat de volledige iframe de juiste grootte heeft */
+    #deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d iframe {
+      width: 100% !important;
+      height: 100% !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
     }
     
     /* Overschrijf de chat-container stijlen uit style.css */
@@ -169,7 +180,26 @@
       position: relative !important;
       bottom: 20px !important; /* Zelfde waarde als hierboven */
     }
-
+    
+    /* Stijl voor de Pickaxe iframe om volledige grootte te garanderen */
+    iframe {
+      border: none !important;
+      background: transparent !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    
+    /* Zorg ervoor dat Pickaxe goed schaalt in het container element */
+    [class*="pickaxe-chat"], 
+    [class*="pickaxe-container"],
+    [class*="pickaxe-wrapper"] {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      position: relative !important;
+    }
+    
     /* Laadanimatie stijl */
     #chat-loading {
       position: absolute;
@@ -308,6 +338,48 @@
         }
       }
       
+      // Fix voor iframe schaling binnen Pickaxe
+      function fixIframeScaling() {
+        // Zoek naar iframes binnen de Pickaxe container
+        const pickaxeContainer = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
+        if (pickaxeContainer) {
+          // Zorg ervoor dat de container zelf de juiste afmetingen heeft
+          pickaxeContainer.style.width = '100%';
+          pickaxeContainer.style.height = '100%';
+          pickaxeContainer.style.position = 'absolute';
+          pickaxeContainer.style.top = '0';
+          pickaxeContainer.style.left = '0';
+          pickaxeContainer.style.right = '0';
+          pickaxeContainer.style.bottom = '0';
+          
+          // Zoek naar iframes en pas hun stijl aan
+          const iframes = pickaxeContainer.querySelectorAll('iframe');
+          iframes.forEach(iframe => {
+            iframe.style.cssText = `
+              width: 100% !important;
+              height: 100% !important;
+              position: absolute !important;
+              top: 0 !important;
+              left: 0 !important;
+              right: 0 !important;
+              bottom: 0 !important;
+              border: none !important;
+              background: transparent !important;
+            `;
+          });
+          
+          // Zoek naar andere container elementen binnen Pickaxe
+          const containers = pickaxeContainer.querySelectorAll('[class*="container"], [class*="wrapper"], [class*="chat"]');
+          containers.forEach(container => {
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.maxWidth = '100%';
+            container.style.maxHeight = '100%';
+            container.style.position = 'relative';
+          });
+        }
+      }
+      
       // Verwijder alle randen van chatinterface elementen
       function removeBorders() {
         // Direct op pickaxe container
@@ -327,6 +399,9 @@
 
         // Extra: vertaal eventuele placeholder teksten of knoppen in de chatinterface
         translateChatElements();
+        
+        // Fix iframe schaling
+        fixIframeScaling();
       }
 
       // Functie om vertaling toe te passen op dynamische chatbot elementen
@@ -371,45 +446,52 @@
         });
       }
       
-      // Controleer of Pickaxe is geladen en verberg de laadanimatie - verbeterde versie
+      // Controleer of Pickaxe is geladen en verberg de laadanimatie
       function checkPickaxeLoaded() {
-        // Verbeterde selector om beter te kunnen detecteren of de chatbot is geladen
-        const pickaxeContent = document.querySelector('[id^="pickaxe-"], [class*="pickaxe-"], [class*="message-container"], [class*="chat-container"], [class*="pickaxe-chat"], iframe[src*="pickaxe"]');
+        // Check of er elementen binnen de container zijn toegevoegd
+        const pickaxeContainer = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
         
-        if (pickaxeContent) {
-          console.log("Pickaxe element gevonden:", pickaxeContent);
+        if (pickaxeContainer && (
+            pickaxeContainer.children.length > 0 || 
+            pickaxeContainer.innerHTML.trim() !== '' ||
+            document.querySelector('iframe[src*="pickaxe"], iframe[src*="studio"]')
+        )) {
           const loader = document.getElementById('chat-loading');
           if (loader) loader.style.display = 'none';
+          
+          // Fix schaling als iframe aanwezig is
+          fixIframeScaling();
           return true;
         }
         
-        // Extra check voor frames/iframes die Pickaxe zou kunnen bevatten
-        const frames = document.querySelectorAll('iframe');
-        for (let i = 0; i < frames.length; i++) {
-          try {
-            const frameContent = frames[i].contentDocument || frames[i].contentWindow.document;
-            if (frameContent && (frameContent.querySelector('[class*="pickaxe-"], [class*="chat-"]'))) {
-              console.log("Pickaxe gevonden in iframe:", frames[i]);
-              const loader = document.getElementById('chat-loading');
-              if (loader) loader.style.display = 'none';
-              return true;
-            }
-          } catch (e) {
-            // Cross-origin restricties kunnen hier optreden - negeren
+        return false;
+      }
+      
+      // Fix voor schaal problemen na het laden
+      function resizeObserver() {
+        // Observeer size veranderingen van het chatbot element
+        if ('ResizeObserver' in window) {
+          const container = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
+          if (container) {
+            const observer = new ResizeObserver(entries => {
+              // Bij elke resize, fix de iframe schaling
+              fixIframeScaling();
+            });
+            observer.observe(container);
           }
         }
-        
-        return false;
       }
 
       // Handmatige timeout om laadanimatie te verbergen na een bepaalde tijd (als fallback)
       setTimeout(function() {
         const loader = document.getElementById('chat-loading');
         if (loader) {
-          console.log("Forceer laadanimatie verbergen (timeout)");
           loader.style.display = 'none';
         }
-      }, 8000); // Verberg na 8 seconden, ongeacht of de chatbot geladen is
+        
+        // Ook de iframe schaling proberen te fixen
+        fixIframeScaling();
+      }, 5000); // Verberg na 5 seconden, ongeacht of de chatbot geladen is
 
       // Voer direct uit en blijf controleren
       forceHideTopNav();
@@ -418,63 +500,45 @@
       // Wacht tot Pickaxe is geladen en verwijder dan borders
       setTimeout(removeBorders, 1000);
       setInterval(removeBorders, 2000); // Blijf controleren op nieuwe elementen
+      setTimeout(fixIframeScaling, 1500); // Extra poging voor iframe scaling
 
       // Controleer regelmatig of Pickaxe is geladen
       const loadCheckInterval = setInterval(() => {
         if (checkPickaxeLoaded()) {
-          console.log("Pickaxe geladen, laadinterval gestopt");
           clearInterval(loadCheckInterval);
+          // Extra fix voor iframe nadat het geladen is
+          setTimeout(fixIframeScaling, 300);
+          // Zet resize observer op
+          resizeObserver();
         }
       }, 500);
-
-      // Log dat de script is geladen (debug)
-      console.log("Script geladen, wacht op Pickaxe initialisatie...");
-      
-      // Extra initialisatie code voor Pickaxe als het nodig mocht zijn
-      window.addEventListener('load', function() {
-        console.log("Window volledig geladen");
-        
-        // Nog een poging om Pickaxe te initialiseren (als fallback)
-        if (!document.querySelector('script[src="https://studio.pickaxe.co/api/embed/bundle.js"]')) {
-          console.log("Pickaxe script niet gevonden, voeg toe als fallback");
-          const pickaxeScript = document.createElement('script');
-          pickaxeScript.src = "https://studio.pickaxe.co/api/embed/bundle.js";
-          document.body.appendChild(pickaxeScript);
-        }
-      });
 
       // Luister naar eventuele taalwijzigingen
       window.addEventListener('languageChanged', function(e) {
         translateChatElements();
       });
-
-      // Voeg offline afhandeling toe
-      window.addEventListener('offline', function() {
-        const offlineMessage = document.createElement('div');
-        offlineMessage.id = 'offline-message';
-        offlineMessage.style.cssText = `
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: rgba(255, 255, 255, 0.9);
-          padding: 20px;
-          border-radius: 10px;
-          text-align: center;
-          z-index: 1000;
-        `;
-        offlineMessage.innerHTML = '<p data-i18n="offline_message">Je bent offline. Knof kan nu niet met je praten.</p>';
-        document.getElementById('chatbot-wrapper').appendChild(offlineMessage);
-      });
       
-      window.addEventListener('online', function() {
-        const offlineMessage = document.getElementById('offline-message');
-        if (offlineMessage) offlineMessage.remove();
+      // Fix na volledig laden van de pagina
+      window.addEventListener('load', function() {
+        setTimeout(fixIframeScaling, 1000);
+        // Zet de chatbot container op volledige grootte
+        const container = document.getElementById('deployment-a054c575-d95c-4767-8bd7-5bf82efb6b2d');
+        if (container) {
+          container.style.cssText = `
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+          `;
+        }
       });
     });
   </script>
   
-  <!-- Nieuwe Pickaxe Chatbot Script - direct aan het einde van de body voor betere laadprestaties -->
+  <!-- Nieuwe Pickaxe Chatbot Script -->
   <script src="https://studio.pickaxe.co/api/embed/bundle.js"></script>
 </body>
 </html>
