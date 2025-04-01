@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Kleurboek - Knof's Speelbos</title>
+  <title data-i18n="coloring_page_title">Kleurboek - Knof's Speelbos</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -100,14 +100,14 @@
   <!-- App container -->
   <div class="app-container">    
     <!-- NIEUWE TOOLBAR - Direct onder top nav -->
-    <div id="drawing-toolbar">
+    <div id="drawing-toolbar" data-i18n-aria="drawing_toolbar_label" aria-label="Teken gereedschappen">
       <!-- Wordt gevuld door JavaScript -->
     </div>
     
     <!-- Coloring container -->
     <div class="coloring-container">
       <div id="canvas-container">
-        <canvas id="coloring-canvas"></canvas>
+        <canvas id="coloring-canvas" data-i18n-aria="coloring_canvas_label" aria-label="Kleur canvas"></canvas>
       </div>
       <!-- Oude UI elementen - nu leeg -->
       <div class="color-tools" style="display:none;"></div>
@@ -124,9 +124,11 @@
   <script>
     // Welkomstbericht direct na het laden van common.js
     document.addEventListener('DOMContentLoaded', function() {
-      // Wacht even om zeker te zijn dat typeSpeechMessage beschikbaar is
+      // Wacht even om zeker te zijn dat typeSpeechMessage en vertalingsfuncties beschikbaar zijn
       setTimeout(function() {
-        if (typeof typeSpeechMessage === 'function') {
+        if (typeof typeSpeechMessage === 'function' && typeof __ === 'function') {
+          typeSpeechMessage(__("coloring_welcome", "Leuk dat je komt kleuren! Wat zullen we maken?"));
+        } else if (typeof typeSpeechMessage === 'function') {
           typeSpeechMessage("Leuk dat je komt kleuren! Wat zullen we maken?");
         }
       }, 500);
