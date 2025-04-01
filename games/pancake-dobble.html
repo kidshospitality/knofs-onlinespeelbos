@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ingrediënten Zoeken - Knof's Spelletjes</title>
+  <title data-i18n="dobble_game_title">Ingrediënten Zoeken - Knof's Spelletjes</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -145,7 +145,7 @@
     }
 
     .level-buttons-container::before {
-      content: 'Kies je niveau:';
+      content: attr(data-level-title);
       position: absolute;
       top: -30px;
       left: 50%;
@@ -850,37 +850,37 @@
     <div class="game-container">
       <!-- Niveau selectie scherm met geïntegreerde uitleg -->
       <div class="level-select-screen" id="level-select-screen">
-        <div class="level-title">Pancake Dobble</div>
+        <div class="level-title" data-i18n="pancake_dobble_title">Pancake Dobble</div>
         
         <div class="knof-challenge">
           <img src="../images/knof-hoofd.png" alt="Knof" class="knof-image">
-          <div class="knof-message">
+          <div class="knof-message" data-i18n="pancake_dobble_challenge">
             "Ik daag je uit! Wie vindt het snelste het juiste ingrediënt op de pannenkoek? Zoek het ingrediënt dat ik toon voordat ik jou te snel af ben! Wie het eerst 10 punten heeft, wint!"
           </div>
         </div>
         
-        <div class="level-buttons-container">
+        <div class="level-buttons-container" data-level-title="Kies je niveau:" data-i18n-attr="data-level-title:choose_level">
           <div class="level-buttons">
             <div class="level-button easy" id="easy-level">
               <div class="level-icon">🥄</div>
-              Makkelijk
-              <div class="level-description">5 ingrediënten - 30 seconden</div>
+              <span data-i18n="level_easy">Makkelijk</span>
+              <div class="level-description" data-i18n="level_easy_desc">5 ingrediënten - 30 seconden</div>
             </div>
             <div class="level-button medium" id="medium-level">
               <div class="level-icon">🍴</div>
-              Normaal
-              <div class="level-description">7 ingrediënten - 20 seconden</div>
+              <span data-i18n="level_medium">Normaal</span>
+              <div class="level-description" data-i18n="level_medium_desc">7 ingrediënten - 20 seconden</div>
             </div>
             <div class="level-button hard" id="hard-level">
               <div class="level-icon">🔥</div>
-              Moeilijk
-              <div class="level-description">9 ingrediënten - 10 seconden</div>
+              <span data-i18n="level_hard">Moeilijk</span>
+              <div class="level-description" data-i18n="level_hard_desc">9 ingrediënten - 10 seconden</div>
             </div>
           </div>
         </div>
         
         <div class="button-container">
-          <button class="game-button" id="back-button1">Terug</button>
+          <button class="game-button" id="back-button1" data-i18n="back_button">Terug</button>
         </div>
       </div>
 
@@ -891,7 +891,7 @@
 
       <!-- Target ingredient scherm -->
       <div class="target-screen" id="target-screen">
-        <div class="target-label">Zoek dit ingrediënt!</div>
+        <div class="target-label" data-i18n="find_ingredient">Zoek dit ingrediënt!</div>
         <div class="ingredient-display" id="ingredient-display">
           <div class="target-ingredient" id="display-target">🍓</div>
         </div>
@@ -902,7 +902,7 @@
         <div class="game-header">
           <div class="scores-container">
             <div class="player-score">
-              <div class="score-name">Jij</div>
+              <div class="score-name" data-i18n="player_you">Jij</div>
               <div class="score-value" id="player-score">0</div>
             </div>
             <div class="vs-decoration">VS</div>
@@ -911,7 +911,7 @@
               <div class="score-value" id="knof-score">0</div>
             </div>
             <div class="time-display">
-              Tijd: <span id="time-value">30</span>s
+              <span data-i18n="time_label">Tijd:</span> <span id="time-value">30</span>s
             </div>
           </div>
         </div>
@@ -923,18 +923,18 @@
         </div>
 
         <div class="button-container" style="margin-top: 20px;">
-          <button class="game-button" id="back-button2">Terug naar menu</button>
+          <button class="game-button" id="back-button2" data-i18n="back_to_menu">Terug naar menu</button>
         </div>
       </div>
 
       <!-- Resultaten scherm -->
       <div class="results-screen" id="results-screen">
-        <div class="results-title">Eindstand</div>
-        <div class="winner-banner" id="winner-banner">Jij wint!</div>
+        <div class="results-title" data-i18n="final_score">Eindstand</div>
+        <div class="winner-banner" id="winner-banner" data-i18n="you_win">Jij wint!</div>
         
         <div class="final-scores">
           <div class="final-player-score">
-            <div class="final-score-name">Jij</div>
+            <div class="final-score-name" data-i18n="player_you">Jij</div>
             <div class="final-score-value" id="final-player-score">0</div>
           </div>
           <div class="vs-decoration">VS</div>
@@ -944,10 +944,10 @@
           </div>
         </div>
         
-        <div class="results-message" id="results-message">Goed gedaan!</div>
+        <div class="results-message" id="results-message" data-i18n="good_job">Goed gedaan!</div>
         <div class="button-container">
-          <button class="game-button" id="play-again-button">Speel opnieuw</button>
-          <button class="game-button" id="menu-button">Menu</button>
+          <button class="game-button" id="play-again-button" data-i18n="play_again">Speel opnieuw</button>
+          <button class="game-button" id="menu-button" data-i18n="menu">Menu</button>
         </div>
       </div>
 
@@ -963,370 +963,487 @@
   <script src="../js/common.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Game elementen
-      const levelSelectScreen = document.getElementById('level-select-screen');
-      const countdownScreen = document.getElementById('countdown-screen');
-      const targetScreen = document.getElementById('target-screen');
-      const gameBoard = document.getElementById('game-board');
-      const resultsScreen = document.getElementById('results-screen');
-      const feedbackPopup = document.getElementById('feedback-popup');
-      const confettiCanvas = document.getElementById('confetti-canvas');
-      
-      const countdownNumber = document.getElementById('countdown-number');
-      const displayTarget = document.getElementById('display-target');
-      const ingredientDisplay = document.getElementById('ingredient-display');
-      const pancake = document.getElementById('pancake');
-      const playerScoreEl = document.getElementById('player-score');
-      const knofScoreEl = document.getElementById('knof-score');
-      const timeValue = document.getElementById('time-value');
-      const finalPlayerScore = document.getElementById('final-player-score');
-      const finalKnofScore = document.getElementById('final-knof-score');
-      const winnerBanner = document.getElementById('winner-banner');
-      const resultsMessage = document.getElementById('results-message');
-      
-      const easyLevelButton = document.getElementById('easy-level');
-      const mediumLevelButton = document.getElementById('medium-level');
-      const hardLevelButton = document.getElementById('hard-level');
-      const backButton1 = document.getElementById('back-button1');
-      const backButton2 = document.getElementById('back-button2');
-      const playAgainButton = document.getElementById('play-again-button');
-      const menuButton = document.getElementById('menu-button');
-      
-      // Game variabelen
-      const INGREDIENTS = [
-        '🍓', '🍌', '🍫', '🍯', '🧀', // Aardbeien, banaan, chocolade, honing, kaas
-        '🍎', '🍊', '🍒', '🍋', '🥥', // Appel, sinaasappel, kersen, citroen, kokos
-        '🍦', '🍪', '🍰', '🥞', '🧈', // IJs, koekjes, taart, pannenkoeken, boter
-        '🍨', '🥐', '🍯', '🍊', '🍒', // Roomijs, croissant, honing, sinaasappel, kersen
-        '🫐', '🍑', '🧁', '🍫', '🍯', // Bosbessen, perzik, cupcake, chocolade, honing
-        '🥜', '🍇', '🍬', '🍭', '🌰'  // Pinda's, druiven, snoep, lolly, kastanje
-      ];
-      
-      const MAX_SCORE = 10; // Wie als eerste 10 punten heeft, wint
-      
-      const LEVELS = {
-        easy: { count: 5, time: 30, knofDelay: 5000 },
-        medium: { count: 7, time: 20, knofDelay: 3000 },
-        hard: { count: 9, time: 10, knofDelay: 1500 }
-      };
-      
-      let currentLevel = 'easy';
-      let playerScore = 0;
-      let knofScore = 0;
-      let timeLeft = 0;
-      let timerInterval = null;
-      let currentTarget = null;
-      let knofMoveTimeout = null;
-      let gameActive = false;
-      let interactionBlocked = false;
-      let confetti = [];
-      let confettiActive = false;
-      let confettiAnimationId = null;
-      
-      // Event listeners
-      easyLevelButton.addEventListener('click', () => startGame('easy'));
-      mediumLevelButton.addEventListener('click', () => startGame('medium'));
-      hardLevelButton.addEventListener('click', () => startGame('hard'));
-      backButton1.addEventListener('click', () => window.location.href = '../games.html');
-      backButton2.addEventListener('click', showLevelSelect);
-      playAgainButton.addEventListener('click', resetGame);
-      menuButton.addEventListener('click', showLevelSelect);
-      
-      // Handle confetti effect
-      function startConfetti() {
-        stopConfetti(); // Stop any existing confetti first
-        confettiActive = true;
-        confetti = [];
-        resizeCanvas();
-        
-        // Create confetti particles
-        for (let i = 0; i < 100; i++) {
-          confetti.push({
-            x: Math.random() * confettiCanvas.width,
-            y: Math.random() * -confettiCanvas.height,
-            size: Math.random() * 10 + 5,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            rotation: Math.random() * 360,
-            rotationSpeed: Math.random() * 2 - 1,
-            speed: Math.random() * 5 + 2
-          });
-        }
-        
-        animateConfetti();
-      }
-      
-      function stopConfetti() {
-        confettiActive = false;
-        if (confettiAnimationId) {
-          cancelAnimationFrame(confettiAnimationId);
-          confettiAnimationId = null;
-        }
-        const context = confettiCanvas.getContext('2d');
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-      
-      function animateConfetti() {
-        if (!confettiActive) return;
-        
-        const context = confettiCanvas.getContext('2d');
-        context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        
-        for (let i = 0; i < confetti.length; i++) {
-          const p = confetti[i];
-          
-          context.save();
-          context.translate(p.x, p.y);
-          context.rotate(p.rotation * Math.PI / 180);
-          context.fillStyle = p.color;
-          context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          context.restore();
-          
-          p.y += p.speed;
-          p.rotation += p.rotationSpeed;
-          
-          if (p.y > confettiCanvas.height) {
-            p.y = -10;
-            p.x = Math.random() * confettiCanvas.width;
-          }
-        }
-        
-        confettiAnimationId = requestAnimationFrame(animateConfetti);
-      }
-      
-      // Resize canvas for confetti
-      function resizeCanvas() {
-        confettiCanvas.width = window.innerWidth;
-        confettiCanvas.height = window.innerHeight;
-      }
-      
-      window.addEventListener('resize', resizeCanvas);
-      
-      function startGame(level) {
-        currentLevel = level;
-        playerScore = 0;
-        knofScore = 0;
-        playerScoreEl.textContent = playerScore;
-        knofScoreEl.textContent = knofScore;
-        gameActive = true;
-        
-        // Verberg niveau selectie
-        levelSelectScreen.style.display = 'none';
-        startCountdown();
-      }
-      
-      function startCountdown() {
-        countdownScreen.style.display = 'flex';
-        let count = 3;
-        countdownNumber.textContent = count;
-        
-        const countInterval = setInterval(() => {
-          count--;
-          
-          if (count > 0) {
-            countdownNumber.textContent = count;
-          } else if (count === 0) {
-            countdownNumber.textContent = 'START!';
+      // Controleer eerst of de vertaalfuncties beschikbaar zijn en laad de vertalingen
+      const loadI18n = async function() {
+        // Als de vertaalfunctie nog niet beschikbaar is, wachten we even en proberen het opnieuw
+        if (typeof __ !== 'function') {
+          if (typeof loadTranslations === 'function') {
+            await loadTranslations();
           } else {
-            clearInterval(countInterval);
-            countdownScreen.style.display = 'none';
-            prepareNextRound();
+            console.warn('Translation functions not available, using default texts');
+            // Definieer een fallback functie als loadTranslations niet beschikbaar is
+            window.__ = function(key, defaultText) {
+              return defaultText || key;
+            };
           }
-        }, 1000);
-      }
-      
-      function prepareNextRound() {
-        // Check voor winnaars
-        if (playerScore >= MAX_SCORE || knofScore >= MAX_SCORE) {
-          showResults();
-          return;
         }
         
-        // Selecteer ingrediënten voor deze ronde
-        const shuffled = shuffleArray(INGREDIENTS);
-        const roundIngredients = shuffled.slice(0, LEVELS[currentLevel].count);
-        currentTarget = roundIngredients[Math.floor(Math.random() * roundIngredients.length)];
+        // Nu kunnen we starten met de game
+        initGame();
+      };
+
+      // De hoofdfunctie voor de game initialisatie
+      function initGame() {
+        // Game elementen
+        const levelSelectScreen = document.getElementById('level-select-screen');
+        const countdownScreen = document.getElementById('countdown-screen');
+        const targetScreen = document.getElementById('target-screen');
+        const gameBoard = document.getElementById('game-board');
+        const resultsScreen = document.getElementById('results-screen');
+        const feedbackPopup = document.getElementById('feedback-popup');
+        const confettiCanvas = document.getElementById('confetti-canvas');
         
-        // Verberg het game board
-        gameBoard.style.display = 'none';
+        const countdownNumber = document.getElementById('countdown-number');
+        const displayTarget = document.getElementById('display-target');
+        const ingredientDisplay = document.getElementById('ingredient-display');
+        const pancake = document.getElementById('pancake');
+        const playerScoreEl = document.getElementById('player-score');
+        const knofScoreEl = document.getElementById('knof-score');
+        const timeValue = document.getElementById('time-value');
+        const finalPlayerScore = document.getElementById('final-player-score');
+        const finalKnofScore = document.getElementById('final-knof-score');
+        const winnerBanner = document.getElementById('winner-banner');
+        const resultsMessage = document.getElementById('results-message');
         
-        // Toon het doelwit ingrediënt
-        showTargetIngredient(currentTarget);
+        const easyLevelButton = document.getElementById('easy-level');
+        const mediumLevelButton = document.getElementById('medium-level');
+        const hardLevelButton = document.getElementById('hard-level');
+        const backButton1 = document.getElementById('back-button1');
+        const backButton2 = document.getElementById('back-button2');
+        const playAgainButton = document.getElementById('play-again-button');
+        const menuButton = document.getElementById('menu-button');
         
-        // Na 2 seconden, toon de pannenkoek met ingrediënten
-        setTimeout(() => {
-          targetScreen.style.display = 'none';
-          showGameBoard(roundIngredients);
-          startTimer();
-        }, 2000);
-      }
-      
-      function showTargetIngredient(target) {
-        targetScreen.style.display = 'flex';
-        displayTarget.textContent = target;
-      }
-      
-      function showGameBoard(ingredients) {
-        gameBoard.style.display = 'block';
-        pancake.innerHTML = '';
+        // Game variabelen
+        const INGREDIENTS = [
+          '🍓', '🍌', '🍫', '🍯', '🧀', // Aardbeien, banaan, chocolade, honing, kaas
+          '🍎', '🍊', '🍒', '🍋', '🥥', // Appel, sinaasappel, kersen, citroen, kokos
+          '🍦', '🍪', '🍰', '🥞', '🧈', // IJs, koekjes, taart, pannenkoeken, boter
+          '🍨', '🥐', '🍯', '🍊', '🍒', // Roomijs, croissant, honing, sinaasappel, kersen
+          '🫐', '🍑', '🧁', '🍫', '🍯', // Bosbessen, perzik, cupcake, chocolade, honing
+          '🥜', '🍇', '🍬', '🍭', '🌰'  // Pinda's, druiven, snoep, lolly, kastanje
+        ];
         
-        // Minimum afstand tussen ingrediënten (in percentage van de pancake grootte)
-        const minDistancePercent = 25;
-        const positions = [];
+        const MAX_SCORE = 10; // Wie als eerste 10 punten heeft, wint
         
-        // Bepaal CSS class voor ingrediënt grootte op basis van niveau
-        let sizeClass = 'medium-size';
-        if (currentLevel === 'easy') {
-          sizeClass = 'easy-size';
-        } else if (currentLevel === 'hard') {
-          sizeClass = 'hard-size';
-        }
+        const LEVELS = {
+          easy: { count: 5, time: 30, knofDelay: 5000 },
+          medium: { count: 7, time: 20, knofDelay: 3000 },
+          hard: { count: 9, time: 10, knofDelay: 1500 }
+        };
         
-        // Voor elke ingredient, plaats het op een niet-overlappende positie
-        ingredients.forEach(ingredient => {
-          const element = document.createElement('div');
-          element.className = `game-ingredient ${sizeClass}`;
-          element.textContent = ingredient;
-          element.dataset.ingredient = ingredient;
+        let currentLevel = 'easy';
+        let playerScore = 0;
+        let knofScore = 0;
+        let timeLeft = 0;
+        let timerInterval = null;
+        let currentTarget = null;
+        let knofMoveTimeout = null;
+        let gameActive = false;
+        let interactionBlocked = false;
+        let confetti = [];
+        let confettiActive = false;
+        let confettiAnimationId = null;
+        
+        // Language observer for dynamic content
+        function setupLanguageObserver() {
+          document.addEventListener('languageChanged', updateGameTexts);
           
-          // Probeer een niet-overlappende positie te vinden
-          let position;
-          let attempts = 0;
-          const maxAttempts = 150; // Verhoogd aantal pogingen
-          
-          do {
-            position = getRandomPancakePosition();
-            attempts++;
-            
-            if (attempts > maxAttempts) {
-              // Als we te veel pogingen doen, accepteer dan een overlappende positie
-              break;
+          // Als er een storage event is voor taalwijziging
+          window.addEventListener('storage', function(e) {
+            if (e.key === 'language') {
+              updateGameTexts();
             }
-          } while (positionOverlapsExisting(position, positions, minDistancePercent));
-          
-          positions.push(position);
-          
-          // Plaats het ingredient op de gevonden positie
-          // CSS transform: translate(-50%, -50%) zorgt voor centrering
-          element.style.left = `${position.x}%`;
-          element.style.top = `${position.y}%`;
-          
-          // Willekeurige rotatie voor speelsheid, maar minder extreem
-          const rotation = Math.random() * 20 - 10; // -10 tot 10 graden
-          element.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
-          
-          // Click handler
-          element.addEventListener('click', () => {
-            if (interactionBlocked) return;
-            handleIngredientClick(ingredient);
           });
+        }
+        
+        // Update all game texts that can change during the game
+        function updateGameTexts() {
+          // Update level buttons container title
+          const levelButtonsContainer = document.querySelector('.level-buttons-container');
+          if (levelButtonsContainer) {
+            levelButtonsContainer.setAttribute('data-level-title', __('choose_level', 'Kies je niveau:'));
+          }
           
-          pancake.appendChild(element);
-        });
-      }
-      
-      // Genereert een willekeurige positie binnen de pannenkoek
-      function getRandomPancakePosition() {
-        // Genereer een random hoek en afstand van het centrum (in polaire coördinaten)
-        const angle = Math.random() * Math.PI * 2; // 0 to 2π (volle cirkel)
-        
-        // Bepaal veilige radius op basis van het niveau en emoji-grootte
-        // Kleinere radius om te zorgen dat emoji's volledig binnen pannenkoek vallen
-        let maxRadius;
-        if (currentLevel === 'easy') {
-          maxRadius = 35; // Grotere emoji's hebben meer ruimte nodig, dus kleinere max radius
-        } else if (currentLevel === 'medium') {
-          maxRadius = 37;
-        } else { // hard
-          maxRadius = 40; // Kleinere emoji's kunnen dichter bij de rand
+          // Update feedback texts for various game states
+          if (resultsScreen.style.display === 'flex') {
+            updateResultsTexts();
+          }
         }
         
-        // Gebruik een minimale radius om te voorkomen dat alles in het midden zit
-        const minRadius = 5;
+        // Event listeners
+        easyLevelButton.addEventListener('click', () => startGame('easy'));
+        mediumLevelButton.addEventListener('click', () => startGame('medium'));
+        hardLevelButton.addEventListener('click', () => startGame('hard'));
+        backButton1.addEventListener('click', () => window.location.href = '../games.html');
+        backButton2.addEventListener('click', showLevelSelect);
+        playAgainButton.addEventListener('click', resetGame);
+        menuButton.addEventListener('click', showLevelSelect);
         
-        // Bereken radius met betere spreiding, min-max zorgt voor betere verdeling
-        const radius = minRadius + (Math.sqrt(Math.random()) * (maxRadius - minRadius));
-        
-        // Converteer polar naar cartesiaanse coördinaten
-        const x = 50 + Math.cos(angle) * radius;
-        const y = 50 + Math.sin(angle) * radius;
-        
-        return { x, y };
-      }
-      
-      // Controleert of een positie overlapt met bestaande posities
-      function positionOverlapsExisting(newPos, existingPositions, minDistance) {
-        // Pas minimum afstand aan op basis van niveau en emoji-grootte
-        let adjustedMinDistance;
-        if (currentLevel === 'easy') {
-          adjustedMinDistance = minDistance * 1.4; // Grotere emoji's hebben meer ruimte nodig
-        } else if (currentLevel === 'medium') {
-          adjustedMinDistance = minDistance * 1.1;
-        } else { // hard
-          adjustedMinDistance = minDistance * 0.9; // Kleinere emoji's kunnen dichter bij elkaar
+        // Handle confetti effect
+        function startConfetti() {
+          stopConfetti(); // Stop any existing confetti first
+          confettiActive = true;
+          confetti = [];
+          resizeCanvas();
+          
+          // Create confetti particles
+          for (let i = 0; i < 100; i++) {
+            confetti.push({
+              x: Math.random() * confettiCanvas.width,
+              y: Math.random() * -confettiCanvas.height,
+              size: Math.random() * 10 + 5,
+              color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+              rotation: Math.random() * 360,
+              rotationSpeed: Math.random() * 2 - 1,
+              speed: Math.random() * 5 + 2
+            });
+          }
+          
+          animateConfetti();
         }
         
-        return existingPositions.some(pos => {
-          const dx = newPos.x - pos.x;
-          const dy = newPos.y - pos.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          return distance < adjustedMinDistance;
-        });
-      }
-      
-      function startTimer() {
-        timeLeft = LEVELS[currentLevel].time;
-        timeValue.textContent = timeLeft;
+        function stopConfetti() {
+          confettiActive = false;
+          if (confettiAnimationId) {
+            cancelAnimationFrame(confettiAnimationId);
+            confettiAnimationId = null;
+          }
+          const context = confettiCanvas.getContext('2d');
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
         
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-          timeLeft--;
+        function animateConfetti() {
+          if (!confettiActive) return;
+          
+          const context = confettiCanvas.getContext('2d');
+          context.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          
+          for (let i = 0; i < confetti.length; i++) {
+            const p = confetti[i];
+            
+            context.save();
+            context.translate(p.x, p.y);
+            context.rotate(p.rotation * Math.PI / 180);
+            context.fillStyle = p.color;
+            context.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            context.restore();
+            
+            p.y += p.speed;
+            p.rotation += p.rotationSpeed;
+            
+            if (p.y > confettiCanvas.height) {
+              p.y = -10;
+              p.x = Math.random() * confettiCanvas.width;
+            }
+          }
+          
+          confettiAnimationId = requestAnimationFrame(animateConfetti);
+        }
+        
+        // Resize canvas for confetti
+        function resizeCanvas() {
+          confettiCanvas.width = window.innerWidth;
+          confettiCanvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        
+        function startGame(level) {
+          currentLevel = level;
+          playerScore = 0;
+          knofScore = 0;
+          playerScoreEl.textContent = playerScore;
+          knofScoreEl.textContent = knofScore;
+          gameActive = true;
+          
+          // Verberg niveau selectie
+          levelSelectScreen.style.display = 'none';
+          startCountdown();
+        }
+        
+        function startCountdown() {
+          countdownScreen.style.display = 'flex';
+          let count = 3;
+          countdownNumber.textContent = count;
+          
+          const countInterval = setInterval(() => {
+            count--;
+            
+            if (count > 0) {
+              countdownNumber.textContent = count;
+            } else if (count === 0) {
+              countdownNumber.textContent = __('start', 'START!');
+            } else {
+              clearInterval(countInterval);
+              countdownScreen.style.display = 'none';
+              prepareNextRound();
+            }
+          }, 1000);
+        }
+        
+        function prepareNextRound() {
+          // Check voor winnaars
+          if (playerScore >= MAX_SCORE || knofScore >= MAX_SCORE) {
+            showResults();
+            return;
+          }
+          
+          // Selecteer ingrediënten voor deze ronde
+          const shuffled = shuffleArray(INGREDIENTS);
+          const roundIngredients = shuffled.slice(0, LEVELS[currentLevel].count);
+          currentTarget = roundIngredients[Math.floor(Math.random() * roundIngredients.length)];
+          
+          // Verberg het game board
+          gameBoard.style.display = 'none';
+          
+          // Toon het doelwit ingrediënt
+          showTargetIngredient(currentTarget);
+          
+          // Na 2 seconden, toon de pannenkoek met ingrediënten
+          setTimeout(() => {
+            targetScreen.style.display = 'none';
+            showGameBoard(roundIngredients);
+            startTimer();
+          }, 2000);
+        }
+        
+        function showTargetIngredient(target) {
+          targetScreen.style.display = 'flex';
+          displayTarget.textContent = target;
+        }
+        
+        function showGameBoard(ingredients) {
+          gameBoard.style.display = 'block';
+          pancake.innerHTML = '';
+          
+          // Minimum afstand tussen ingrediënten (in percentage van de pancake grootte)
+          const minDistancePercent = 25;
+          const positions = [];
+          
+          // Bepaal CSS class voor ingrediënt grootte op basis van niveau
+          let sizeClass = 'medium-size';
+          if (currentLevel === 'easy') {
+            sizeClass = 'easy-size';
+          } else if (currentLevel === 'hard') {
+            sizeClass = 'hard-size';
+          }
+          
+          // Voor elke ingredient, plaats het op een niet-overlappende positie
+          ingredients.forEach(ingredient => {
+            const element = document.createElement('div');
+            element.className = `game-ingredient ${sizeClass}`;
+            element.textContent = ingredient;
+            element.dataset.ingredient = ingredient;
+            
+            // Probeer een niet-overlappende positie te vinden
+            let position;
+            let attempts = 0;
+            const maxAttempts = 150; // Verhoogd aantal pogingen
+            
+            do {
+              position = getRandomPancakePosition();
+              attempts++;
+              
+              if (attempts > maxAttempts) {
+                // Als we te veel pogingen doen, accepteer dan een overlappende positie
+                break;
+              }
+            } while (positionOverlapsExisting(position, positions, minDistancePercent));
+            
+            positions.push(position);
+            
+            // Plaats het ingredient op de gevonden positie
+            // CSS transform: translate(-50%, -50%) zorgt voor centrering
+            element.style.left = `${position.x}%`;
+            element.style.top = `${position.y}%`;
+            
+            // Willekeurige rotatie voor speelsheid, maar minder extreem
+            const rotation = Math.random() * 20 - 10; // -10 tot 10 graden
+            element.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+            
+            // Click handler
+            element.addEventListener('click', () => {
+              if (interactionBlocked) return;
+              handleIngredientClick(ingredient);
+            });
+            
+            pancake.appendChild(element);
+          });
+        }
+        
+        // Genereert een willekeurige positie binnen de pannenkoek
+        function getRandomPancakePosition() {
+          // Genereer een random hoek en afstand van het centrum (in polaire coördinaten)
+          const angle = Math.random() * Math.PI * 2; // 0 to 2π (volle cirkel)
+          
+          // Bepaal veilige radius op basis van het niveau en emoji-grootte
+          // Kleinere radius om te zorgen dat emoji's volledig binnen pannenkoek vallen
+          let maxRadius;
+          if (currentLevel === 'easy') {
+            maxRadius = 35; // Grotere emoji's hebben meer ruimte nodig, dus kleinere max radius
+          } else if (currentLevel === 'medium') {
+            maxRadius = 37;
+          } else { // hard
+            maxRadius = 40; // Kleinere emoji's kunnen dichter bij de rand
+          }
+          
+          // Gebruik een minimale radius om te voorkomen dat alles in het midden zit
+          const minRadius = 5;
+          
+          // Bereken radius met betere spreiding, min-max zorgt voor betere verdeling
+          const radius = minRadius + (Math.sqrt(Math.random()) * (maxRadius - minRadius));
+          
+          // Converteer polar naar cartesiaanse coördinaten
+          const x = 50 + Math.cos(angle) * radius;
+          const y = 50 + Math.sin(angle) * radius;
+          
+          return { x, y };
+        }
+        
+        // Controleert of een positie overlapt met bestaande posities
+        function positionOverlapsExisting(newPos, existingPositions, minDistance) {
+          // Pas minimum afstand aan op basis van niveau en emoji-grootte
+          let adjustedMinDistance;
+          if (currentLevel === 'easy') {
+            adjustedMinDistance = minDistance * 1.4; // Grotere emoji's hebben meer ruimte nodig
+          } else if (currentLevel === 'medium') {
+            adjustedMinDistance = minDistance * 1.1;
+          } else { // hard
+            adjustedMinDistance = minDistance * 0.9; // Kleinere emoji's kunnen dichter bij elkaar
+          }
+          
+          return existingPositions.some(pos => {
+            const dx = newPos.x - pos.x;
+            const dy = newPos.y - pos.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < adjustedMinDistance;
+          });
+        }
+        
+        function startTimer() {
+          timeLeft = LEVELS[currentLevel].time;
           timeValue.textContent = timeLeft;
           
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            handleTimeUp();
-          }
-        }, 1000);
-        
-        // Schedule Knof's move
-        scheduleKnofMove();
-      }
-      
-      function scheduleKnofMove() {
-        if (knofMoveTimeout) clearTimeout(knofMoveTimeout);
-        
-        const knofDelay = LEVELS[currentLevel].knofDelay;
-        const randomFactor = 1 + (Math.random() * 0.4 - 0.2); // ±20% randomness
-        const finalDelay = Math.floor(knofDelay * randomFactor);
-        
-        knofMoveTimeout = setTimeout(() => {
-          if (gameActive && !interactionBlocked) {
-            // Knof vindt het doelwit
-            handleKnofClick();
-          }
-        }, finalDelay);
-      }
-      
-      function handleIngredientClick(clickedIngredient) {
-        if (interactionBlocked) return;
-        interactionBlocked = true;
-        
-        // Cancel Knof's pending move
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
+          clearInterval(timerInterval);
+          timerInterval = setInterval(() => {
+            timeLeft--;
+            timeValue.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+              clearInterval(timerInterval);
+              handleTimeUp();
+            }
+          }, 1000);
+          
+          // Schedule Knof's move
+          scheduleKnofMove();
         }
         
-        clearInterval(timerInterval);
+        function scheduleKnofMove() {
+          if (knofMoveTimeout) clearTimeout(knofMoveTimeout);
+          
+          const knofDelay = LEVELS[currentLevel].knofDelay;
+          const randomFactor = 1 + (Math.random() * 0.4 - 0.2); // ±20% randomness
+          const finalDelay = Math.floor(knofDelay * randomFactor);
+          
+          knofMoveTimeout = setTimeout(() => {
+            if (gameActive && !interactionBlocked) {
+              // Knof vindt het doelwit
+              handleKnofClick();
+            }
+          }, finalDelay);
+        }
         
-        if (clickedIngredient === currentTarget) {
-          // Correct - speler krijgt een punt
-          playerScore++;
-          playerScoreEl.textContent = playerScore;
-          showFeedback(true);
+        function handleIngredientClick(clickedIngredient) {
+          if (interactionBlocked) return;
+          interactionBlocked = true;
+          
+          // Cancel Knof's pending move
+          if (knofMoveTimeout) {
+            clearTimeout(knofMoveTimeout);
+            knofMoveTimeout = null;
+          }
+          
+          clearInterval(timerInterval);
+          
+          if (clickedIngredient === currentTarget) {
+            // Correct - speler krijgt een punt
+            playerScore++;
+            playerScoreEl.textContent = playerScore;
+            showFeedback(true);
+            
+            // Highlight correct ingredient
+            highlightIngredient(clickedIngredient);
+            
+            // Animate pancake
+            pancake.classList.add('correct');
+            setTimeout(() => {
+              pancake.classList.remove('correct');
+            }, 500);
+            
+            // Spraakbericht van Knof
+            if (typeof typeSpeechMessage === 'function') {
+              const praises = [
+                __("praise_1", "Goed gedaan!"), 
+                __("praise_2", "Heel goed!"), 
+                __("praise_3", "Prima!"), 
+                __("praise_4", "Goed zo!"),
+                __("praise_5", "Je bent snel!"),
+                __("praise_6", "Dat had ik bijna gevonden!")
+              ];
+              typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+            }
+            
+            // Controleer of de speler heeft gewonnen
+            if (playerScore >= MAX_SCORE) {
+              setTimeout(() => {
+                showResults();
+              }, 1500);
+              return;
+            }
+          } else {
+            // Incorrect
+            showFeedback(false);
+            
+            // Shake pancake
+            pancake.classList.add('wrong');
+            setTimeout(() => {
+              pancake.classList.remove('wrong');
+            }, 500);
+            
+            // Spraakbericht van Knof
+            if (typeof typeSpeechMessage === 'function') {
+              const consolations = [
+                __("consolation_1", "Jammer!"), 
+                __("consolation_2", "Helaas, dat is niet het juiste ingrediënt!"), 
+                __("consolation_3", "Probeer het nog eens!"),
+                __("consolation_4", "Niet het juiste ingrediënt, kijk goed!")
+              ];
+              typeSpeechMessage(consolations[Math.floor(Math.random() * consolations.length)]);
+            }
+          }
+          
+          setTimeout(() => {
+            interactionBlocked = false;
+            prepareNextRound();
+          }, 1500);
+        }
+        
+        function handleKnofClick() {
+          if (interactionBlocked) return;
+          interactionBlocked = true;
+          
+          clearInterval(timerInterval);
+          
+          // Knof vindt het doelwit en krijgt een punt
+          knofScore++;
+          knofScoreEl.textContent = knofScore;
           
           // Highlight correct ingredient
-          highlightIngredient(clickedIngredient);
+          highlightIngredient(currentTarget);
+          
+          // Show Knof feedback
+          showFeedback(__("knof_faster", "Knof was sneller!"));
           
           // Animate pancake
           pancake.classList.add('correct');
@@ -1334,249 +1451,192 @@
             pancake.classList.remove('correct');
           }, 500);
           
-          // Spraakbericht van Knof
+          // Knof feedback via spraak
           if (typeof typeSpeechMessage === 'function') {
-            const praises = [
-              "Goed gedaan!", 
-              "Heel goed!", 
-              "Prima!", 
-              "Goed zo!",
-              "Je bent snel!",
-              "Dat had ik bijna gevonden!"
+            const knofComments = [
+              __("knof_comment_1", "Ha! Die zag ik meteen!"), 
+              __("knof_comment_2", "Ik was sneller!"), 
+              __("knof_comment_3", "Gevonden!"),
+              __("knof_comment_4", "Daar is het ingrediënt!"),
+              __("knof_comment_5", "Ik heb een punt!"),
+              __("knof_comment_6", "Dat was snel van mij!")
             ];
-            typeSpeechMessage(praises[Math.floor(Math.random() * praises.length)]);
+            typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
           }
           
-          // Controleer of de speler heeft gewonnen
-          if (playerScore >= MAX_SCORE) {
+          // Controleer of Knof heeft gewonnen
+          if (knofScore >= MAX_SCORE) {
             setTimeout(() => {
               showResults();
             }, 1500);
             return;
           }
-        } else {
-          // Incorrect
-          showFeedback(false);
           
-          // Shake pancake
-          pancake.classList.add('wrong');
           setTimeout(() => {
-            pancake.classList.remove('wrong');
-          }, 500);
+            interactionBlocked = false;
+            prepareNextRound();
+          }, 1500);
+        }
+        
+        function handleTimeUp() {
+          if (interactionBlocked) return;
+          interactionBlocked = true;
           
-          // Spraakbericht van Knof
+          // Als de tijd om is, krijgt Knof een punt
+          knofScore++;
+          knofScoreEl.textContent = knofScore;
+          
+          // Highlight the target ingredient
+          highlightIngredient(currentTarget);
+          
+          // Show timeout feedback
+          showFeedback(__("time_up", "Tijd is op!"));
+          
           if (typeof typeSpeechMessage === 'function') {
-            const consolations = [
-              "Jammer!", 
-              "Helaas, dat is niet het juiste ingrediënt!", 
-              "Probeer het nog eens!",
-              "Niet het juiste ingrediënt, kijk goed!"
+            const timeupComments = [
+              __("timeup_comment_1", "Tijd is op! Ik krijg een punt!"),
+              __("timeup_comment_2", "Te langzaam! Dat is een punt voor mij!"),
+              __("timeup_comment_3", "Tijd is om! Het ingrediënt was " + currentTarget),
+              __("timeup_comment_4", "Je bent niet snel genoeg! Ik win deze ronde!")
             ];
-            typeSpeechMessage(consolations[Math.floor(Math.random() * consolations.length)]);
+            typeSpeechMessage(timeupComments[Math.floor(Math.random() * timeupComments.length)]);
+          }
+          
+          // Controleer of Knof heeft gewonnen
+          if (knofScore >= MAX_SCORE) {
+            setTimeout(() => {
+              showResults();
+            }, 1500);
+            return;
+          }
+          
+          setTimeout(() => {
+            interactionBlocked = false;
+            prepareNextRound();
+          }, 1500);
+        }
+        
+        function highlightIngredient(ingredient) {
+          const ingredientEl = pancake.querySelector(`.game-ingredient[data-ingredient="${ingredient}"]`);
+          if (ingredientEl) {
+            ingredientEl.classList.add('highlighted');
           }
         }
         
-        setTimeout(() => {
-          interactionBlocked = false;
-          prepareNextRound();
-        }, 1500);
-      }
-      
-      function handleKnofClick() {
-        if (interactionBlocked) return;
-        interactionBlocked = true;
-        
-        clearInterval(timerInterval);
-        
-        // Knof vindt het doelwit en krijgt een punt
-        knofScore++;
-        knofScoreEl.textContent = knofScore;
-        
-        // Highlight correct ingredient
-        highlightIngredient(currentTarget);
-        
-        // Show Knof feedback
-        showFeedback("Knof was sneller!");
-        
-        // Animate pancake
-        pancake.classList.add('correct');
-        setTimeout(() => {
-          pancake.classList.remove('correct');
-        }, 500);
-        
-        // Knof feedback via spraak
-        if (typeof typeSpeechMessage === 'function') {
-          const knofComments = [
-            "Ha! Die zag ik meteen!", 
-            "Ik was sneller!", 
-            "Gevonden!",
-            "Daar is het ingrediënt!",
-            "Ik heb een punt!",
-            "Dat was snel van mij!"
-          ];
-          typeSpeechMessage(knofComments[Math.floor(Math.random() * knofComments.length)]);
-        }
-        
-        // Controleer of Knof heeft gewonnen
-        if (knofScore >= MAX_SCORE) {
+        function showFeedback(correct) {
+          feedbackPopup.textContent = typeof correct === 'string' ? correct : 
+                                      correct ? __("correct", "Juist!") : __("incorrect", "Helaas!");
+          feedbackPopup.className = 'feedback-popup';
+          
+          if (typeof correct === 'boolean') {
+            feedbackPopup.classList.add(correct ? 'correct' : 'wrong');
+          }
+          
+          feedbackPopup.classList.add('show');
+          
           setTimeout(() => {
-            showResults();
+            feedbackPopup.classList.remove('show');
           }, 1500);
-          return;
         }
         
-        setTimeout(() => {
-          interactionBlocked = false;
-          prepareNextRound();
-        }, 1500);
-      }
-      
-      function handleTimeUp() {
-        if (interactionBlocked) return;
-        interactionBlocked = true;
+        function updateResultsTexts() {
+          // Update de resultaten teksten op basis van wie er gewonnen heeft
+          if (playerScore > knofScore) {
+            winnerBanner.textContent = __("you_win_emoji", "Jij wint! 🎉");
+            winnerBanner.style.color = "#4CAF50";
+            resultsMessage.textContent = __("win_message", "Gefeliciteerd! Je bent een echte ingrediënten-expert! Je hebt Knof verslagen!");
+          } else if (knofScore > playerScore) {
+            winnerBanner.textContent = __("knof_wins_emoji", "Knof wint! 🏆");
+            winnerBanner.style.color = "#FF9A5A";
+            resultsMessage.textContent = __("lose_message", "Helaas, Knof was deze keer sneller. Probeer het nog eens!");
+          } else {
+            winnerBanner.textContent = __("tie_emoji", "Gelijkspel! 🤝");
+            winnerBanner.style.color = "#7A97FF";
+            resultsMessage.textContent = __("tie_message", "Jullie zijn aan elkaar gewaagd! Het is een gelijkspel geworden.");
+          }
+        }
         
-        // Als de tijd om is, krijgt Knof een punt
-        knofScore++;
-        knofScoreEl.textContent = knofScore;
+        function showResults() {
+          gameBoard.style.display = 'none';
+          resultsScreen.style.display = 'flex';
+          gameActive = false;
+          
+          // Stop any active timers
+          clearInterval(timerInterval);
+          if (knofMoveTimeout) {
+            clearTimeout(knofMoveTimeout);
+            knofMoveTimeout = null;
+          }
+          
+          // Update scores on results screen
+          finalPlayerScore.textContent = playerScore;
+          finalKnofScore.textContent = knofScore;
+          
+          // Determine and display winner
+          updateResultsTexts();
+          
+          // Start confetti effect als de speler wint
+          if (playerScore > knofScore) {
+            startConfetti();
+          }
+          
+          // Spraakbericht van Knof
+          if (typeof typeSpeechMessage === 'function') {
+            typeSpeechMessage(resultsMessage.textContent);
+          }
+        }
         
-        // Highlight the target ingredient
-        highlightIngredient(currentTarget);
+        function resetGame() {
+          resultsScreen.style.display = 'none';
+          stopConfetti();
+          startGame(currentLevel);
+        }
         
-        // Show timeout feedback
-        showFeedback("Tijd is op!");
+        function showLevelSelect() {
+          resultsScreen.style.display = 'none';
+          gameBoard.style.display = 'none';
+          targetScreen.style.display = 'none';
+          countdownScreen.style.display = 'none';
+          levelSelectScreen.style.display = 'flex';
+          stopConfetti();
+          
+          // Reset game state
+          gameActive = false;
+          clearInterval(timerInterval);
+          if (knofMoveTimeout) {
+            clearTimeout(knofMoveTimeout);
+            knofMoveTimeout = null;
+          }
+        }
         
+        // Utility functions
+        function shuffleArray(array) {
+          const newArray = [...array];
+          for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+          }
+          return newArray;
+        }
+        
+        // Setup language observer
+        setupLanguageObserver();
+        
+        // Start met het hoofdscherm direct
+        showLevelSelect();
+        
+        // Welkom bericht
         if (typeof typeSpeechMessage === 'function') {
-          const timeupComments = [
-            "Tijd is op! Ik krijg een punt!",
-            "Te langzaam! Dat is een punt voor mij!",
-            "Tijd is om! Het ingrediënt was " + currentTarget,
-            "Je bent niet snel genoeg! Ik win deze ronde!"
-          ];
-          typeSpeechMessage(timeupComments[Math.floor(Math.random() * timeupComments.length)]);
-        }
-        
-        // Controleer of Knof heeft gewonnen
-        if (knofScore >= MAX_SCORE) {
           setTimeout(() => {
-            showResults();
-          }, 1500);
-          return;
+            typeSpeechMessage(__("welcome_message", "Welkom bij Pancake Dobble! Ik daag je uit om tegen mij te spelen. Kies een niveau om te beginnen."));
+          }, 500);
         }
         
-        setTimeout(() => {
-          interactionBlocked = false;
-          prepareNextRound();
-        }, 1500);
+        resizeCanvas();
       }
-      
-      function highlightIngredient(ingredient) {
-        const ingredientEl = pancake.querySelector(`.game-ingredient[data-ingredient="${ingredient}"]`);
-        if (ingredientEl) {
-          ingredientEl.classList.add('highlighted');
-        }
-      }
-      
-      function showFeedback(correct) {
-        feedbackPopup.textContent = typeof correct === 'string' ? correct : 
-                                    correct ? 'Juist!' : 'Helaas!';
-        feedbackPopup.className = 'feedback-popup';
-        
-        if (typeof correct === 'boolean') {
-          feedbackPopup.classList.add(correct ? 'correct' : 'wrong');
-        }
-        
-        feedbackPopup.classList.add('show');
-        
-        setTimeout(() => {
-          feedbackPopup.classList.remove('show');
-        }, 1500);
-      }
-      
-      function showResults() {
-        gameBoard.style.display = 'none';
-        resultsScreen.style.display = 'flex';
-        gameActive = false;
-        
-        // Stop any active timers
-        clearInterval(timerInterval);
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
-        }
-        
-        // Update scores on results screen
-        finalPlayerScore.textContent = playerScore;
-        finalKnofScore.textContent = knofScore;
-        
-        // Determine and display winner
-        let message;
-        if (playerScore > knofScore) {
-          winnerBanner.textContent = "Jij wint! 🎉";
-          winnerBanner.style.color = "#4CAF50";
-          message = "Gefeliciteerd! Je bent een echte ingrediënten-expert! Je hebt Knof verslagen!";
-          startConfetti();
-        } else if (knofScore > playerScore) {
-          winnerBanner.textContent = "Knof wint! 🏆";
-          winnerBanner.style.color = "#FF9A5A";
-          message = "Helaas, Knof was deze keer sneller. Probeer het nog eens!";
-        } else {
-          winnerBanner.textContent = "Gelijkspel! 🤝";
-          winnerBanner.style.color = "#7A97FF";
-          message = "Jullie zijn aan elkaar gewaagd! Het is een gelijkspel geworden.";
-        }
-        
-        resultsMessage.textContent = message;
-        
-        // Spraakbericht van Knof
-        if (typeof typeSpeechMessage === 'function') {
-          typeSpeechMessage(message);
-        }
-      }
-      
-      function resetGame() {
-        resultsScreen.style.display = 'none';
-        stopConfetti();
-        startGame(currentLevel);
-      }
-      
-      function showLevelSelect() {
-        resultsScreen.style.display = 'none';
-        gameBoard.style.display = 'none';
-        targetScreen.style.display = 'none';
-        countdownScreen.style.display = 'none';
-        levelSelectScreen.style.display = 'flex';
-        stopConfetti();
-        
-        // Reset game state
-        gameActive = false;
-        clearInterval(timerInterval);
-        if (knofMoveTimeout) {
-          clearTimeout(knofMoveTimeout);
-          knofMoveTimeout = null;
-        }
-      }
-      
-      // Utility functions
-      function shuffleArray(array) {
-        const newArray = [...array];
-        for (let i = newArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-        }
-        return newArray;
-      }
-      
-      // Start met het hoofdscherm direct
-      showLevelSelect();
-      
-      // Welkom bericht
-      if (typeof typeSpeechMessage === 'function') {
-        setTimeout(() => {
-          typeSpeechMessage("Welkom bij Pancake Dobble! Ik daag je uit om tegen mij te spelen. Kies een niveau om te beginnen.");
-        }, 500);
-      }
-      
-      resizeCanvas();
+
+      // Start de initialisatie na het laden van vertalingen
+      loadI18n();
     });
   </script>
 </body>
