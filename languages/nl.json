@@ -23,3 +23,25 @@
   "weather_message": "Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?",
   "popup_message": "Deze functie wordt nog gebakken, kom snel terug! 🧁"
 }
+{
+  "games_title": "Knof's Spelletjes",
+  "games_corner": "Knof's Spelletjeshoek",
+  "connect_four": "4 op een rij",
+  "connect_four_subtitle": "Krijg 4 schijfjes op een rij, kolom of diagonaal!",
+  "tic_tac_toe": "Boter, Kaas en Eieren",
+  "tic_tac_toe_subtitle": "Krijg drie op een rij om te winnen!",
+  "pancake_dobble": "Pannenkoeken Dobble",
+  "pancake_dobble_subtitle": "Vind zo snel mogelijk de overeenkomende plaatjes",
+  "how_to_play": "Hoe wil je spelen?",
+  "how_to_play_format": "Hoe wil je {game} spelen?",
+  "play_against_knof": "Spelen tegen Knof",
+  "play_with_friend": "Spelen met een vriend",
+  "back": "Terug",
+  "games_welcome": "Welkom bij de spelletjes! Wat wil je spelen? Ik vind ze allemaal leuk!",
+  "connect_four_message": "4 op een rij is superleuk! Wil je tegen mij spelen of tegen een vriend?",
+  "tic_tac_toe_message": "Boter, kaas en eieren! Wil je tegen mij spelen of tegen een vriend?",
+  "pancake_dobble_message": "Pannenkoeken Dobble is mijn favoriet! Ik doe mijn best tegen jou!",
+  "play_against_knof_message": "Leuk dat je {game} tegen mij wilt spelen! Ik doe mijn best!",
+  "play_with_friend_message": "{game} samen spelen is gezellig! Veel plezier!",
+  "other_game_choice": "Wil je een ander spelletje kiezen? Ze zijn allemaal leuk!"
+}
