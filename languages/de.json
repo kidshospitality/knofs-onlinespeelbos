@@ -68,3 +68,10 @@
   "save_drawing_message": "Deine Zeichnung wurde in deinen Bildern gespeichert!",
   "drawing_error": "Beim Speichern deiner Zeichnung ist ein Fehler aufgetreten"
 }
+{
+  "memory_intro": "Memory ist ein Spiel, bei dem du dir merken musst, wo die Bilder sind. Klicke auf zwei Karten, um zu sehen, ob sie gleich sind!",
+  "puzzle_intro": "In diesem Puzzlespiel musst du die Teile an die richtige Stelle legen. Ziehe die Teile an die richtige Stelle!",
+  "drawing_intro": "Ich werde etwas zeichnen und du musst erraten, was es ist! Bist du bereit?",
+  "games_intro": "Lass uns spielen! Wähle ein Spiel, das dir gefällt.",
+  "memory_welcome": "Willkommen beim Memory-Spiel! Finde alle Paare, um zu gewinnen!"
+}
