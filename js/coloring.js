@@ -9,51 +9,176 @@ document.addEventListener('DOMContentLoaded', function() {
   let messageInProgress = false;
   let messageTimer = null;
   
-  // NIEUW: Berichten die Knof kan zeggen
+  // NIEUW: Berichten die Knof kan zeggen (nu met taalsupport)
   const knofMessages = {
-    welcome: [
-      "Hallo! Ik ben Knof. Laten we samen tekenen!",
-      "Welkom bij de kleurplaat! Ik help je graag!",
-      "Leuk dat je er bent! Wat ga je vandaag tekenen?"
-    ],
-    colorPicker: [
-      "Welke kleur wil je gebruiken? Ik vind rood heel mooi!",
-      "Kies maar een leuke kleur, ik ben benieuwd!",
-      "Kleuren kiezen is zo leuk! Wat wordt het?"
-    ],
-    brushSize: [
-      "Een dikke of dunne lijn? Jij mag kiezen!",
-      "Wil je dikke of dunne strepen maken?",
-      "Met een grote kwast kun je veel sneller kleuren!"
-    ],
-    undo: [
-      "Oeps, foutje? Geen probleem!",
-      "We maken allemaal wel eens een foutje...",
-      "Terug naar de vorige stap, handig hè?"
-    ],
-    clear: [
-      "Wil je echt helemaal opnieuw beginnen?",
-      "Alles wissen? Ben je zeker?",
-      "Soms is het leuk om met een schone lei te beginnen!"
-    ],
-    download: [
-      "Je kunt je tekening opslaan en later printen!",
-      "Zullen we je kunstwerk bewaren?",
-      "Laat je tekening maar zien aan iedereen!"
-    ],
-    template: [
-      "Kies maar een leuke kleurplaat uit!",
-      "Welke kleurplaat vind jij het leukst?",
-      "Er zijn verschillende kleurplaten, kies er maar eentje!"
-    ],
-    drawing: [
-      "Wat ben je mooi aan het tekenen!",
-      "Je bent echt goed in kleuren!",
-      "Ik ben benieuwd hoe je tekening eruit gaat zien!"
-    ]
+    nl: {
+      welcome: [
+        "Hallo! Ik ben Knof. Laten we samen tekenen!",
+        "Welkom bij de kleurplaat! Ik help je graag!",
+        "Leuk dat je er bent! Wat ga je vandaag tekenen?"
+      ],
+      colorPicker: [
+        "Welke kleur wil je gebruiken? Ik vind rood heel mooi!",
+        "Kies maar een leuke kleur, ik ben benieuwd!",
+        "Kleuren kiezen is zo leuk! Wat wordt het?"
+      ],
+      brushSize: [
+        "Een dikke of dunne lijn? Jij mag kiezen!",
+        "Wil je dikke of dunne strepen maken?",
+        "Met een grote kwast kun je veel sneller kleuren!"
+      ],
+      undo: [
+        "Oeps, foutje? Geen probleem!",
+        "We maken allemaal wel eens een foutje...",
+        "Terug naar de vorige stap, handig hè?"
+      ],
+      clear: [
+        "Wil je echt helemaal opnieuw beginnen?",
+        "Alles wissen? Ben je zeker?",
+        "Soms is het leuk om met een schone lei te beginnen!"
+      ],
+      download: [
+        "Je kunt je tekening opslaan en later printen!",
+        "Zullen we je kunstwerk bewaren?",
+        "Laat je tekening maar zien aan iedereen!"
+      ],
+      template: [
+        "Kies maar een leuke kleurplaat uit!",
+        "Welke kleurplaat vind jij het leukst?",
+        "Er zijn verschillende kleurplaten, kies er maar eentje!"
+      ],
+      drawing: [
+        "Wat ben je mooi aan het tekenen!",
+        "Je bent echt goed in kleuren!",
+        "Ik ben benieuwd hoe je tekening eruit gaat zien!"
+      ],
+      confirm_clear: "Weet je zeker dat je de tekening wilt wissen?",
+      yes: "Ja",
+      no: "Nee"
+    },
+    en: {
+      welcome: [
+        "Hello! I'm Knof. Let's draw together!",
+        "Welcome to the coloring page! I'm happy to help!",
+        "Nice to see you! What are you going to draw today?"
+      ],
+      colorPicker: [
+        "Which color would you like to use? I think red is beautiful!",
+        "Choose a nice color, I'm curious!",
+        "Choosing colors is so much fun! What will it be?"
+      ],
+      brushSize: [
+        "A thick or thin line? You get to choose!",
+        "Do you want to make thick or thin stripes?",
+        "With a big brush you can color much faster!"
+      ],
+      undo: [
+        "Oops, made a mistake? No problem!",
+        "We all make mistakes sometimes...",
+        "Back to the previous step, handy right?"
+      ],
+      clear: [
+        "Do you really want to start all over again?",
+        "Erase everything? Are you sure?",
+        "Sometimes it's nice to start with a clean slate!"
+      ],
+      download: [
+        "You can save your drawing and print it later!",
+        "Shall we save your artwork?",
+        "Show your drawing to everyone!"
+      ],
+      template: [
+        "Choose a nice coloring page!",
+        "Which coloring page do you like best?",
+        "There are different coloring pages, pick one!"
+      ],
+      drawing: [
+        "You're drawing so beautifully!",
+        "You're really good at coloring!",
+        "I'm curious to see how your drawing will turn out!"
+      ],
+      confirm_clear: "Are you sure you want to erase the drawing?",
+      yes: "Yes",
+      no: "No"
+    },
+    de: {
+      welcome: [
+        "Hallo! Ich bin Knof. Lass uns zusammen zeichnen!",
+        "Willkommen zum Malbuch! Ich helfe dir gerne!",
+        "Schön, dass du da bist! Was wirst du heute zeichnen?"
+      ],
+      colorPicker: [
+        "Welche Farbe möchtest du verwenden? Ich finde rot sehr schön!",
+        "Wähle eine schöne Farbe, ich bin gespannt!",
+        "Farben auswählen macht so viel Spaß! Was wird es sein?"
+      ],
+      brushSize: [
+        "Eine dicke oder dünne Linie? Du darfst wählen!",
+        "Möchtest du dicke oder dünne Streifen machen?",
+        "Mit einem großen Pinsel kannst du viel schneller malen!"
+      ],
+      undo: [
+        "Ups, ein Fehler? Kein Problem!",
+        "Wir alle machen manchmal Fehler...",
+        "Zurück zum vorherigen Schritt, praktisch, oder?"
+      ],
+      clear: [
+        "Möchtest du wirklich ganz von vorne anfangen?",
+        "Alles löschen? Bist du sicher?",
+        "Manchmal ist es schön, mit einem leeren Blatt anzufangen!"
+      ],
+      download: [
+        "Du kannst deine Zeichnung speichern und später ausdrucken!",
+        "Sollen wir dein Kunstwerk aufbewahren?",
+        "Zeige deine Zeichnung allen!"
+      ],
+      template: [
+        "Wähle eine schöne Malvorlage aus!",
+        "Welche Malvorlage gefällt dir am besten?",
+        "Es gibt verschiedene Malvorlagen, wähle eine aus!"
+      ],
+      drawing: [
+        "Du zeichnest so schön!",
+        "Du bist wirklich gut im Malen!",
+        "Ich bin gespannt, wie deine Zeichnung aussehen wird!"
+      ],
+      confirm_clear: "Bist du sicher, dass du die Zeichnung löschen möchtest?",
+      yes: "Ja",
+      no: "Nein"
+    }
   };
   
-  // Vervang je showKnofMessage functie door deze directe versie:
+  // Functie voor het verkrijgen van de huidige taalcode
+  function getCurrentLanguage() {
+    return localStorage.getItem('language') || 'nl';
+  }
+  
+  // Functie voor vertaling
+  function __(key, defaultText = '') {
+    const lang = getCurrentLanguage();
+    const langMessages = knofMessages[lang] || knofMessages.nl; // Fallback naar Nederlands
+    
+    // Split de key bij punten voor geneste objecten
+    const parts = key.split('.');
+    let message = langMessages;
+    
+    for (const part of parts) {
+      if (message && message[part] !== undefined) {
+        message = message[part];
+      } else {
+        return defaultText || key;
+      }
+    }
+    
+    // Als de boodschap een array is, kies een willekeurig bericht
+    if (Array.isArray(message)) {
+      return message[Math.floor(Math.random() * message.length)];
+    }
+    
+    return message || defaultText || key;
+  }
+  
+  // Vervang je showKnofMessage functie door deze meertalige versie:
   function showKnofMessage(messageType) {
     // Annuleer elke lopende timer
     if (messageTimer) {
@@ -75,15 +200,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Selecteer een willekeurig bericht
-    if (!knofMessages[messageType]) {
+    // Haal het bericht op in de juiste taal
+    const message = __(messageType);
+    if (!message) {
       console.warn(`Berichttype '${messageType}' bestaat niet.`);
       return;
     }
-    
-    const messages = knofMessages[messageType];
-    const randomIndex = Math.floor(Math.random() * messages.length);
-    const message = messages[randomIndex];
     
     // Markeer dat we nu een bericht tonen
     messageInProgress = true;
@@ -115,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
   canvasContainer.appendChild(templateCanvas);
   const templateCtx = templateCanvas.getContext('2d');
   
-  // Creëer bevestigingsdialoog
+  // Creëer bevestigingsdialoog met meertalige ondersteuning
   const confirmDialog = document.createElement('div');
   confirmDialog.style.display = 'none';
   confirmDialog.style.position = 'fixed';
@@ -131,13 +253,26 @@ document.addEventListener('DOMContentLoaded', function() {
   confirmDialog.style.alignItems = 'center';
   document.body.appendChild(confirmDialog);
   
-  confirmDialog.innerHTML = `
-    <p>Weet je zeker dat je de tekening wilt wissen?</p>
-    <div style="display: flex;">
-      <button id="confirm-yes" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #4CAF50;">Ja</button>
-      <button id="confirm-no" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #f44336;">Nee</button>
-    </div>
-  `;
+  // Dialooginhoud wordt in updateDialogLanguage bijgewerkt
+  function updateDialogLanguage() {
+    const confirmMessage = __('confirm_clear');
+    const yesText = __('yes');
+    const noText = __('no');
+    
+    confirmDialog.innerHTML = `
+      <p>${confirmMessage}</p>
+      <div style="display: flex;">
+        <button id="confirm-yes" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #4CAF50;">${yesText}</button>
+        <button id="confirm-no" style="margin: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; color: white; background-color: #f44336;">${noText}</button>
+      </div>
+    `;
+    
+    // Voeg event listeners opnieuw toe na HTML-update
+    document.getElementById('confirm-yes').addEventListener('click', confirmClearCanvas);
+    document.getElementById('confirm-no').addEventListener('click', () => {
+      confirmDialog.style.display = 'none';
+    });
+  }
   
   // Staat
   let currentColor = '#000000';
@@ -398,12 +533,6 @@ document.addEventListener('DOMContentLoaded', function() {
       brushSizeMenu.style.display = 'none';
       templateMenu.style.display = 'none';
     });
-    
-    // Bevestigingsdialoog knoppen
-    document.getElementById('confirm-yes').addEventListener('click', confirmClearCanvas);
-    document.getElementById('confirm-no').addEventListener('click', () => {
-      confirmDialog.style.display = 'none';
-    });
   }
   
   // Update canvas grootte
@@ -611,6 +740,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Wis canvas bevestiging tonen
   function handleClearCanvas() {
+    // Update de dialog tekst eerst met de huidige taal
+    updateDialogLanguage();
     confirmDialog.style.display = 'flex';
   }
   
@@ -676,10 +807,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Resize event
     window.addEventListener('resize', updateCanvasSize);
     window.addEventListener('orientationchange', () => setTimeout(updateCanvasSize, 300));
+    
+    // Luister naar taalveranderingen
+    window.addEventListener('languagechange', updateDialogLanguage);
+    
+    // Als localStorage verandert (voor taalwijzigingen)
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'language') {
+        updateDialogLanguage();
+      }
+    });
+  }
+  
+  // Om externe taalwijzigingen op te vangen (vanuit common.js)
+  function setupLanguageObserver() {
+    // De originele setItem-functie opslaan
+    const originalSetItem = localStorage.setItem;
+    
+    // Overschrijf de setItem-functie
+    localStorage.setItem = function(key, value) {
+      // Roep de originele functie aan
+      originalSetItem.apply(this, arguments);
+      
+      // Als de taal wordt gewijzigd, werk de UI bij
+      if (key === 'language') {
+        updateDialogLanguage();
+      }
+    };
   }
   
   // Initialisatie
   function init() {
+    // Bevestigingsdialoog tekst updaten voor de huidige taal
+    updateDialogLanguage();
+    
+    // Setup language observer
+    setupLanguageObserver();
+    
     // Bouw toolbar
     buildToolbar();
     
