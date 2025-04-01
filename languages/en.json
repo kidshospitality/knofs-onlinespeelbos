@@ -23,3 +23,25 @@
   "weather_message": "It's great weather to play outside! Have you seen our playground yet?",
   "popup_message": "This feature is still baking, come back soon! 🧁"
 }
+{
+  "games_title": "Knof's Games",
+  "games_corner": "Knof's Game Corner",
+  "connect_four": "Connect Four",
+  "connect_four_subtitle": "Get 4 discs in a row, column or diagonal!",
+  "tic_tac_toe": "Tic Tac Toe",
+  "tic_tac_toe_subtitle": "Get three in a row to win!",
+  "pancake_dobble": "Pancake Dobble",
+  "pancake_dobble_subtitle": "Find the matching images as fast as possible",
+  "how_to_play": "How do you want to play?",
+  "how_to_play_format": "How do you want to play {game}?",
+  "play_against_knof": "Play against Knof",
+  "play_with_friend": "Play with a friend",
+  "back": "Back",
+  "games_welcome": "Welcome to the games! What would you like to play? I like them all!",
+  "connect_four_message": "Connect Four is super fun! Do you want to play against me or against a friend?",
+  "tic_tac_toe_message": "Tic Tac Toe! Do you want to play against me or against a friend?",
+  "pancake_dobble_message": "Pancake Dobble is my favorite! I'll do my best against you!",
+  "play_against_knof_message": "I'm glad you want to play {game} against me! I'll do my best!",
+  "play_with_friend_message": "Playing {game} together is fun! Enjoy!",
+  "other_game_choice": "Would you like to choose another game? They're all fun!"
+}
