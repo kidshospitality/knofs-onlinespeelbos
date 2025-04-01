@@ -68,3 +68,10 @@
   "save_drawing_message": "Your drawing has been saved to your pictures!",
   "drawing_error": "Something went wrong saving your drawing"
 }
+{
+  "memory_intro": "Memory is a game where you need to remember where the pictures are. Click on two cards to see if they match!",
+  "puzzle_intro": "In this puzzle game, you need to place the pieces in the right spot. Drag the pieces to the correct position!",
+  "drawing_intro": "I'm going to draw something and you have to guess what it is! Are you ready?",
+  "games_intro": "Let's play! Choose a game you like.",
+  "memory_welcome": "Welcome to the Memory game! Find all pairs to win!"
+}
