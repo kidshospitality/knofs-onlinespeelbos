@@ -1,20 +1,23 @@
 <div class="settings-modal" id="settings-modal">
   <div class="settings-content">
     <span class="close-settings" id="close-settings">&times;</span>
-    <h2>Instellingen</h2>
-    <p>Hier kun je de instellingen aanpassen.</p>
+    <h2 data-i18n="settings">Instellingen</h2>
     <div class="settings-options">
       <div class="settings-option">
-        <label for="volume-slider">Geluid</label>
-        <input type="range" id="volume-slider" min="0" max="100" value="70">
+        <label for="text-speed" data-i18n="text_speed">Tekstsnelheid</label>
+        <select id="text-speed">
+          <option value="slow" data-i18n="slow">Langzaam</option>
+          <option value="medium" selected data-i18n="medium">Gemiddeld</option>
+          <option value="fast" data-i18n="fast">Snel</option>
+        </select>
       </div>
       <div class="settings-option">
-        <label for="text-speed">Tekstsnelheid</label>
-        <select id="text-speed">
-          <option value="slow">Langzaam</option>
-          <option value="medium" selected>Gemiddeld</option>
-          <option value="fast">Snel</option>
-        </select>
+        <label data-i18n="language">Taal</label>
+        <div class="language-options">
+          <div class="language-option selected" data-lang="nl">🇳🇱 Nederlands</div>
+          <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
+          <div class="language-option" data-lang="en">🇬🇧 English</div>
+        </div>
       </div>
     </div>
   </div>
