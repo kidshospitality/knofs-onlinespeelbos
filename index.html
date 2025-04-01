@@ -12,7 +12,7 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Knof's Online Speelbos</title>
+  <title data-i18n="app_title">Knof's Online Speelbos</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#F8F6E9">
@@ -121,28 +121,28 @@
         <div class="button-bg"></div>
         <span>
           <div class="button-emoji">😃</div>
-          <div class="button-text">Ik voel me blij</div>
+          <div class="button-text" data-i18n="feeling_happy">Ik voel me blij</div>
         </span>
       </div>
       <div class="button" id="creatief-btn">
         <div class="button-bg"></div>
         <span>
           <div class="button-emoji">✨</div>
-          <div class="button-text">Ik voel me creatief</div>
+          <div class="button-text" data-i18n="feeling_creative">Ik voel me creatief</div>
         </span>
       </div>
       <div class="button" id="nieuwsgierig-btn">
         <div class="button-bg"></div>
         <span>
           <div class="button-emoji">🤔</div>
-          <div class="button-text">Ik ben nieuwsgierig</div>
+          <div class="button-text" data-i18n="feeling_curious">Ik ben nieuwsgierig</div>
         </span>
       </div>
       <div class="button" id="verrassing-btn">
         <div class="button-bg"></div>
         <span>
           <div class="button-emoji">🎲</div>
-          <div class="button-text">Verras me!</div>
+          <div class="button-text" data-i18n="surprise_me">Verras me!</div>
         </span>
       </div>
     </div>
@@ -151,32 +151,32 @@
       <!-- Games Section -->
       <div class="section" id="games-section">
         <div class="section-bg-games"></div>
-        <div class="section-title">Spelletjes!</div>
-        <div class="section-subtitle">Kies een leuk spel om te spelen</div>
+        <div class="section-title" data-i18n="games">Spelletjes!</div>
+        <div class="section-subtitle" data-i18n="games_subtitle">Kies een leuk spel om te spelen</div>
         <span class="section-arrow"></span>
       </div>
       
       <!-- Coloring Boek Section -->
       <div class="section" id="coloring-section">
         <div class="section-bg-coloring"></div>
-        <div class="section-title">Kleurboek</div>
-        <div class="section-subtitle">Maak je eigen kunstwerk!</div>
+        <div class="section-title" data-i18n="coloring_book">Kleurboek</div>
+        <div class="section-subtitle" data-i18n="coloring_subtitle">Maak je eigen kunstwerk!</div>
         <span class="section-arrow"></span>
       </div>
 
       <!-- Placemat Section -->
       <div class="section" id="placemat-section">
         <div class="section-bg-placemat"></div>
-        <div class="section-title">Interactieve Placemat</div>
-        <div class="section-subtitle">Speel met AR!</div>
+        <div class="section-title" data-i18n="placemat">Interactieve Placemat</div>
+        <div class="section-subtitle" data-i18n="placemat_subtitle">Speel met AR!</div>
         <span class="section-arrow"></span>
       </div>
 
       <!-- Chat Section -->
       <div class="section" id="chat-section">
         <div class="section-bg-chat"></div>
-        <div class="section-title">Praten met Knof</div>
-        <div class="section-subtitle">Stel vragen aan je vriend!</div>
+        <div class="section-title" data-i18n="chat">Praten met Knof</div>
+        <div class="section-subtitle" data-i18n="chat_subtitle">Stel vragen aan je vriend!</div>
         <span class="section-arrow"></span>
       </div>
     </div>
@@ -189,7 +189,7 @@
   <div id="popup-message" class="popup">
     <div class="popup-content">
       <span class="close-popup">&times;</span>
-      <p>Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
+      <p data-i18n="popup_message">Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
     </div>
   </div>
 
@@ -197,8 +197,8 @@
   <div class="weather-popup" id="weatherPopup">
     <div class="weather-popup-content">
       <span class="close-weather" onclick="closeWeatherPopup()">&times;</span>
-      <h2><span class="sun-emoji">☀️</span> Lekker weer alert! <span class="sun-emoji">☀️</span></h2>
-      <p id="weatherMessage">Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?</p>
+      <h2><span class="sun-emoji">☀️</span> <span data-i18n="weather_title">Lekker weer alert!</span> <span class="sun-emoji">☀️</span></h2>
+      <p id="weatherMessage" data-i18n="weather_message">Het is heerlijk weer om buiten te spelen! Heb je onze speeltuin al gezien?</p>
     </div>
   </div>
 
@@ -209,7 +209,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Welkomstbericht tonen wanneer de pagina geladen is
       setTimeout(() => {
-        typeSpeechMessage("Hoi! Ik ben Knof. Hoe voel je je vandaag?");
+        typeSpeechMessage(__("greeting", "Hoi! Ik ben Knof. Hoe voel je je vandaag?"));
       }, 500);
 
       // Check het weer als de pagina laadt
@@ -248,7 +248,7 @@
         document.getElementById('popup-message').style.display = 'flex';
         
         // Toon ook een leuk bericht van Knof
-        typeSpeechMessage("Oeps! De placemat-functie ligt nog in de oven!");
+        typeSpeechMessage(__("placemat_unavailable", "Oeps! De placemat-functie ligt nog in de oven!"));
       });
       
       document.getElementById('chat-section').addEventListener('click', () => {
@@ -323,17 +323,17 @@
       let speechText = '';
       
       if (temperature >= 25) {
-        messageText = `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen en misschien wel een ijsje te eten! 🍦`;
-        speechText = "Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan en een ijsje eten?";
+        messageText = __("weather_hot", `Wow! Het is ${temperature}°C! Perfect weer om buiten te spelen en misschien wel een ijsje te eten! 🍦`);
+        speechText = __("weather_hot_speech", "Wow, wat is het lekker warm vandaag! Zullen we naar buiten gaan en een ijsje eten?");
       } else if (temperature >= 20) {
-        messageText = `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur in de speeltuin! 🌳`;
-        speechText = "Het is zo'n mooie dag! Ik wil graag buiten spelen in de speeltuin!";
+        messageText = __("weather_nice", `Het is ${temperature}°C, heerlijk weer om buiten te spelen! Knof heeft zin in avontuur in de speeltuin! 🌳`);
+        speechText = __("weather_nice_speech", "Het is zo'n mooie dag! Ik wil graag buiten spelen in de speeltuin!");
       } else if (temperature >= 15) {
-        messageText = `Het is ${temperature}°C, prima weer om buiten te spelen! Misschien kun je Knof helpen met schatten zoeken? 🔍`;
-        speechText = "Het is lekker weer voor een speurtocht! Zullen we samen schatten gaan zoeken?";
+        messageText = __("weather_mild", `Het is ${temperature}°C, prima weer om buiten te spelen! Misschien kun je Knof helpen met schatten zoeken? 🔍`);
+        speechText = __("weather_mild_speech", "Het is lekker weer voor een speurtocht! Zullen we samen schatten gaan zoeken?");
       } else {
-        messageText = `Het is ${temperature}°C, een beetje fris maar nog steeds leuk om even buiten te spelen! Neem wel een vestje mee! 🧥`;
-        speechText = "Het is een beetje fris, maar buiten spelen is nog steeds leuk! Vergeet je vestje niet!";
+        messageText = __("weather_cool", `Het is ${temperature}°C, een beetje fris maar nog steeds leuk om even buiten te spelen! Neem wel een vestje mee! 🧥`);
+        speechText = __("weather_cool_speech", "Het is een beetje fris, maar buiten spelen is nog steeds leuk! Vergeet je vestje niet!");
       }
       
       message.textContent = messageText;
@@ -348,7 +348,7 @@
     function closeWeatherPopup() {
       const popup = document.getElementById('weatherPopup');
       popup.style.display = 'none';
-      typeSpeechMessage("Leuk hè, buiten spelen! Laten we straks gaan!");
+      typeSpeechMessage(__("weather_close", "Leuk hè, buiten spelen! Laten we straks gaan!"));
     }
   </script>
 </body>
