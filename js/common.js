@@ -1,79 +1,230 @@
-// Functie om gedeelde componenten in te voegen
-document.addEventListener('DOMContentLoaded', function() {
-  // Voeg de popup toe aan elke pagina als deze nog niet bestaat
-  if (!document.getElementById('popup-message')) {
-    const popupDiv = document.createElement('div');
-    popupDiv.id = 'popup-message';
-    popupDiv.className = 'popup';
-    popupDiv.innerHTML = `
-      <div class="popup-content">
-        <span class="close-popup">&times;</span>
-        <p>Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
-      </div>
-    `;
-    document.body.appendChild(popupDiv);
-    
-    // Popup sluiten wanneer op het X icoontje wordt geklikt
-    popupDiv.querySelector('.close-popup').addEventListener('click', function() {
-      document.getElementById('popup-message').style.display = 'none';
-    });
-    
-    // Popup sluiten wanneer ergens anders wordt geklikt
-    window.addEventListener('click', function(event) {
-      if (event.target == document.getElementById('popup-message')) {
-        document.getElementById('popup-message').style.display = 'none';
+// Globale variabele voor vertaalgegevens
+let translations = {};
+
+// Laad vertalingen bij het opstarten
+function loadTranslations() {
+  const lang = localStorage.getItem('language') || 'nl';
+  return fetch(`/languages/${lang}.json`)
+    .then(response => response.json())
+    .then(data => {
+      translations = data;
+      applyTranslations();
+      return data;
+    })
+    .catch(error => {
+      console.error('Error loading translations:', error);
+      // Fallback naar Nederlands bij een fout
+      if (lang !== 'nl') {
+        localStorage.setItem('language', 'nl');
+        return loadTranslations();
       }
+    });
+}
+
+// Vertaal een string op basis van de sleutel
+function __(key, defaultText = '') {
+  return translations[key] || defaultText || key;
+}
+
+// Pas vertalingen toe op alle elementen met data-i18n attribuut
+function applyTranslations() {
+  // Titel van de pagina
+  document.title = __('app_title', "Knof's Online Speelbos");
+  
+  // Elementen met data-i18n attribuut
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    if (key) {
+      element.textContent = __(key);
+    }
+  });
+  
+  // Elementen met data-i18n-placeholder attribuut (voor input placeholders)
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (key) {
+      element.placeholder = __(key);
+    }
+  });
+  
+  // Vertaal HTML5 elementen met data-i18n-html (voor elementen die HTML mogen bevatten)
+  document.querySelectorAll('[data-i18n-html]').forEach(element => {
+    const key = element.getAttribute('data-i18n-html');
+    if (key) {
+      element.innerHTML = __(key);
+    }
+  });
+  
+  // Vertaal dropdown opties
+  translateDropdowns();
+}
+
+// Vertaal dropdown selecties
+function translateDropdowns() {
+  const textSpeed = document.getElementById('text-speed');
+  if (textSpeed) {
+    Array.from(textSpeed.options).forEach(option => {
+      option.text = __(`${option.value}`, option.text);
     });
   }
+}
 
-  // Laad de Top Navigation Bar
-  fetch('/components/top-nav.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('top-nav-container').innerHTML = data;
-      initTopNav();
-    })
-    .catch(error => {
-      console.error('Error loading top nav:', error);
-      // Fallback voor offline gebruik
-      document.getElementById('top-nav-container').innerHTML = 
-        '<div class="top-nav-bar"><div class="top-nav-bar-bg"></div><div class="top-nav-inner"><div class="top-nav-knof" id="top-nav-knof"><img src="/images/knof.png" alt="Knof"></div></div></div>';
-    });
-  
-  // Laad de Bottom Navigation Bar
-  fetch('/components/bottom-nav.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('bottom-nav-container').innerHTML = data;
-      initBottomNav();
-    })
-    .catch(error => {
-      console.error('Error loading bottom nav:', error);
-      // Fallback voor offline gebruik
-      document.getElementById('bottom-nav-container').innerHTML = 
-        '<div class="nav-bar"><div class="nav-bar-bg"></div></div>';
-    });
+// Functie om de gekozen taal toe te passen
+function applyLanguage(lang) {
+  localStorage.setItem('language', lang);
+  loadTranslations().then(() => {
+    console.log(`Taal gewijzigd naar: ${lang}`);
+    // Dynamic translation happens without page reload
+  });
+}
+
+// Functie om gedeelde componenten in te voegen
+document.addEventListener('DOMContentLoaded', function() {
+  // Laad eerst vertalingen
+  loadTranslations().then(() => {
+    // Voeg de popup toe aan elke pagina als deze nog niet bestaat
+    if (!document.getElementById('popup-message')) {
+      const popupDiv = document.createElement('div');
+      popupDiv.id = 'popup-message';
+      popupDiv.className = 'popup';
+      popupDiv.innerHTML = `
+        <div class="popup-content">
+          <span class="close-popup">&times;</span>
+          <p data-i18n="popup_message">Deze functie wordt nog gebakken, kom snel terug! 🧁</p>
+        </div>
+      `;
+      document.body.appendChild(popupDiv);
+      
+      // Pas vertalingen toe op de nieuwe popup
+      applyTranslations();
+      
+      // Popup sluiten wanneer op het X icoontje wordt geklikt
+      popupDiv.querySelector('.close-popup').addEventListener('click', function() {
+        document.getElementById('popup-message').style.display = 'none';
+      });
+      
+      // Popup sluiten wanneer ergens anders wordt geklikt
+      window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('popup-message')) {
+          document.getElementById('popup-message').style.display = 'none';
+        }
+      });
+    }
+
+    // Laad de Top Navigation Bar
+    fetch('/components/top-nav.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('top-nav-container').innerHTML = data;
+        initTopNav();
+        applyTranslations(); // Vertaal na het laden
+      })
+      .catch(error => {
+        console.error('Error loading top nav:', error);
+        // Fallback voor offline gebruik
+        document.getElementById('top-nav-container').innerHTML = 
+          '<div class="top-nav-bar"><div class="top-nav-bar-bg"></div><div class="top-nav-inner"><div class="top-nav-knof" id="top-nav-knof"><img src="/images/knof.png" alt="Knof"></div></div></div>';
+      });
     
-  // Laad de Settings Modal
-  fetch('/components/settings-modal.html')
-    .then(response => response.text())
-    .then(data => {
-      // Voeg de modal toe als het container element bestaat
-      const settingsContainer = document.getElementById('settings-modal-container');
-      if (settingsContainer) {
-        settingsContainer.innerHTML = data;
-      } else {
-        // Als er geen container is, voeg de modal toe aan het einde van de body
-        const div = document.createElement('div');
-        div.id = 'settings-modal-container';
-        div.innerHTML = data;
-        document.body.appendChild(div);
-      }
-    })
-    .catch(error => {
-      console.error('Error loading settings modal:', error);
-    });
+    // Laad de Bottom Navigation Bar
+    fetch('/components/bottom-nav.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('bottom-nav-container').innerHTML = data;
+        initBottomNav();
+        applyTranslations(); // Vertaal na het laden
+      })
+      .catch(error => {
+        console.error('Error loading bottom nav:', error);
+        // Fallback voor offline gebruik
+        document.getElementById('bottom-nav-container').innerHTML = 
+          '<div class="nav-bar"><div class="nav-bar-bg"></div></div>';
+      });
+      
+    // Laad de Settings Modal
+    fetch('/components/settings-modal.html')
+      .then(response => response.text())
+      .then(data => {
+        // Voeg de modal toe als het container element bestaat
+        const settingsContainer = document.getElementById('settings-modal-container');
+        if (settingsContainer) {
+          settingsContainer.innerHTML = data;
+          
+          // Initialiseer taal-selectie en tekstsnelheid na het laden
+          setTimeout(() => {
+            initSettingsModal();
+            applyTranslations(); // Vertaal na het laden
+          }, 100);
+        } else {
+          // Als er geen container is, voeg de modal toe aan het einde van de body
+          const div = document.createElement('div');
+          div.id = 'settings-modal-container';
+          div.innerHTML = data;
+          document.body.appendChild(div);
+          
+          setTimeout(() => {
+            initSettingsModal();
+            applyTranslations(); // Vertaal na het laden
+          }, 100);
+        }
+      })
+      .catch(error => {
+        console.error('Error loading settings modal:', error);
+      });
+  });
 });
+
+// Initialiseer de settings modal (taal en tekstsnelheid)
+function initSettingsModal() {
+  const closeBtn = document.getElementById('close-settings');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.style.display = 'none';
+    });
+  }
+  
+  // Event listener voor tekstsnelheid instelling
+  const textSpeed = document.getElementById('text-speed');
+  if (textSpeed) {
+    // Initialiseer met opgeslagen waarde (indien beschikbaar)
+    const savedSpeed = localStorage.getItem('textSpeed') || 'medium';
+    textSpeed.value = savedSpeed;
+    
+    textSpeed.addEventListener('change', () => {
+      localStorage.setItem('textSpeed', textSpeed.value);
+    });
+  }
+  
+  // Event listeners voor taalinstellingen
+  const languageOptions = document.querySelectorAll('.language-option');
+  if (languageOptions.length > 0) {
+    // Initialiseer met opgeslagen taal (indien beschikbaar)
+    const savedLanguage = localStorage.getItem('language') || 'nl';
+    
+    // Markeer de juiste taal als geselecteerd
+    languageOptions.forEach(option => {
+      if (option.getAttribute('data-lang') === savedLanguage) {
+        option.classList.add('selected');
+      } else {
+        option.classList.remove('selected');
+      }
+      
+      // Voeg click event toe
+      option.addEventListener('click', function() {
+        // Verwijder selected class van alle opties
+        languageOptions.forEach(opt => opt.classList.remove('selected'));
+        
+        // Voeg selected class toe aan de aangeklikte optie
+        this.classList.add('selected');
+        
+        // Pas de taal toe
+        const lang = this.getAttribute('data-lang');
+        applyLanguage(lang);
+      });
+    });
+  }
+}
 
 // Variabele voor type-timer
 let typeTextTimer = null;
@@ -97,9 +248,9 @@ function typeText(element, text, speed = 50) {
   // Bepaal de snelheid op basis van instellingen (indien beschikbaar)
   const textSpeedSetting = localStorage.getItem('textSpeed') || 'medium';
   const speedMap = {
-    slow: 70,
-    medium: 50,
-    fast: 30
+    slow: 100,    // Langzamer (2x zo langzaam als normaal)
+    medium: 50,   // Normaal
+    fast: 30      // Snel
   };
   speed = speedMap[textSpeedSetting] || speed;
   
@@ -141,7 +292,7 @@ function initTopNav() {
   const knofBtn = document.getElementById('top-nav-knof');
   if (knofBtn) {
     knofBtn.addEventListener('click', () => {
-      typeSpeechMessage("Hoi! Ik ben Knof. Hoe voel je je vandaag?");
+      typeSpeechMessage(__("greeting", "Hoi! Ik ben Knof. Hoe voel je je vandaag?"));
     });
   }
   
@@ -153,40 +304,6 @@ function initTopNav() {
       if (modal) modal.style.display = 'flex';
     });
   }
-  
-  // Sluit-knop in modal
-  setTimeout(() => {
-    const closeBtn = document.getElementById('close-settings');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        const modal = document.getElementById('settings-modal');
-        if (modal) modal.style.display = 'none';
-      });
-    }
-    
-    // Event listeners voor instellingen
-    const volumeSlider = document.getElementById('volume-slider');
-    if (volumeSlider) {
-      // Initialiseer met opgeslagen waarde (indien beschikbaar)
-      const savedVolume = localStorage.getItem('volume');
-      if (savedVolume) volumeSlider.value = savedVolume;
-      
-      volumeSlider.addEventListener('change', () => {
-        localStorage.setItem('volume', volumeSlider.value);
-      });
-    }
-    
-    const textSpeed = document.getElementById('text-speed');
-    if (textSpeed) {
-      // Initialiseer met opgeslagen waarde (indien beschikbaar)
-      const savedSpeed = localStorage.getItem('textSpeed');
-      if (savedSpeed) textSpeed.value = savedSpeed;
-      
-      textSpeed.addEventListener('change', () => {
-        localStorage.setItem('textSpeed', textSpeed.value);
-      });
-    }
-  }, 100);
 }
 
 // Initialiseer de bottom nav
@@ -224,10 +341,10 @@ function initBottomNav() {
         popup.style.display = 'flex';
         
         // Toon ook een leuk bericht van Knof
-        typeSpeechMessage("Oeps! De placemat-functie ligt nog in de oven!");
+        typeSpeechMessage(__("placemat_popup", "Oeps! De placemat-functie ligt nog in de oven!"));
       } else {
         // Fallback in geval de popup niet bestaat op deze pagina
-        alert("Deze functie wordt nog gebakken, kom snel terug! 🧁");
+        alert(__("popup_message", "Deze functie wordt nog gebakken, kom snel terug! 🧁"));
       }
     });
   }
