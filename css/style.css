@@ -64,10 +64,10 @@ body {
 
 .top-nav-bar-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   pointer-events: none;
   filter: url(#rough-filter);
   border-bottom: 2px solid #863A6F;
@@ -312,10 +312,10 @@ body {
 
 .button-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   z-index: -1;
   filter: url(#rough-filter);
   border-radius: 15px;
@@ -353,10 +353,10 @@ body {
 
 .section-bg-games {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 20px;
   pointer-events: none;
   z-index: -1;
@@ -367,10 +367,10 @@ body {
 
 .section-bg-coloring {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 20px;
   pointer-events: none;
   z-index: -1;
@@ -381,10 +381,10 @@ body {
 
 .section-bg-placemat {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 20px;
   pointer-events: none;
   z-index: -1;
@@ -395,10 +395,10 @@ body {
 
 .section-bg-chat {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 20px;
   pointer-events: none;
   z-index: -1;
@@ -508,10 +508,10 @@ body {
 
 .nav-bar-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   pointer-events: none;
   filter: url(#rough-filter);
   border: 2px solid #863A6F;
@@ -557,10 +557,10 @@ body {
 
 .game-item-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 15px;
   pointer-events: none;
   z-index: -1;
@@ -707,6 +707,7 @@ body {
   font-size: 16px;
   filter: url(#rough-filter);
   transition: transform 0.2s;
+  position: relative;
 }
 
 /* Placemat page */
@@ -773,6 +774,7 @@ body {
   font-size: 18px;
   filter: url(#rough-filter);
   transition: transform 0.2s;
+  position: relative;
 }
 
 #placemat-instructions {
@@ -782,6 +784,7 @@ body {
   border-radius: 10px;
   display: none;
   filter: url(#rough-filter);
+  position: relative;
 }
 
 /* Chat page */
@@ -796,6 +799,7 @@ body {
   border: 2px solid #7BB661;
   background-color: white;
   filter: url(#rough-filter);
+  position: relative;
 }
 
 .chat-header {
@@ -904,6 +908,7 @@ body {
   font-size: 16px;
   transition: transform 0.2s;
   filter: url(#rough-filter);
+  position: relative;
 }
 
 /* Popup stijlen */
@@ -922,7 +927,7 @@ body {
 }
 
 .popup-content {
-  background-color: #F8F6E9;
+  background-color: #FFB8FF;
   padding: 25px;
   border: 2px solid #B5338A;
   width: 85%;
@@ -935,7 +940,6 @@ body {
   font-size: 1.2rem;
   font-family: 'Patrick Hand', 'Architects Daughter', cursive;
   animation: popIn 0.3s ease-out;
-  background-color: #FFB8FF;
 }
 
 @keyframes popIn {
@@ -988,6 +992,7 @@ body {
   filter: url(#rough-filter);
   transform: rotate(-1deg);
   animation: weatherPopIn 0.5s ease-out forwards;
+  position: relative;
 }
 
 .weather-popup h2 {
@@ -1018,6 +1023,7 @@ body {
   filter: url(#rough-filter);
   transform: rotate(1deg);
   box-shadow: 2px 4px 0px #FFD6A5;
+  position: relative;
 }
 
 .weather-button:active {
