@@ -184,7 +184,7 @@ body {
     animation: slowRotate 20s linear infinite;
 }
 
-/* Settings modal */
+/* Settings modal - Verbeterde styling */
 .settings-modal {
     position: fixed;
     top: 0;
@@ -199,23 +199,37 @@ body {
 }
 
 .settings-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    min-width: 300px;
+    background-color: #FFDFD3;
+    padding: 30px;
+    border-radius: 20px;
+    min-width: 320px;
+    max-width: 90%;
     text-align: center;
     position: relative;
     filter: url(#rough-filter);
-    border: 2px solid #863A6F;
-    background-color: #FFDFD3;
+    border: 3px solid #863A6F;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.settings-content h2 {
+    font-size: 32px;
+    color: #4B0082;
+    margin-bottom: 25px;
+    transform: rotate(-1deg);
 }
 
 .close-settings {
     position: absolute;
-    top: 5px;
-    right: 10px;
+    top: 10px;
+    right: 15px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 28px;
+    color: #863A6F;
+    transition: transform 0.2s;
+}
+
+.close-settings:hover {
+    transform: scale(1.2);
 }
 
 .settings-options {
@@ -224,20 +238,59 @@ body {
 }
 
 .settings-option {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .settings-option label {
     display: block;
-    margin-bottom: 5px;
-    font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #4B0082;
+    font-weight: bold;
 }
 
-.settings-option input, .settings-option select {
+.settings-option select {
     width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid #863A6F;
+    font-size: 20px;
+    font-family: 'Patrick Hand', 'Architects Daughter', cursive;
+    background-color: #FFF5EF;
+    cursor: pointer;
+}
+
+/* Taalopties styling */
+.language-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.language-option {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px dashed #863A6F;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    background-color: #FFF5EF;
+}
+
+.language-option:hover {
+    transform: scale(1.02);
+    background-color: #FFE8D6;
+}
+
+.language-option.selected {
+    background-color: #FFD1DC;
+    border: 2px solid #863A6F;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transform: rotate(-1deg);
+    font-weight: bold;
 }
 
 /* Main content container */
@@ -1175,5 +1228,29 @@ body {
     .weather-button {
         font-size: 1.3rem;
         padding: 10px 25px;
+    }
+    
+    /* Media query aanpassingen voor settings modal op kleine schermen */
+    .settings-content {
+        padding: 25px 20px;
+    }
+    
+    .settings-content h2 {
+        font-size: 28px;
+    }
+    
+    .settings-option label {
+        font-size: 20px;
+    }
+    
+    .language-option {
+        font-size: 18px;
+        padding: 10px 12px;
+    }
+    
+    .close-settings {
+        top: 8px;
+        right: 12px;
+        font-size: 24px;
     }
 }
