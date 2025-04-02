@@ -64,10 +64,10 @@ body {
 
 .top-nav-bar-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   pointer-events: none;
   filter: url(#rough-filter);
   border-bottom: 2px solid #863A6F;
@@ -312,10 +312,10 @@ body {
 
 .button-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   z-index: -1;
   filter: url(#rough-filter);
   border-radius: 15px;
@@ -351,58 +351,37 @@ body {
   overflow: hidden;
 }
 
-.section-bg-games {
+.section-bg-games, 
+.section-bg-coloring, 
+.section-bg-placemat, 
+.section-bg-chat {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 20px;
   pointer-events: none;
   z-index: -1;
   filter: url(#rough-filter);
+}
+
+.section-bg-games {
   border: 2px solid #FF85A2;
   background-color: #FFD6E0;
 }
 
 .section-bg-coloring {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  pointer-events: none;
-  z-index: -1;
-  filter: url(#rough-filter);
   border: 2px solid #00A4CC;
   background-color: #ADDFFF;
 }
 
 .section-bg-placemat {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  pointer-events: none;
-  z-index: -1;
-  filter: url(#rough-filter);
   border: 2px solid #B5338A;
   background-color: #FFB8FF;
 }
 
 .section-bg-chat {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  pointer-events: none;
-  z-index: -1;
-  filter: url(#rough-filter);
   border: 2px solid #7BB661;
   background-color: #B8FFB8;
 }
@@ -508,10 +487,10 @@ body {
 
 .nav-bar-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   pointer-events: none;
   filter: url(#rough-filter);
   border: 2px solid #863A6F;
@@ -557,10 +536,10 @@ body {
 
 .game-item-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
   border-radius: 15px;
   pointer-events: none;
   z-index: -1;
@@ -637,6 +616,10 @@ body {
   background-color: #FFD6A5;
   border: 2px solid #FF9A5A;
   filter: url(#rough-filter);
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
 }
 
 .card-back {
@@ -644,6 +627,10 @@ body {
   border: 2px solid #FF7BF3;
   transform: rotateY(180deg);
   filter: url(#rough-filter);
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
 }
 
 /* Coloring book */
@@ -866,18 +853,35 @@ body {
   position: relative;
 }
 
-.user-message .message-content {
-  background-color: #ADDFFF;
-  border: 1px solid #00A4CC;
-  border-top-right-radius: 4px;
+.user-message .message-content,
+.knof-message .message-content {
+  position: relative;
+  transform: translateZ(0); /* Fixes some rendering issues on mobile */
+}
+
+.user-message .message-content::before,
+.knof-message .message-content::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 102%;
+  height: 102%;
+  border-radius: inherit;
+  z-index: -1;
   filter: url(#rough-filter);
 }
 
-.knof-message .message-content {
+.user-message .message-content::before {
+  background-color: #ADDFFF;
+  border: 1px solid #00A4CC;
+  border-top-right-radius: 4px;
+}
+
+.knof-message .message-content::before {
   background-color: #B8FFB8;
   border: 1px solid #7BB661;
   border-top-left-radius: 4px;
-  filter: url(#rough-filter);
 }
 
 .chat-form {
@@ -904,6 +908,7 @@ body {
   font-size: 16px;
   transition: transform 0.2s;
   filter: url(#rough-filter);
+  position: relative;
 }
 
 /* Popup stijlen */
@@ -922,7 +927,7 @@ body {
 }
 
 .popup-content {
-  background-color: #F8F6E9;
+  background-color: #FFB8FF;
   padding: 25px;
   border: 2px solid #B5338A;
   width: 85%;
@@ -935,7 +940,7 @@ body {
   font-size: 1.2rem;
   font-family: 'Patrick Hand', 'Architects Daughter', cursive;
   animation: popIn 0.3s ease-out;
-  background-color: #FFB8FF;
+  transform: translateZ(0); /* Fix for iOS rendering */
 }
 
 @keyframes popIn {
@@ -988,6 +993,9 @@ body {
   filter: url(#rough-filter);
   transform: rotate(-1deg);
   animation: weatherPopIn 0.5s ease-out forwards;
+  position: relative;
+  transform-origin: center center;
+  transform: translateZ(0) rotate(-1deg); /* Fix for iOS rendering */
 }
 
 .weather-popup h2 {
